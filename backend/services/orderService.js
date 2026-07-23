@@ -431,40 +431,47 @@ const updateOrder = async (orderId, updateData) => {
 // Delete and order
 const deleteOrder = async (orderId) => {
   try {
-    // Find the order by ID
     const order = await Order.findById(orderId)
       .populate('items.productId')
       .populate('items.variantId');
 
     if (!order) throw new Error('Order not found');
 
-    // Restore stock for each item in the order
     for (const item of order.items) {
       const { productId, variantId, quantity } = item;
 
-      const product = await Product.findById(productId);
-      if (!product) throw new Error(`Product not found for item ${productId}`);
+      if (!productId) continue;
 
-      if (product.variants.length === 0) {
-        // If the product doesn't have variants, restore the stock to the product
+      const product = await Product.findById(productId);
+      if (!product) {
+        console.warn(`Product ${productId} not found, skipping stock restore`);
+        continue;
+      }
+
+      if (!product.variants || product.variants.length === 0) {
         product.finalStock += quantity;
         await product.save();
       } else {
-        // If the product has variants, find the specific variant and restore the stock
-        const variant = product.variants.find((v) => v._id.toString() === variantId.toString());
-        if (!variant) throw new Error(`Variant not found for product ${productId}`);
+        if (!variantId) continue;
+        const variant = product.variants.find(
+          (v) => v._id.toString() === variantId.toString(),
+        );
+        if (!variant) {
+          console.warn(
+            `Variant ${variantId} not found for product ${productId}, skipping stock restore`,
+          );
+          continue;
+        }
 
         variant.stock += quantity;
         await product.save();
       }
     }
 
-    // Delete the order after updating stock
     await Order.findByIdAndDelete(orderId);
 
     return { message: 'Order deleted successfully, stock updated' };
   } catch (error) {
-    // Abort the transaction if there's an error
     throw new Error('Error deleting order and updating stock: ' + error.message);
   }
 };

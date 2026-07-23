@@ -1,11 +1,56 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Slider from 'react-slick';
+import React, { useEffect, useState, useCallback } from 'react';
 import CarouselStore from '../../store/CarouselStore.js';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import ImageComponent from './ImageComponent.jsx';
+
+const SlotCarousel = ({ images, skeletonHeight, altName }) => {
+  const [index, setIndex] = useState(0);
+
+  const next = useCallback(() => {
+    setIndex((i) => (i + 1) % images.length);
+  }, [images.length]);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(next, 5000);
+    return () => clearInterval(interval);
+  }, [images.length, next]);
+
+  if (images.length === 0) return null;
+
+  return (
+    <div className="relative overflow-hidden rounded-lg w-full h-full">
+      {images.map((img, i) => (
+        <div
+          key={img._id}
+          className={`absolute inset-0 transition-opacity duration-700 ${
+            i === index ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <ImageComponent
+            imageName={img.imgSrc}
+            className="w-full h-full object-cover"
+            skeletonHeight={skeletonHeight}
+            altName={altName}
+          />
+        </div>
+      ))}
+      {images.length > 1 && (
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                i === index ? 'bg-white scale-110' : 'bg-white/50'
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ProductCarousel = () => {
   const {
@@ -14,90 +59,79 @@ const ProductCarousel = () => {
     CarouselStoreListError,
   } = CarouselStore();
 
-  const [products, setProducts] = useState([]);
-  const sliderRef = useRef(null);
+  const getSlot = (position) =>
+    Array.isArray(CarouselStoreList)
+      ? CarouselStoreList.filter((img) => img.position === position)
+      : [];
 
-  useEffect(() => {
-    if (Array.isArray(CarouselStoreList) && CarouselStoreList.length > 0) {
-      setProducts(CarouselStoreList);
-    }
-  }, [CarouselStoreList]);
-
-  const settings = {
-    dots: false, // Disable dots
-    infinite: products.length > 1,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: products.length > 1,
-    autoplaySpeed: 6000,
-    pauseOnHover: false,
-    arrows: true,
-    prevArrow: <CustomPrevArrow />,
-    nextArrow: <CustomNextArrow />,
-  };
-
-  useEffect(() => {
-    if (sliderRef.current && products.length > 1) {
-      sliderRef.current.slickPlay();
-    }
-  }, [products]);
+  const leftLarge = getSlot('left-large');
+  const rightTop = getSlot('right-top');
+  const rightBottom = getSlot('right-bottom');
 
   if (CarouselStoreListError) {
     return (
-      <div className="primaryTextColor  container md:mx-auto text-center p-3">
-        <h1 className={'p-44'}>
-          Something went wrong! Please try again later.
-        </h1>
+      <div className="primaryTextColor container md:mx-auto text-center p-3">
+        <h1 className="p-44">Something went wrong! Please try again later.</h1>
       </div>
-    ); // Display error message
+    );
   }
+
+  if (CarouselStoreListLoading) {
+    return (
+      <div className="xl:container xl:mx-auto pb-4 grid grid-cols-1 md:grid-cols-3 gap-2">
+        <div className="md:col-span-2">
+          <Skeleton height={400} width="100%" />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Skeleton height={196} width="100%" />
+          <Skeleton height={196} width="100%" />
+        </div>
+      </div>
+    );
+  }
+
+  if (
+    leftLarge.length === 0 &&
+    rightTop.length === 0 &&
+    rightBottom.length === 0
+  )
+    return null;
+
   return (
-    <div className="product-carousel xl:container xl:mx-auto pb-4 relative">
-      {CarouselStoreListLoading ? (
-        <>
-          <Skeleton height={400} width={'100%'} />
-        </>
-      ) : (
-        <>
-          <Slider ref={sliderRef} {...settings}>
-            {products.map((product, index) => (
-              <div key={index} className="relative">
-                <ImageComponent
-                  imageName={product.imgSrc}
-                  className="w-full h-full object-contain"
-                  skeletonHeight={400}
-                  altName={`Banner ${index + 1}`}
-                  fetchpriority={index === 0 ? 'high' : undefined}
-                />
-              </div>
-            ))}
-          </Slider>
-        </>
-      )}
+    <div className="xl:container xl:mx-auto pb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+        {leftLarge.length > 0 && (
+          <div className="md:col-span-2 min-h-[200px]">
+            <SlotCarousel
+              images={leftLarge}
+              skeletonHeight={400}
+              altName="Left Large Banner"
+            />
+          </div>
+        )}
+        <div className="flex flex-col gap-2">
+          {rightTop.length > 0 && (
+            <div className="flex-1 min-h-[150px]">
+              <SlotCarousel
+                images={rightTop}
+                skeletonHeight={196}
+                altName="Right Top Banner"
+              />
+            </div>
+          )}
+          {rightBottom.length > 0 && (
+            <div className="flex-1 min-h-[150px]">
+              <SlotCarousel
+                images={rightBottom}
+                skeletonHeight={196}
+                altName="Right Bottom Banner"
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
-
-// Custom Arrow Components
-const CustomPrevArrow = ({ onClick }) => (
-  <button
-    onClick={onClick}
-    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black text-white p-2 rounded-full z-10"
-    aria-label="Previous slide"
-  >
-    <ChevronLeft size={30} />
-  </button>
-);
-
-const CustomNextArrow = ({ onClick }) => (
-  <button
-    onClick={onClick}
-    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black text-white p-2 rounded-full z-10"
-    aria-label="Next slide"
-  >
-    <ChevronRight size={30} />
-  </button>
-);
 
 export default ProductCarousel;

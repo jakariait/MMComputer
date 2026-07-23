@@ -10,6 +10,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import useAuthAdminStore from '../../store/AuthAdminStore.js';
+import useOrderStore from '../../store/useOrderStore.js';
 
 const statusConfig = {
   pending: { icon: Hourglass, color: 'text-amber-500' },
@@ -23,6 +24,7 @@ const statusConfig = {
 const OrderStats = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { token } = useAuthAdminStore();
+  const statsRefreshKey = useOrderStore((s) => s.statsRefreshKey);
   const [amountByStatus, setAmountByStatus] = useState({
     pending: 0,
     approved: 0,
@@ -38,6 +40,7 @@ const OrderStats = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: { limit: 10000 },
       });
 
       const orders = res.data?.orders || [];
@@ -68,7 +71,7 @@ const OrderStats = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [statsRefreshKey]);
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-3 my-6">

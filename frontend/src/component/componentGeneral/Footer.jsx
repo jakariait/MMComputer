@@ -189,11 +189,14 @@ const Footer = () => {
                 'text-center pb-5 pt-5 flex flex-col md:flex-row items-center justify-center gap-3'
               }
             >
-              <p>{GeneralInfoList?.FooterCopyright}</p>
+              <p>
+                {GeneralInfoList?.CompanyName} &copy; {new Date().getFullYear()}{' '}
+                All Rights Reserved
+              </p>
               <p>
                 Design and Developed by{' '}
                 <a
-                  href="https://www.digiweb.digital/"
+                  href="https://www.digiwebdigital.com/"
                   className={'text-green-500 hover:underline'}
                 >
                   DigiWeb

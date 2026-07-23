@@ -6,8 +6,10 @@ const createCarousel = async (req, res) => {
       return res.status(400).json({ message: 'Image file is required' });
     }
 
-    const fileName = req.files.imgSrc[0].filename; // Store only file name
-    const carousel = await CarouselService.createCarousel(fileName);
+    const fileName = req.files.imgSrc[0].filename;
+    const { position } = req.body;
+
+    const carousel = await CarouselService.createCarousel(fileName, position);
 
     res.status(201).json(carousel);
   } catch (error) {
@@ -23,6 +25,7 @@ const getAllCarousel = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
 const deleteByIdCarousel = async (req, res) => {
   try {
     const { id } = req.params;

@@ -15,8 +15,8 @@ const deleteOldFile = (filename) => {
 
 // Create Carousel
 
-const createCarousel = async (imgSrc) => {
-  return await CarouselModel.create({ imgSrc });
+const createCarousel = async (imgSrc, position) => {
+  return await CarouselModel.create({ imgSrc, position });
 };
 
 // Get All Carousel

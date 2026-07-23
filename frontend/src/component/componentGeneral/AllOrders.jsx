@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import useAuthUserStore from '../../store/AuthUserStore.js';
 import { Button } from '@/components/ui/button';
@@ -32,6 +32,7 @@ const AllOrders = () => {
   const rowsPerPage = 8;
 
   const navigate = useNavigate();
+  const fetchOrdersRef = useRef();
 
   const fetchOrders = async () => {
     if (!user?._id) return;
@@ -48,9 +49,17 @@ const AllOrders = () => {
     }
   };
 
+  fetchOrdersRef.current = fetchOrders;
+
   useEffect(() => {
     fetchOrders();
   }, [user?._id, token]);
+
+  useEffect(() => {
+    const handleFocus = () => fetchOrdersRef.current?.();
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, []);
 
   const totalPages = Math.ceil(orders.length / rowsPerPage) || 1;
   const paginated = orders.slice(

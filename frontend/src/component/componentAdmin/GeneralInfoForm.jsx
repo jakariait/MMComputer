@@ -332,19 +332,6 @@ export default function GeneralInfoForm() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Footer</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <TextField
-              label="Footer Copyright"
-              name="FooterCopyright"
-              placeholder="© 2024 Your Company. All rights reserved."
-            />
-          </CardContent>
-        </Card>
-
         <div className="flex justify-end">
           <Button type="submit" size="lg" disabled={submitting}>
             {submitting ? 'Updating...' : 'Update General Info'}

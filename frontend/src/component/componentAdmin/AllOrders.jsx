@@ -73,6 +73,7 @@ const AllOrders = ({ title, status = '' }) => {
     setDateRange,
     totalByStatus,
     fetchAllStatusCounts,
+    incrementStatsRefreshKey,
   } = useOrderStore();
 
   const STATUS_TABS = [
@@ -164,12 +165,14 @@ const AllOrders = ({ title, status = '' }) => {
   const fetchOrders = useCallback(() => {
     fetchAllOrders(activeStatus, currentPage, itemsPerPage);
     fetchAllStatusCounts();
+    incrementStatsRefreshKey();
   }, [
     activeStatus,
     currentPage,
     itemsPerPage,
     fetchAllOrders,
     fetchAllStatusCounts,
+    incrementStatsRefreshKey,
   ]);
 
   useEffect(() => {

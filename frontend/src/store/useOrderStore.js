@@ -38,6 +38,8 @@ const useOrderStore = create((set, get) => ({
   startDate: null,
   endDate: null,
 
+  statsRefreshKey: 0,
+
   // Common loading/error state
   orderListLoading: false,
   orderListError: null,
@@ -252,6 +254,10 @@ const useOrderStore = create((set, get) => ({
       'cancelled',
     ];
     await Promise.all(statuses.map((status) => fetchStatusCount(status)));
+  },
+
+  incrementStatsRefreshKey: () => {
+    set((state) => ({ statsRefreshKey: state.statsRefreshKey + 1 }));
   },
 
   // Helper function to refresh current view
