@@ -49,7 +49,7 @@ const AdminCategoryAllinone = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
-  const rowsPerPage = 10;
+  const rowsPerPage = 20;
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);

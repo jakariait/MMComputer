@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const path = require('path');
+const slugify = require('slugify');
 
 dotenv.config();
 
@@ -248,14 +249,14 @@ async function main() {
       continue;
     }
 
-    const doc = new SubCategoryModel({
+    const doc = await SubCategoryModel.create({
       name: cat.name,
       image: cat.image || '',
       showInHomepage: false,
       isActive: true,
       category: parentId,
+      categoryId: 0,
     });
-    await doc.save({ validateBeforeSave: false });
     subCategoryMap[cat.cid] = { _id: doc._id };
     console.log(`  [SubCategory] ${cat.name} (sql_id: ${cat.cid}) -> categoryId: ${doc.categoryId}, slug: ${doc.slug}`);
   }
@@ -279,15 +280,15 @@ async function main() {
       continue;
     }
 
-    const doc = new ChildCategoryModel({
+    const doc = await ChildCategoryModel.create({
       name: cat.name,
       image: cat.image || '',
       showInHomepage: false,
       isActive: true,
       category: parentCatId,
       subCategory: parentSub._id,
+      categoryId: 0,
     });
-    await doc.save({ validateBeforeSave: false });
     console.log(`  [ChildCategory] ${cat.name} (sql_id: ${cat.cid}) -> categoryId: ${doc.categoryId}, slug: ${doc.slug}`);
     childInserted++;
   }

@@ -1,6 +1,6 @@
 import { useState, memo, useRef, useCallback, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaAngleDown } from 'react-icons/fa6';
+import { ChevronDown } from 'lucide-react';
 import useCategoryStore from '../../store/useCategoryStore.js';
 import useSubCategoryStore from '../../store/useSubCategoryStore.js';
 import useChildCategoryStore from '../../store/useChildCategoryStore.js';
@@ -37,91 +37,63 @@ const MenuBar = () => {
   );
 
   return (
-    <div className="lg:shadow lg:bg-white">
+    <div className="lg:shadow-sm lg:bg-white border-b border-gray-100 lg:border-b-0">
       <nav>
-        <ul className="lg:flex items-center justify-center">
-          <MenuItem
-            label={
-              <Link to="/" className="block">
-                Home
-              </Link>
-            }
-          />
-          <MenuItem
-            label={
-              <Link to="/shop" className="block">
-                Shop
-              </Link>
-            }
-          />
-
+        {/*
+          Minimum gap on every breakpoint:
+          - flex-wrap + gap-x-* + gap-y-* keeps a real gutter even when items wrap
+          - gap scales up gently as the viewport grows
+        */}
+        <ul className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1 sm:gap-x-1">
           {categories?.length ? (
             categories.map((category) => {
-                const categoryQuery = buildQueryString({
-                  category: category.name,
-                });
-                const categoryPath = `/shop?${categoryQuery}`;
-                const hasSubCategories =
-                  Array.isArray(subCategories) &&
-                  subCategories.some(
-                    (subCat) =>
-                      subCat?.category?._id === category._id && subCat.isActive,
-                  );
-
-                return (
-                  <MenuItem
-                    key={category._id}
-                    label={
-                      <Link
-                        to={categoryPath}
-                        className="grid grid-cols-2 gap-1 items-center justify-center w-full text-left"
-                        onClick={(e) => {
-                          // Prevent navigation if already on this category
-                          if (isCurrentRoute(categoryQuery)) {
-                            e.preventDefault();
-                          }
-                        }}
-                      >
-                        {category.name}
-                        {hasSubCategories && <FaAngleDown />}
-                      </Link>
-                    }
-                  >
-                    {hasSubCategories && (
-                      <SubMenu
-                        subCategories={subCategories}
-                        categoryId={category._id}
-                        childCategories={childCategories}
-                        buildQueryString={buildQueryString}
-                        isCurrentRoute={isCurrentRoute}
-                      />
-                    )}
-                  </MenuItem>
+              const categoryQuery = buildQueryString({
+                category: category.name,
+              });
+              const categoryPath = `/shop?${categoryQuery}`;
+              const hasSubCategories =
+                Array.isArray(subCategories) &&
+                subCategories.some(
+                  (subCat) =>
+                    subCat?.category?._id === category._id && subCat.isActive,
                 );
-              })
+              const active = isCurrentRoute(categoryQuery);
+
+              return (
+                <MenuItem
+                  key={category._id}
+                  active={active}
+                  hasChildren={hasSubCategories}
+                  label={
+                    <Link
+                      to={categoryPath}
+                      className="flex items-center gap-1 w-full text-left"
+                      onClick={(e) => {
+                        // Prevent navigation if already on this category
+                        if (active) {
+                          e.preventDefault();
+                        }
+                      }}
+                    >
+                      {category.name}
+                    </Link>
+                  }
+                >
+                  {hasSubCategories && (
+                    <SubMenu
+                      subCategories={subCategories}
+                      categoryId={category._id}
+                      childCategories={childCategories}
+                      buildQueryString={buildQueryString}
+                      isCurrentRoute={isCurrentRoute}
+                    />
+                  )}
+                </MenuItem>
+              );
+            })
           ) : (
             <MenuItem label={<span></span>} />
           )}
-
-          <MenuItem
-            label={
-              <div className="flex items-center gap-1 cursor-pointer">
-                More <FaAngleDown />
-              </div>
-            }
-          >
-            <SubMenu
-              items={[
-                { name: 'About Us', path: '/about' },
-                { name: 'FAQ', path: '/faqs' },
-                { name: 'Privacy Policy', path: '/privacypolicy' },
-                { name: 'Refund Policy', path: '/refundpolicy' },
-                { name: 'Terms of Services', path: '/termofservice' },
-                { name: 'Blog', path: '/blog' },
-                { name: 'Contact', path: '/contact-us' },
-              ]}
-            />
-          </MenuItem>
         </ul>
       </nav>
     </div>
@@ -129,15 +101,13 @@ const MenuBar = () => {
 };
 
 // ✅ Optimized MenuItem Component with better hover handling
-const MenuItem = memo(({ label, children }) => {
+const MenuItem = memo(({ label, children, active, hasChildren }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
   const timerRef = useRef(null);
   const menuRef = useRef(null);
 
   const closeMenu = useCallback(() => {
     setIsOpen(false);
-    setIsHovering(false);
   }, []);
 
   const openMenu = useCallback(() => {
@@ -146,7 +116,6 @@ const MenuItem = memo(({ label, children }) => {
       timerRef.current = null;
     }
     setIsOpen(true);
-    setIsHovering(true);
   }, []);
 
   const handleMouseEnter = useCallback(() => {
@@ -157,7 +126,7 @@ const MenuItem = memo(({ label, children }) => {
 
   const handleMouseLeave = useCallback(() => {
     if (children) {
-      timerRef.current = setTimeout(closeMenu, 300);
+      timerRef.current = setTimeout(closeMenu, 250);
     }
   }, [children, closeMenu]);
 
@@ -176,6 +145,17 @@ const MenuItem = memo(({ label, children }) => {
     }
   }, [isOpen, closeMenu]);
 
+  // Close on Escape for keyboard users
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') closeMenu();
+    };
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, closeMenu]);
+
   // Cleanup timer on unmount
   useEffect(() => {
     return () => {
@@ -188,26 +168,42 @@ const MenuItem = memo(({ label, children }) => {
   return (
     <li
       ref={menuRef}
-      className="relative group"
+      className="relative"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="px-2 py-2 text-gray-800 font-semibold cursor-pointer">
+      <div
+        className={`flex items-center  px-2 py-2 rounded-md uppercase font-semibold tracking-wide cursor-pointer transition-colors duration-150
+         `}
+        onClick={() => hasChildren && setIsOpen((prev) => !prev)}
+      >
         {label}
+        {hasChildren && (
+          <ChevronDown
+            size={14}
+            strokeWidth={2.5}
+            className={`text-gray-400 transition-transform duration-200 ${
+              isOpen ? 'rotate-180' : ''
+            }`}
+          />
+        )}
       </div>
 
-      {/* Use CSS transition for smoother animation */}
-      <div
-        className={`absolute left-0 mt-2 bg-white shadow-lg rounded-md w-56 z-50 transition-all duration-200 ${
-          isOpen
-            ? 'opacity-100 visible transform translate-y-0'
-            : 'opacity-0 invisible transform -translate-y-2'
-        }`}
-        onMouseEnter={openMenu}
-        onMouseLeave={handleMouseLeave}
-      >
-        {children}
-      </div>
+      {children && (
+        <div
+          className={`absolute left-0 top-full pt-2 z-50 transition-all duration-200 ${
+            isOpen
+              ? 'opacity-100 visible translate-y-0'
+              : 'opacity-0 invisible -translate-y-1 pointer-events-none'
+          }`}
+          onMouseEnter={openMenu}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="min-w-56 bg-white border border-gray-100 shadow-xl rounded-xl py-1.5">
+            {children}
+          </div>
+        </div>
+      )}
     </li>
   );
 });
@@ -222,6 +218,7 @@ const SubMenu = memo(
     buildQueryString,
     isCurrentRoute,
   }) => {
+    const [hoveredSub, setHoveredSub] = useState(null);
     const filteredSubCategories = Array.isArray(subCategories)
       ? subCategories.filter(
           (subCategory) => subCategory?.category?._id === categoryId,
@@ -229,7 +226,7 @@ const SubMenu = memo(
       : [];
 
     return (
-      <ul className="text-black p-2">
+      <ul className="text-black">
         {filteredSubCategories
           .filter((subCategory) => subCategory.isActive)
           .map((subCategory) => {
@@ -237,12 +234,26 @@ const SubMenu = memo(
               subcategory: subCategory.slug,
             });
             const subCategoryPath = `/shop?${subCategoryQuery}`;
+            const hasChildren = Array.isArray(childCategories)
+              ? childCategories.some(
+                  (childCategory) =>
+                    String(
+                      childCategory?.subCategory?._id ||
+                        childCategory?.subCategory,
+                    ) === String(subCategory._id) && childCategory.isActive,
+                )
+              : false;
 
             return (
-              <li key={subCategory._id} className="px-4 py-2">
+              <li
+                key={subCategory._id}
+                className="relative px-1.5"
+                onMouseEnter={() => setHoveredSub(subCategory._id)}
+                onMouseLeave={() => setHoveredSub(null)}
+              >
                 <Link
                   to={subCategoryPath}
-                  className="block w-full text-left hover:bg-gray-100 p-1 rounded transition-colors duration-150"
+                  className="flex items-center justify-between gap-2 w-full text-left text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 px-2.5 py-2 rounded-md transition-colors duration-150"
                   onClick={(e) => {
                     if (isCurrentRoute && isCurrentRoute(subCategoryQuery)) {
                       e.preventDefault();
@@ -250,22 +261,33 @@ const SubMenu = memo(
                   }}
                 >
                   {subCategory.name}
+                  {hasChildren && (
+                    <ChevronDown
+                      size={12}
+                      strokeWidth={2.5}
+                      className="text-gray-300 -rotate-90"
+                    />
+                  )}
                 </Link>
-                <ChildSubMenu
-                  subCategoryId={subCategory._id}
-                  childCategories={childCategories}
-                  buildQueryString={buildQueryString}
-                  isCurrentRoute={isCurrentRoute}
-                />
+                {hoveredSub === subCategory._id && hasChildren && (
+                  <div className="absolute left-full top-0 ml-1.5 min-w-56 bg-white border border-gray-100 shadow-xl rounded-xl py-1.5 z-50">
+                    <ChildSubMenu
+                      subCategoryId={subCategory._id}
+                      childCategories={childCategories}
+                      buildQueryString={buildQueryString}
+                      isCurrentRoute={isCurrentRoute}
+                    />
+                  </div>
+                )}
               </li>
             );
           })}
 
         {items?.map((item, index) => (
-          <li key={index} className="px-4 py-2">
+          <li key={index} className="px-1.5">
             <Link
               to={item.path}
-              className="block w-full text-left hover:bg-gray-100 p-1 rounded transition-colors duration-150"
+              className="block w-full text-left text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 px-2.5 py-2 rounded-md transition-colors duration-150"
             >
               {item.name}
             </Link>
@@ -291,7 +313,7 @@ const ChildSubMenu = memo(
     if (filteredChildCategories.length === 0) return null;
 
     return (
-      <ul className="ml-4">
+      <ul className="text-black">
         {filteredChildCategories
           .filter((childCategory) => childCategory.isActive)
           .map((childCategory) => {
@@ -301,10 +323,10 @@ const ChildSubMenu = memo(
             const childCategoryPath = `/shop?${childCategoryQuery}`;
 
             return (
-              <li key={childCategory._id} className="px-4 py-2">
+              <li key={childCategory._id} className="px-1.5">
                 <Link
                   to={childCategoryPath}
-                  className="text-left w-full hover:bg-gray-100 p-1 rounded text-sm block transition-colors duration-150"
+                  className="block w-full text-left text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 px-2.5 py-2 rounded-md transition-colors duration-150"
                   onClick={(e) => {
                     if (isCurrentRoute && isCurrentRoute(childCategoryQuery)) {
                       e.preventDefault();
