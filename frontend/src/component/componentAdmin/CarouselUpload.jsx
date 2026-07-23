@@ -131,7 +131,7 @@ const CarouselUpload = () => {
                   {slotImages.map((image) => (
                     <div
                       key={image._id}
-                      className="relative group aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border"
+                      className="relative group  overflow-hidden "
                     >
                       <ImageComponent
                         imageName={image.imgSrc}
