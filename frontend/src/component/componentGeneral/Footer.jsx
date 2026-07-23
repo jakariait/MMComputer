@@ -120,7 +120,7 @@ const Footer = () => {
             {/*Desktop Footer*/}
             <div
               className={
-                ' lg:grid grid-cols-1 lg:grid-cols-12 gap-10 justify-between py-10 px-6  hidden'
+                'xl:container xl:mx-auto lg:grid grid-cols-1 lg:grid-cols-12 gap-10 justify-between py-10 px-6  hidden'
               }
             >
               <div className={'col-span-6 relative'}>

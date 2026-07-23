@@ -5,6 +5,8 @@ import useProductStore from '../store/useProductStore.js';
 import ProductCarousel from '../component/componentGeneral/ProductCarousel.jsx';
 import Feature from '../component/componentGeneral/Feature.jsx';
 import ProductByFlag from '../component/componentGeneral/ProductByFlag.jsx';
+import Headers from '@/component/componentGeneral/Headers.jsx';
+import MarqueeModern from '@/component/componentGeneral/MarqueeModern.jsx';
 
 const HomePage = () => {
   const { CarouselStoreListRequest } = CarouselStore();
@@ -21,6 +23,7 @@ const HomePage = () => {
     <>
       <h1 className="sr-only">Welcome to Our Store</h1>
       <ProductCarousel />
+      <MarqueeModern />
       <Feature />
       <ProductByFlag />
     </>

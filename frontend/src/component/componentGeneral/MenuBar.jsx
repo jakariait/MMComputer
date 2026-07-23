@@ -37,14 +37,14 @@ const MenuBar = () => {
   );
 
   return (
-    <div className="lg:shadow-sm lg:bg-white border-b border-gray-100 lg:border-b-0">
+    <div className="shadow">
       <nav>
         {/*
           Minimum gap on every breakpoint:
           - flex-wrap + gap-x-* + gap-y-* keeps a real gutter even when items wrap
           - gap scales up gently as the viewport grows
         */}
-        <ul className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1 sm:gap-x-1">
+        <ul className=" xl:container xl:mx-auto flex flex-wrap items-center justify-center gap-x-1 gap-y-1 sm:gap-x-1">
           {categories?.length ? (
             categories.map((category) => {
               const categoryQuery = buildQueryString({
