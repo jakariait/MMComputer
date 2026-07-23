@@ -198,7 +198,7 @@ const Headers = () => {
           isSticky ? 'fixed top-0 left-0 right-0 z-40 ' : ''
         }`}
       >
-        <div className="xl:container xl:mx-auto py-3 px-3 flex gap-6 items-center justify-between">
+        <div className="py-3 px-3 flex gap-6 items-center justify-between">
           <div
             ref={hamburgerRef}
             onClick={() => setIsMenuOpen(!isMenuOpen)}

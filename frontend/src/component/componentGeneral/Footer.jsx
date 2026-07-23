@@ -29,7 +29,7 @@ const Footer = () => {
     <div>
       {GeneralInfoListLoading ? (
         <>
-          <div className={'grid grid-cols-2 md:grid-cols-4 gap-3 p-3'}>
+          <div className={'grid grid-cols-2 md:grid-cols-4 gap-3  p-3'}>
             <Skeleton height={200} width={'100%'} />
             <Skeleton height={200} width={'100%'} />
             <Skeleton height={200} width={'100%'} />
@@ -120,7 +120,7 @@ const Footer = () => {
             {/*Desktop Footer*/}
             <div
               className={
-                'lg:grid grid-cols-1 lg:grid-cols-12 gap-10 justify-between py-10 px-6  hidden'
+                ' lg:grid grid-cols-1 lg:grid-cols-12 gap-10 justify-between py-10 px-6  hidden'
               }
             >
               <div className={'col-span-6 relative'}>

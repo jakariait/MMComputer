@@ -173,7 +173,7 @@ const MenuItem = memo(({ label, children, active, hasChildren }) => {
       onMouseLeave={handleMouseLeave}
     >
       <div
-        className={`flex items-center  px-2 py-2 rounded-md uppercase font-semibold tracking-wide cursor-pointer transition-colors duration-150
+        className={`flex items-center  px-1 py-2 rounded-md uppercase text-sm font-semibold tracking-wide cursor-pointer transition-colors duration-150
          `}
         onClick={() => hasChildren && setIsOpen((prev) => !prev)}
       >
