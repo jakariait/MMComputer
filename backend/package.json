@@ -6,6 +6,7 @@
     "test": "jest --forceExit --detectOpenHandles",
     "test:watch": "jest --watch --forceExit --detectOpenHandles",
     "clean-unused-images": "node scripts/cleanUnusedImages.js",
+    "migrate-categories": "node scripts/migrateCategories.js",
     "nodemon": "nodemon index.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
