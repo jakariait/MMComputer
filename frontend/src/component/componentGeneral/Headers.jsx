@@ -156,7 +156,7 @@ const Headers = () => {
       {/* Header Main */}
       <div
         ref={headerMainRef}
-        className={`border-b border-gray-200 md:px-3 bg-white ${
+        className={`border-b border-gray-200 md:px-3 primaryBgColor${
           isSticky ? 'fixed top-0 left-0 right-0 z-40 ' : ''
         }`}
       >
@@ -181,17 +181,17 @@ const Headers = () => {
             />
           </Link>
 
-          <HeaderSearch />
-
           {/* Right Icons */}
           <div className="flex items-center justify-center gap-2 relative">
+            <HeaderSearch />
             {/* Wishlist */}
+
             <Link
               to="/user/wishlist"
               className="relative flex flex-col justify-center items-center"
               aria-label="Wishlist"
             >
-              <Heart className="w-8 h-8 cursor-pointer" />
+              <Heart className="w-8 h-8 cursor-pointer text-white" />
               {wishlist.length > 0 && (
                 <span className="absolute top-0 right-0 -mt-2 -mr-2 md:mr-0 primaryBgColor rounded-full h-6 w-6 flex items-center justify-center text-xs accentTextColor">
                   {wishlist.length}
@@ -211,7 +211,7 @@ const Headers = () => {
               <div className={'flex flex-col justify-center items-center'}>
                 {/* Shopping Cart Icon */}
                 <ShoppingCart
-                  className="w-8 h-8 cursor-pointer"
+                  className="w-8 h-8 cursor-pointer text-white"
                   aria-hidden="true"
                 />
               </div>
@@ -262,7 +262,7 @@ const Headers = () => {
                           className={'flex items-center justify-center gap-2'}
                         >
                           <User
-                            className="w-8 h-8 cursor-pointer"
+                            className="w-8 h-8 cursor-pointer text-white"
                             aria-hidden="true"
                           />
                         </Link>
@@ -273,7 +273,7 @@ const Headers = () => {
                         aria-label="Log out"
                       >
                         <LogOut
-                          className="w-8 h-8 cursor-pointer"
+                          className="w-8 h-8 text-white cursor-pointer"
                           aria-hidden="true"
                         />
                       </button>
@@ -284,7 +284,10 @@ const Headers = () => {
             ) : (
               <Link to="/login" aria-label="Login or register">
                 <div className="flex items-center gap-2 flex-col">
-                  <User className="w-8 h-8 cursor-pointer" aria-hidden="true" />
+                  <User
+                    className="w-8 h-8 cursor-pointer text-white"
+                    aria-hidden="true"
+                  />
                 </div>
               </Link>
             )}
@@ -327,6 +330,7 @@ const Headers = () => {
                 <X className="w-8 h-8 cursor-pointer" />
               </button>
             </div>
+
             <div className="space-y-2">
               <MobileMenu />
             </div>

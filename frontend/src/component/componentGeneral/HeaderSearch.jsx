@@ -1,63 +1,104 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CiSearch } from 'react-icons/ci';
+import { Search, X } from 'lucide-react';
 
 const HeaderSearch = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [isOpen, setIsOpen] = useState(false);
   const [searchInput, setSearchInput] = useState(
     searchParams.get('search') || '',
   );
-  const searchTimeoutRef = useRef(null);
+  const inputRef = useRef(null);
+  const containerRef = useRef(null);
 
   const handleSearch = () => {
     if (searchInput.trim()) {
-      // Navigate to products page with search parameter
       navigate(`/shop?search=${encodeURIComponent(searchInput.trim())}&page=1`);
+      setIsOpen(false);
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
+    } else if (e.key === 'Escape') {
+      setIsOpen(false);
     }
   };
 
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setSearchInput(value);
+  const openSearch = () => {
+    setIsOpen(true);
+  };
 
-    // Optional: Auto-search with debounce (uncomment if you want live search)
-    /*
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
+  // Auto-focus input when opened
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
     }
+  }, [isOpen]);
 
-    searchTimeoutRef.current = setTimeout(() => {
-      if (value.trim()) {
-        navigate(`/products?search=${encodeURIComponent(value.trim())}&page=1`);
+  // Close on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
       }
-    }, 1000); // 1 second debounce for auto-search
-    */
-  };
+    };
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
 
   return (
-    <div className="flex-1 max-w-xl hidden lg:flex">
-      <input
-        type="text"
-        placeholder="Search products..."
-        value={searchInput}
-        onChange={handleInputChange}
-        onKeyPress={handleKeyPress}
-        className="px-3 py-2 w-full outline-none text-gray-700 border border-gray-200 rounded-l "
-      />
-      <button
-        onClick={handleSearch}
-        className="primaryBgColor p-3 rounded-r hover:opacity-90 transition-opacity"
-        aria-label="Search"
+    <div ref={containerRef} className="relative flex items-center">
+      <div
+        className={`flex items-center transition-all duration-300 ease-in-out rounded-full border ${
+          isOpen
+            ? 'w-56 sm:w-72 border-gray-300 bg-white shadow-sm ring-1 ring-gray-200'
+            : 'w-10 border-transparent'
+        }`}
       >
-        <CiSearch className="text-white w-5 h-5" />
-      </button>
+        <button
+          onClick={isOpen ? handleSearch : openSearch}
+          className="flex-shrink-0 p-2 rounded-full cursor-pointer  transition-colors"
+          aria-label={isOpen ? 'Search' : 'Open search'}
+        >
+          <Search
+            className={`w-8 h-8 transition-colors ${
+              isOpen ? 'text-gray-900' : 'text-white'
+            }`}
+          />
+        </button>
+
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Search products..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className={`flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder-gray-400 transition-all duration-300 ${
+            isOpen
+              ? 'w-full opacity-100 px-1'
+              : 'w-0 opacity-0 px-0 pointer-events-none'
+          }`}
+        />
+
+        {isOpen && searchInput && (
+          <button
+            onClick={() => setSearchInput('')}
+            className="flex-shrink-0 p-2 rounded-full cursor-pointer hover:bg-gray-100 transition-colors"
+            aria-label="Clear search"
+          >
+            <X className="w-4 h-4 text-gray-400" />
+          </button>
+        )}
+      </div>
     </div>
   );
 };
