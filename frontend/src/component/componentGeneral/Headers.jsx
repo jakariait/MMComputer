@@ -1,11 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { MdEmail, MdClose } from 'react-icons/md';
-import { TfiTruck } from 'react-icons/tfi';
-import { CiShoppingCart, CiHeart } from 'react-icons/ci';
-import { IoPersonOutline } from 'react-icons/io5';
-import { GiHamburgerMenu } from 'react-icons/gi';
-import { IoIosLogOut } from 'react-icons/io';
+import { X, ShoppingCart, Heart, User, Menu, LogOut } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
 
 import GeneralInfoStore from '../../store/GeneralInfoStore';
@@ -158,39 +153,6 @@ const Headers = () => {
 
   return (
     <div>
-      {/* Top Bar */}
-      <div className={'primaryBgColor text-white '}>
-        {' '}
-        <div className="flex gap-6 xl:container xl:mx-auto p-3 justify-center md:justify-start">
-          <h1 className="md:border-r-1 px-4">
-            Welcome to {GeneralInfoList?.CompanyName}
-          </h1>
-          <div className="items-center gap-2 border-r-1 px-4 hidden md:flex">
-            <Link
-              to="/track-order"
-              className="flex items-center gap-2"
-              aria-label="Track your order"
-            >
-              <TfiTruck aria-hidden="true" />
-              <p>Track Your Order</p>
-            </Link>
-          </div>
-          <div className="items-center gap-2 hidden md:flex">
-            <MdEmail className="text-2xl" aria-hidden="true" />
-            {GeneralInfoList?.CompanyEmail?.map((email, index) => (
-              <a
-                key={index}
-                href={`mailto:${email}`}
-                className="mr-2"
-                aria-label={`Email: ${email}`}
-              >
-                {email}
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* Header Main */}
       <div
         ref={headerMainRef}
@@ -198,7 +160,7 @@ const Headers = () => {
           isSticky ? 'fixed top-0 left-0 right-0 z-40 ' : ''
         }`}
       >
-        <div className="py-3 px-3 flex gap-6 items-center justify-between">
+        <div className="py-2 px-3 flex gap-6 items-center justify-between">
           <div
             ref={hamburgerRef}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -207,7 +169,7 @@ const Headers = () => {
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >
-            <GiHamburgerMenu />
+            <Menu className="w-8 h-8 cursor-pointer" />
           </div>
 
           <Link to="/">
@@ -229,8 +191,7 @@ const Headers = () => {
               className="relative flex flex-col justify-center items-center"
               aria-label="Wishlist"
             >
-              <CiHeart className="w-7 h-7 cursor-pointer" />
-              <span className="text-sm hidden lg:block pt-1">Wishlist</span>
+              <Heart className="w-8 h-8 cursor-pointer" />
               {wishlist.length > 0 && (
                 <span className="absolute top-0 right-0 -mt-2 -mr-2 md:mr-0 primaryBgColor rounded-full h-6 w-6 flex items-center justify-center text-xs accentTextColor">
                   {wishlist.length}
@@ -249,10 +210,10 @@ const Headers = () => {
             >
               <div className={'flex flex-col justify-center items-center'}>
                 {/* Shopping Cart Icon */}
-                <CiShoppingCart className="w-7 h-7 cursor-pointer" />
-
-                {/* Text for My Cart */}
-                <span className="text-sm hidden lg:block pt-1">My Cart</span>
+                <ShoppingCart
+                  className="w-8 h-8 cursor-pointer"
+                  aria-hidden="true"
+                />
               </div>
 
               {/* Cart Quantity Badge */}
@@ -300,8 +261,10 @@ const Headers = () => {
                           to="/user/home"
                           className={'flex items-center justify-center gap-2'}
                         >
-                          <IoPersonOutline className="w-5 h-5" />
-                          <span className="text-sm">My Account</span>
+                          <User
+                            className="w-8 h-8 cursor-pointer"
+                            aria-hidden="true"
+                          />
                         </Link>
                       </button>
                       <button
@@ -309,8 +272,10 @@ const Headers = () => {
                         className="bg-red-500 w-full text-white px-4 py-2 cursor-pointer rounded-lg flex items-center justify-center gap-2 hover:bg-red-600 transition-colors"
                         aria-label="Log out"
                       >
-                        <IoIosLogOut className="text-xl" aria-hidden="true" />
-                        <span>Log Out</span>
+                        <LogOut
+                          className="w-8 h-8 cursor-pointer"
+                          aria-hidden="true"
+                        />
                       </button>
                     </div>
                   </div>
@@ -319,10 +284,7 @@ const Headers = () => {
             ) : (
               <Link to="/login" aria-label="Login or register">
                 <div className="flex items-center gap-2 flex-col">
-                  <IoPersonOutline className="w-6 h-6" aria-hidden="true" />
-                  <span className="text-sm hidden lg:block">
-                    Login / Register
-                  </span>
+                  <User className="w-8 h-8 cursor-pointer" aria-hidden="true" />
                 </div>
               </Link>
             )}
@@ -362,7 +324,7 @@ const Headers = () => {
                 onClick={() => setIsMenuOpen(false)}
                 aria-label="Close menu"
               >
-                <MdClose className="text-3xl" />
+                <X className="w-8 h-8 cursor-pointer" />
               </button>
             </div>
             <div className="space-y-2">
@@ -380,8 +342,8 @@ const Headers = () => {
               ) : (
                 <Link to="/login" aria-label="Login or register">
                   <div className="inline-flex items-center gap-3">
-                    <IoPersonOutline
-                      className="w-10 h-10 primaryBgColor rounded-full text-white p-2"
+                    <User
+                      className="w-8 h-8 cursor-pointer"
                       aria-hidden="true"
                     />
                     <span className="text-sm">Login / Register</span>
@@ -426,7 +388,7 @@ const Headers = () => {
                 className={'cursor-pointer'}
                 aria-label="Close cart"
               >
-                <MdClose className="text-2xl" />
+                <X className="w-8 h-8 cursor-pointer" />
               </button>
             </div>
 
