@@ -3,6 +3,9 @@ const subCategoryService = require('../services/subCategoryService');
 // Create a new subcategory
 const createSubCategory = async (req, res) => {
   try {
+    if (req.files?.image?.[0]?.filename) {
+      req.body.image = req.files.image[0].filename;
+    }
     const subCategory = await subCategoryService.createSubCategory(req.body);
     res.status(201).json({ message: 'Subcategory created successfully', subCategory });
   } catch (error) {
@@ -33,6 +36,9 @@ const getSubCategoryById = async (req, res) => {
 // Update a subcategory
 const updateSubCategory = async (req, res) => {
   try {
+    if (req.files?.image?.[0]?.filename) {
+      req.body.image = req.files.image[0].filename;
+    }
     const subCategory = await subCategoryService.updateSubCategory(req.params.id, req.body);
     res.status(200).json({ message: 'Subcategory updated successfully', subCategory });
   } catch (error) {

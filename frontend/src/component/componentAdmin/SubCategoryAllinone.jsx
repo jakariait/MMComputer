@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import axios from 'axios';
 import useAuthAdminStore from '../../store/AuthAdminStore.js';
 import { Input } from '@/components/ui/input';
@@ -43,6 +43,7 @@ import { SectionHeader } from '@/component/componentAdmin/SectionHeader.jsx';
 
 const SubCategoryAllinone = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const imageBaseUrl = apiUrl.replace('/api', '') + '/uploads';
   const { token } = useAuthAdminStore();
 
   const [subCategories, setSubCategories] = useState([]);
@@ -59,8 +60,13 @@ const SubCategoryAllinone = () => {
     name: '',
     category: '',
     isActive: true,
+    image: null,
+    showInHomepage: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageRemoved, setImageRemoved] = useState(false);
+  const fileInputRef = useRef(null);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [subCategoryToDelete, setSubCategoryToDelete] = useState(null);
@@ -98,7 +104,9 @@ const SubCategoryAllinone = () => {
   const handleOpenCreate = () => {
     setIsEdit(false);
     setEditId(null);
-    setFormData({ name: '', category: '', isActive: true });
+    setFormData({ name: '', category: '', isActive: true, image: null, showInHomepage: false });
+    setImagePreview(null);
+    setImageRemoved(false);
     setDialogOpen(true);
   };
 
@@ -109,7 +117,11 @@ const SubCategoryAllinone = () => {
       name: subCat.name,
       category: subCat.category?._id || '',
       isActive: subCat.isActive,
+      image: null,
+      showInHomepage: subCat.showInHomepage || false,
     });
+    setImagePreview(subCat.image ? `${imageBaseUrl}/${subCat.image}` : null);
+    setImageRemoved(false);
     setDialogOpen(true);
   };
 
@@ -120,33 +132,26 @@ const SubCategoryAllinone = () => {
     }
     setIsSubmitting(true);
     try {
+      const fd = new FormData();
+      fd.append('name', formData.name);
+      fd.append('category', formData.category);
+      fd.append('showInHomepage', formData.showInHomepage);
+      if (formData.image instanceof File) {
+        fd.append('image', formData.image);
+      } else if (imageRemoved && isEdit) {
+        fd.append('removeImage', 'true');
+      }
+
       if (isEdit) {
-        await axios.put(
-          `${apiUrl}/sub-category/${editId}`,
-          {
-            name: formData.name,
-            category: formData.category,
-            isActive: formData.isActive,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          },
-        );
+        fd.append('isActive', formData.isActive);
+        await axios.put(`${apiUrl}/sub-category/${editId}`, fd, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         toast.success('Subcategory updated successfully!');
       } else {
-        await axios.post(
-          `${apiUrl}/sub-category`,
-          { name: formData.name, category: formData.category },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          },
-        );
+        await axios.post(`${apiUrl}/sub-category`, fd, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         toast.success('Subcategory added successfully!');
       }
       setDialogOpen(false);
@@ -237,8 +242,14 @@ const SubCategoryAllinone = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Subcategory Name</TableHead>
+                    <TableHead className="text-center w-[60px]">
+                      Image
+                    </TableHead>
                     <TableHead className="text-center w-[200px]">
                       Category
+                    </TableHead>
+                    <TableHead className="text-center w-[110px]">
+                      Show in Homepage
                     </TableHead>
                     <TableHead className="text-center w-[100px]">
                       Active
@@ -252,7 +263,7 @@ const SubCategoryAllinone = () => {
                   {paginated.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={4}
+                        colSpan={6}
                         className="text-center text-muted-foreground py-8"
                       >
                         No subcategories found.
@@ -265,8 +276,26 @@ const SubCategoryAllinone = () => {
                           {subCat.name || 'N/A'}
                         </TableCell>
                         <TableCell className="text-center">
+                          {subCat.image ? (
+                            <img
+                              src={`${imageBaseUrl}/${subCat.image}`}
+                              alt=""
+                              className="mx-auto h-8 w-8 rounded object-cover"
+                            />
+                          ) : (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-center">
                           <Badge variant="outline">
                             {subCat.category?.name || 'N/A'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Badge
+                            variant={subCat.showInHomepage ? 'default' : 'secondary'}
+                          >
+                            {subCat.showInHomepage ? 'Yes' : 'No'}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-center">
@@ -363,6 +392,47 @@ const SubCategoryAllinone = () => {
               )}
             </div>
             <div className="space-y-2">
+              <label className="text-sm font-medium">
+                Image <span className="text-muted-foreground">(optional)</span>
+              </label>
+              <div className="flex items-center gap-3">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setFormData({ ...formData, image: file });
+                      setImagePreview(URL.createObjectURL(file));
+                    }
+                  }}
+                  className="flex-1"
+                />
+                {imagePreview && (
+                  <button
+                    type="button"
+                    className="text-xs text-destructive hover:underline"
+                    onClick={() => {
+                      setFormData({ ...formData, image: null });
+                      setImagePreview(null);
+                      setImageRemoved(true);
+                      if (fileInputRef.current) fileInputRef.current.value = '';
+                    }}
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+              {imagePreview && (
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="mt-1 h-20 w-20 object-cover rounded border"
+                />
+              )}
+            </div>
+            <div className="space-y-2">
               <label className="text-sm font-medium">Category</label>
               <Select
                 value={formData.category}
@@ -404,6 +474,23 @@ const SubCategoryAllinone = () => {
                 </Select>
               </div>
             )}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Show in Homepage</label>
+              <Select
+                value={String(formData.showInHomepage)}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, showInHomepage: value === 'true' })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">Yes</SelectItem>
+                  <SelectItem value="false">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)}>

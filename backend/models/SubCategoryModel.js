@@ -5,6 +5,8 @@ const CounterModel = require('./CategoryCounterModel');
 const subCategorySchema = new mongoose.Schema(
   {
     name: { type: String, trim: true, required: true },
+    image: { type: String, default: '' },
+    showInHomepage: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true, required: true },
     category: {
       type: mongoose.Schema.Types.ObjectId,

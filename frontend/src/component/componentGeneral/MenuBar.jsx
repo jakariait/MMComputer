@@ -38,7 +38,7 @@ const MenuBar = () => {
 
   return (
     <div className="lg:shadow lg:bg-white">
-      <nav className="xl:container xl:mx-auto">
+      <nav>
         <ul className="lg:flex items-center justify-center">
           <MenuItem
             label={
@@ -56,9 +56,7 @@ const MenuBar = () => {
           />
 
           {categories?.length ? (
-            categories
-              .filter((category) => category.showOnNavbar)
-              .map((category) => {
+            categories.map((category) => {
                 const categoryQuery = buildQueryString({
                   category: category.name,
                 });

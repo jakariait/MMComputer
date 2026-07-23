@@ -1,6 +1,14 @@
 const SubCategory = require('../models/SubCategoryModel');
 const CounterModel = require('../models/CategoryCounterModel');
 const slugify = require('slugify');
+const fs = require('fs');
+const path = require('path');
+
+const deleteOldFile = (filename) => {
+  if (!filename) return;
+  const filePath = path.join(__dirname, '../uploads', filename);
+  try { fs.unlinkSync(filePath); } catch {}
+};
 
 // Create a new subcategory
 const createSubCategory = async (subCategoryData) => {
@@ -49,6 +57,19 @@ const getSubCategoryById = async (id) => {
 // Update a subcategory
 const updateSubCategory = async (id, updatedData) => {
   try {
+    const existing = await SubCategory.findById(id);
+    if (!existing) throw new Error('Subcategory not found');
+
+    if (updatedData.image && updatedData.image !== existing.image) {
+      deleteOldFile(existing.image);
+    } else if (updatedData.removeImage === 'true') {
+      deleteOldFile(existing.image);
+      updatedData.image = '';
+    } else {
+      updatedData.image = existing.image;
+    }
+    delete updatedData.removeImage;
+
     if (updatedData.name) {
       updatedData.slug = slugify(`${updatedData.name}-${id}`, { lower: true });
     }
@@ -69,6 +90,7 @@ const deleteSubCategory = async (id) => {
   try {
     const subCategory = await SubCategory.findByIdAndDelete(id);
     if (!subCategory) throw new Error('Subcategory not found');
+    deleteOldFile(subCategory.image);
     return { message: 'Subcategory deleted successfully' };
   } catch (error) {
     throw new Error('Error deleting subcategory: ' + error.message);

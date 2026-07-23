@@ -5,18 +5,20 @@ const slugify = require('slugify');
 const childCategorySchema = new mongoose.Schema(
   {
     name: { type: String, trim: true, required: true },
+    image: { type: String, default: '' },
+    showInHomepage: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
     category: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category', // Reference to the Category model
+      ref: 'Category',
       required: true,
     },
     subCategory: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'SubCategory', // Reference to the SubCategory model
+      ref: 'SubCategory',
       required: true,
     },
-    categoryId: { type: Number }, // Auto-increment field
+    categoryId: { type: Number },
     slug: { type: String, trim: true, unique: true },
   },
   {
