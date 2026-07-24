@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
 import { Link } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
 import ProductGallery from './ProductGallery.jsx';
 import ProductAddToCart from './ProductAddToCart.jsx';
-import BuyNowButton from './BuyNowButton.jsx';
 import ImageComponent from './ImageComponent.jsx';
-import WishlistButton from './WishlistButton.jsx';
 
 // Memoize the formatted price function
 const formatPrice = (price) => {
@@ -15,7 +13,7 @@ const formatPrice = (price) => {
   return price.toLocaleString();
 };
 
-const ProductList = ({ products }) => {
+const ProductList = ({ products, productPage }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const handleOpen = (product) => {
     setSelectedProduct(product);
@@ -49,115 +47,206 @@ const ProductList = ({ products }) => {
       ) : (
         <div
           className={
-            'grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 mt-4'
+            productPage
+              ? 'grid grid-cols-1 gap-3 mt-4 '
+              : 'grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4  gap-3 mt-4'
           }
         >
           {/*Product Display Section*/}
-          {products.map((product) => (
-            <div
-              key={product.slug}
-              className="relative bg-white rounded-md  min-h-[250px]"
-            >
-              <Link to={`/product/${product.slug}`} className="block ">
-                <ImageComponent
-                  imageName={product.thumbnailImage}
-                  className="w-full aspect-square object-cover"
-                  altName={product.name}
-                  skeletonHeight={250}
-                />
-                <div className="text-center mt-1 mb-1 p-2 hover:underline truncate">
-                  {product.name}
+          {products.map((product) =>
+            productPage ? (
+              // List View
+              <div
+                key={product.slug}
+                className="relative flex gap-4 items-center rounded-md  shadow-sm "
+              >
+                <div className="w-1/3 ">
+                  <Link to={`/product/${product.slug}`}>
+                    <ImageComponent
+                      imageName={product.thumbnailImage}
+                      altName={product.name}
+                      skeletonHeight={120}
+                    />
+                  </Link>
                 </div>
-              </Link>
+                <div>
+                  <Link to={`/product/${product.slug}`}>
+                    <div className=" font-semibold hover:underline mb-2">
+                      {product.name}
+                    </div>
+                  </Link>
+                  <div className="flex gap-2 items-center">
+                    {/*Base Price*/}
+                    {product.variants?.length ? (
+                      product.variants[0].discount > 0 ? (
+                        <div className="line-through text-gray-500">
+                          Tk. {formatPrice(Number(product.variants[0].price))}
+                        </div>
+                      ) : (
+                        <div className="font-semibold">
+                          Tk. {formatPrice(Number(product.variants[0].price))}
+                        </div>
+                      )
+                    ) : product.finalDiscount > 0 ? (
+                      <div className="line-through text-gray-500">
+                        Tk. {formatPrice(Number(product.finalPrice))}
+                      </div>
+                    ) : (
+                      <div className="font-semibold">
+                        Tk. {formatPrice(Number(product.finalPrice))}
+                      </div>
+                    )}
 
-              <div className="flex gap-2 pb-2 justify-center">
-                {/*Base Price*/}
-                {product.variants?.length ? (
-                  product.variants[0].discount > 0 ? (
+                    {/*Discount Price*/}
+                    {product.variants?.length
+                      ? product.variants[0].discount > 0 && (
+                          <div className="text-red-800 font-semibold">
+                            Tk.{' '}
+                            {formatPrice(Number(product.variants[0].discount))}
+                          </div>
+                        )
+                      : product.finalDiscount > 0 && (
+                          <div className="text-red-800 font-semibold">
+                            Tk. {formatPrice(Number(product.finalDiscount))}
+                          </div>
+                        )}
+                  </div>
+                </div>
+                {/* Discount Percentage */}
+                <div className="absolute top-1 left-1 z-10">
+                  {product.variants?.length > 0
+                    ? product.variants[0].discount > 0 && (
+                        <span className="bg-red-400 px-2 py-1 text-white text-xs">
+                          -
+                          {calculateDiscountPercentage(
+                            product.variants[0].price,
+                            product.variants[0].discount,
+                          )}
+                          %
+                        </span>
+                      )
+                    : product.finalDiscount > 0 && (
+                        <span className="bg-red-400 px-2 py-1 text-white text-xs">
+                          -
+                          {calculateDiscountPercentage(
+                            product.finalPrice,
+                            product.finalDiscount,
+                          )}
+                          %
+                        </span>
+                      )}
+                </div>
+
+                {/* Quick View Button */}
+                <div className="absolute top-1 right-1 z-10 bg-white rounded-full flex justify-center items-center">
+                  <button
+                    onClick={() => handleOpen(product)}
+                    className="p-2 cursor-pointer"
+                  >
+                    <FaEye />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              // Grid View
+              <div
+                key={product.slug}
+                className="relative shadow-sm rounded-md pb-2"
+              >
+                <Link to={`/product/${product.slug}`}>
+                  <ImageComponent
+                    imageName={product.thumbnailImage}
+                    altName={product.name}
+                    skeletonHeight={250}
+                  />
+                </Link>
+                <Link to={`/product/${product.slug}`}>
+                  <div className="text-center mt-2 mb-1 hover:underline">
+                    {product.name}
+                  </div>
+                </Link>
+
+                <div className="flex md:flex-row flex-col items-center gap-2 justify-center">
+                  {/*Base Price*/}
+                  {product.variants?.length ? (
+                    product.variants[0].discount > 0 ? (
+                      <div className="line-through">
+                        Tk. {formatPrice(Number(product.variants[0].price))}
+                      </div>
+                    ) : (
+                      <div>
+                        Tk. {formatPrice(Number(product.variants[0].price))}
+                      </div>
+                    )
+                  ) : product.finalDiscount > 0 ? (
                     <div className="line-through">
-                      Tk. {formatPrice(Number(product.variants[0].price))}
+                      Tk. {formatPrice(Number(product.finalPrice))}
                     </div>
                   ) : (
-                    <div>
-                      Tk. {formatPrice(Number(product.variants[0].price))}
-                    </div>
-                  )
-                ) : product.finalDiscount > 0 ? (
-                  <div className="line-through">
-                    Tk. {formatPrice(Number(product.finalPrice))}
-                  </div>
-                ) : (
-                  <div>Tk. {formatPrice(Number(product.finalPrice))}</div>
-                )}
+                    <div>Tk. {formatPrice(Number(product.finalPrice))}</div>
+                  )}
 
-                {/*Discount Price*/}
-                {product.variants?.length
-                  ? product.variants[0].discount > 0 && (
-                      <div className="text-red-800">
-                        Tk. {formatPrice(Number(product.variants[0].discount))}
-                      </div>
-                    )
-                  : product.finalDiscount > 0 && (
-                      <div className="text-red-800">
-                        Tk. {formatPrice(Number(product.finalDiscount))}
-                      </div>
-                    )}
-              </div>
+                  {/*Discount Price*/}
+                  {product.variants?.length
+                    ? product.variants[0].discount > 0 && (
+                        <div className="text-red-800">
+                          Tk.{' '}
+                          {formatPrice(Number(product.variants[0].discount))}
+                        </div>
+                      )
+                    : product.finalDiscount > 0 && (
+                        <div className="text-red-800">
+                          Tk. {formatPrice(Number(product.finalDiscount))}
+                        </div>
+                      )}
+                </div>
 
-              {/* Discount Percentage */}
-              <div className="absolute top-2 left-0 z-10 ">
-                {product.variants?.length > 0
-                  ? product.variants[0].discount > 0 && (
-                      <span className="bg-red-400 px-2 py-1 rounded text-white">
-                        -
-                        {calculateDiscountPercentage(
-                          product.variants[0].price,
-                          product.variants[0].discount,
-                        )}
-                        %
-                      </span>
-                    )
-                  : product.finalDiscount > 0 && (
-                      <span className="bg-red-400 px-2 py-1 text-white rounded">
-                        -
-                        {calculateDiscountPercentage(
-                          product.finalPrice,
-                          product.finalDiscount,
-                        )}
-                        %
-                      </span>
-                    )}
-              </div>
+                {/* Discount Percentage */}
+                <div className="absolute top-1 z-10">
+                  {product.variants?.length > 0
+                    ? product.variants[0].discount > 0 && (
+                        <span className="bg-red-400 px-2 py-1 text-white">
+                          -
+                          {calculateDiscountPercentage(
+                            product.variants[0].price,
+                            product.variants[0].discount,
+                          )}
+                          %
+                        </span>
+                      )
+                    : product.finalDiscount > 0 && (
+                        <span className="bg-red-400 px-2 py-1 text-white">
+                          -
+                          {calculateDiscountPercentage(
+                            product.finalPrice,
+                            product.finalDiscount,
+                          )}
+                          %
+                        </span>
+                      )}
+                </div>
 
-              {/* Quick View Button */}
-              <div className="absolute top-1 right-0 z-10 flex gap-1 bg-white rounded-full justify-center items-center">
-                <WishlistButton
-                  product={product}
-                  size={18}
-                  className="!p-1.5"
-                />
-                <button
-                  onClick={() => handleOpen(product)}
-                  className="p-2 cursor-pointer"
-                  aria-label={`Quick view ${product.name}`}
-                >
-                  <FaEye aria-hidden="true" />
-                </button>
+                {/* Quick View Button */}
+                <div className="absolute top-1 right-0 z-10 bg-white rounded-full flex justify-center items-center">
+                  <button
+                    onClick={() => handleOpen(product)} // Pass the product to set the state
+                    className="p-2 cursor-pointer"
+                  >
+                    <FaEye />
+                  </button>
+                </div>
               </div>
-              {/*<div className={'pt-5'}>*/}
-              {/*  <BuyNowButton product={product} isAddToCart={false} />*/}
-              {/*</div>*/}
-            </div>
-          ))}
+            ),
+          )}
 
           {/* Quick View Modal */}
           {selectedProduct && (
-            <Dialog
-              open={Boolean(selectedProduct)}
-              onOpenChange={(open) => !open && handleClose()}
-            >
-              <DialogContent className="sm:max-w-4xl w-[calc(100%-1.5rem)] p-3 sm:p-6 max-h-[95vh] overflow-y-auto scrollbar-hide">
-                <div className="flex flex-col md:grid md:grid-cols-2 gap-2 sm:gap-4">
+            <Dialog open={Boolean(selectedProduct)} onOpenChange={handleClose}>
+              <DialogContent className="sm:max-w-4xl">
+                <DialogTitle className="sr-only">
+                  {selectedProduct.name}
+                </DialogTitle>
+                <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
                   <ProductGallery
                     images={selectedProduct.images}
                     discount={calculateDiscountPercentage(

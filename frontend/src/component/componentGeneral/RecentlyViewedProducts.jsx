@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import ProductList from './ProductList.jsx';
 
-const RecentlyViewedProducts = ({ currentProductId, products = [] }) => {
+const RecentlyViewedProducts = ({ currentProductId }) => {
   const [recentProducts, setRecentProducts] = useState([]);
 
   useEffect(() => {
+    const viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
     // Exclude the currently viewed product
-    const filtered = products.filter((item) => item._id !== currentProductId);
+    const filtered = viewed.filter((item) => item._id !== currentProductId);
 
-    setRecentProducts(filtered);
-  }, [currentProductId, products]);
+    setRecentProducts(filtered.slice(0, 5));
+  }, [currentProductId]);
 
   if (recentProducts.length === 0) return null;
 

@@ -1,10 +1,10 @@
 import React from 'react';
-import ProductDetails from '../component/componentGeneral/ProductDetails.jsx';
+import ProductDetailsGadget from '@/component/componentGeneral/ProductDetailsGadget.jsx';
 
 const ProductDetailsPage = () => {
   return (
     <>
-      <ProductDetails />
+      <ProductDetailsGadget />
     </>
   );
 };
