@@ -54,20 +54,23 @@ const ProductList = ({ products }) => {
         >
           {/*Product Display Section*/}
           {products.map((product) => (
-            <div key={product.slug} className="relative min-h-[250px]">
-              <Link to={`/product/${product.slug}`} className="block">
+            <div
+              key={product.slug}
+              className="relative bg-white rounded-md  min-h-[250px]"
+            >
+              <Link to={`/product/${product.slug}`} className="block ">
                 <ImageComponent
                   imageName={product.thumbnailImage}
                   className="w-full aspect-square object-cover"
                   altName={product.name}
                   skeletonHeight={250}
                 />
-                <div className="text-center mt-1 mb-1 hover:underline truncate">
+                <div className="text-center mt-1 mb-1 p-2 hover:underline truncate">
                   {product.name}
                 </div>
               </Link>
 
-              <div className="flex gap-2 justify-center">
+              <div className="flex gap-2 pb-2 justify-center">
                 {/*Base Price*/}
                 {product.variants?.length ? (
                   product.variants[0].discount > 0 ? (
@@ -141,9 +144,9 @@ const ProductList = ({ products }) => {
                   <FaEye aria-hidden="true" />
                 </button>
               </div>
-              <div className={'pt-5'}>
-                <BuyNowButton product={product} isAddToCart={false} />
-              </div>
+              {/*<div className={'pt-5'}>*/}
+              {/*  <BuyNowButton product={product} isAddToCart={false} />*/}
+              {/*</div>*/}
             </div>
           ))}
 

@@ -21,7 +21,7 @@ const ProductByFlag = () => {
 
   if (loading || flagsLoading || !hasFlags || !hasProducts)
     return (
-      <div className="xl:container xl:mx-auto p-4">
+      <div className="xl:container xl:mx-auto p-4 ">
         <div className="flex items-center gap-4 my-6">
           <div className="grow h-px bg-gray-300"></div>
           <div className="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
@@ -48,7 +48,7 @@ const ProductByFlag = () => {
     );
 
   return (
-    <div className=" p-4 justify-center md:justify-start">
+    <div className="bg-gray-400/10 p-4 justify-center md:justify-start ">
       {flags.map((flag) => {
         const products = homeProducts[flag.name] || [];
         if (products.length === 0) return null; // Skip if no products for this flag
