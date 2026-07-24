@@ -18,6 +18,7 @@ import {
   FaInfo,
   FaClipboardList,
   FaBlog,
+  FaStar,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import useAuthAdminStore from '../../store/AuthAdminStore.js';
@@ -159,6 +160,18 @@ export const MENU_CONFIG = [
         icon: FaList,
         path: '/admin/childcategory',
         permission: 'child_category',
+      },
+    ],
+  },
+  {
+    section: 'brands',
+    items: [
+      {
+        type: 'link',
+        label: 'Brands',
+        icon: FaStar,
+        path: '/admin/brands',
+        permission: 'brands',
       },
     ],
   },

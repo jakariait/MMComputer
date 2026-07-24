@@ -38,6 +38,7 @@ const PassWordResetController = require('../controllers/PassWordResetController'
 const pathaoController = require('../controllers/pathaoController');
 const pathaoConfigController = require('../controllers/pathaoConfigController');
 const productOptionController = require('../controllers/ProductOptionController');
+const brandController = require('../controllers/BrandController');
 
 const { handleCourierCheck, getDynamicCourierStatus } = require('../controllers/courierController');
 const cacheMiddleware = require('../middlewares/redisCacheMiddleware');
@@ -143,6 +144,10 @@ const upload = multer({ storage, fileFilter }).fields([
   },
   {
     name: 'image',
+    maxCount: 1,
+  },
+  {
+    name: 'logo',
     maxCount: 1,
   },
 ]);
@@ -815,5 +820,19 @@ router.delete(
   checkPermission('product_size'),
   productOptionController.deleteProductOption
 );
+
+// Brand Routes
+router.post('/brands', adminProtect, checkPermission('brands'), upload, brandController.createBrand);
+router.get('/brands', brandController.getBrands);
+router.get('/brands/slug/:slug', brandController.getBrandBySlug);
+router.get('/brands/:id', brandController.getBrandById);
+router.put(
+  '/brands/:id',
+  adminProtect,
+  checkPermission('brands'),
+  upload,
+  brandController.updateBrand
+);
+router.delete('/brands/:id', adminProtect, checkPermission('brands'), brandController.deleteBrand);
 
 module.exports = router;
