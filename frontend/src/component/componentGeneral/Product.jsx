@@ -9,6 +9,7 @@ import { useSearchParams } from 'react-router-dom';
 import useProductStore from '../../store/useProductStore.js';
 import useCategoryStore from '../../store/useCategoryStore.js';
 import useFlagStore from '../../store/useFlagStore.js';
+import useBrandStore from '../../store/useBrandStore.js';
 import { FormControl } from '@/components/ui/form-control';
 import { InputLabel } from '@/components/ui/input-label';
 import { MenuItem } from '@/components/ui/menu-item';
@@ -49,6 +50,7 @@ const Product = () => {
 
   const { categories } = useCategoryStore();
   const { flags, fetchFlags } = useFlagStore();
+  const { brands, fetchBrands } = useBrandStore();
 
   // Local state for drawer visibility
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
@@ -74,6 +76,7 @@ const Product = () => {
       childCategory: searchParams.get('childCategory') || '',
       stock: searchParams.get('stock') || '',
       flags: searchParams.get('flags') || '',
+      brand: searchParams.get('brand') || '',
       search: searchParams.get('search') || '',
     }),
     [searchParams],
@@ -193,13 +196,17 @@ const Product = () => {
     () => (flags || []).filter((flag) => flag.isActive),
     [flags],
   );
+  const memoizedBrands = useMemo(() => brands || [], [brands]);
 
-  // Fetch flags on mount if not already loaded
+  // Fetch flags and brands on mount if not already loaded
   useEffect(() => {
     if (!flags || flags.length === 0) {
       fetchFlags();
     }
-  }, [fetchFlags, flags]);
+    if (!brands || brands.length === 0) {
+      fetchBrands();
+    }
+  }, [fetchFlags, flags, fetchBrands, brands]);
 
   // Effect to fetch products whenever filters change
   useEffect(() => {
@@ -354,6 +361,25 @@ const Product = () => {
                 </FormControl>
 
                 <FormControl fullWidth>
+                  <InputLabel>Brand</InputLabel>
+                  <Select
+                    name="brand"
+                    value={currentFilters.brand}
+                    onChange={handleFilterChange}
+                    label="Brand"
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    {memoizedBrands.map((brand) => (
+                      <MenuItem key={brand._id} value={brand.name}>
+                        {brand.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <FormControl fullWidth>
                   <InputLabel>Sort</InputLabel>
                   <Select
                     name="sort"
@@ -452,7 +478,7 @@ const Product = () => {
           {/* Desktop Filters */}
           <div className="hidden md:block mb-6">
             <div className="grid grid-cols-12 gap-2">
-              <div className="col-span-4 md:col-span-3">
+              <div className="col-span-4 md:col-span-2">
                 <FormControl fullWidth>
                   <InputLabel>Category</InputLabel>
                   <Select
@@ -473,7 +499,7 @@ const Product = () => {
                 </FormControl>
               </div>
 
-              <div className="col-span-4 md:col-span-3">
+              <div className="col-span-4 md:col-span-2">
                 <FormControl fullWidth>
                   <InputLabel>Flag</InputLabel>
                   <Select
@@ -508,6 +534,27 @@ const Product = () => {
                     </MenuItem>
                     <MenuItem value="in">In Stock</MenuItem>
                     <MenuItem value="out">Out of Stock</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+
+              <div className="col-span-4 md:col-span-2">
+                <FormControl fullWidth>
+                  <InputLabel>Brand</InputLabel>
+                  <Select
+                    name="brand"
+                    value={currentFilters.brand}
+                    onChange={handleFilterChange}
+                    label="Brand"
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    {memoizedBrands.map((brand) => (
+                      <MenuItem key={brand._id} value={brand.name}>
+                        {brand.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </div>
@@ -557,6 +604,7 @@ const Product = () => {
           {(currentFilters.search ||
             currentFilters.category ||
             currentFilters.flags ||
+            currentFilters.brand ||
             currentFilters.stock !== '' ||
             currentFilters.sort) && (
             <div className="mb-4 flex flex-wrap gap-2">
@@ -581,6 +629,11 @@ const Product = () => {
               {currentFilters.flags && (
                 <div className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">
                   Flag: {currentFilters.flags}
+                </div>
+              )}
+              {currentFilters.brand && (
+                <div className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm">
+                  Brand: {currentFilters.brand}
                 </div>
               )}
               {currentFilters.stock && (

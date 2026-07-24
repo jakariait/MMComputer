@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import useProductStore from '../../store/useProductStore.js';
+import useBrandStore from '../../store/useBrandStore.js';
 import ImageComponent from '../componentGeneral/ImageComponent.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import RequirePermission from './RequirePermission.jsx';
@@ -64,12 +65,15 @@ const ViewAllProducts = () => {
     duplicateProduct,
   } = useProductStore();
 
+  const { brands, fetchBrands } = useBrandStore();
+
   const navigate = useNavigate();
 
   const [filters, setFilters] = useState({
     page: 1,
     limit: 10,
     search: '',
+    brand: '',
   });
 
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -78,18 +82,20 @@ const ViewAllProducts = () => {
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   useEffect(() => {
+    fetchBrands();
+  }, [fetchBrands]);
+
+  useEffect(() => {
     fetchProductsAdmin(filters);
-  }, [filters.page, filters.limit, fetchProductsAdmin]);
+  }, [filters, fetchProductsAdmin]);
 
   useEffect(() => {
     setFilteredProducts(
-      products
-        .filter((product) =>
-          product.name.toLowerCase().includes(filters.search.toLowerCase()),
-        )
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
+      [...products].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+      ),
     );
-  }, [filters.search, products]);
+  }, [products]);
 
   const handleFilterChange = useCallback((name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value, page: 1 }));
@@ -217,6 +223,22 @@ const ViewAllProducts = () => {
           />
         </div>
         <div className="flex items-center gap-2">
+          <Select
+            value={filters.brand}
+            onValueChange={(value) => handleFilterChange('brand', value)}
+          >
+            <SelectTrigger className="w-36 h-8 bg-background">
+              <SelectValue placeholder="All brands" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All brands</SelectItem>
+              {brands.map((brand) => (
+                <SelectItem key={brand._id} value={brand.name}>
+                  {brand.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <p className="text-sm text-muted-foreground">Show</p>
           <Select
             value={String(filters.limit)}
@@ -247,6 +269,7 @@ const ViewAllProducts = () => {
                 <TableHead>Image</TableHead>
                 <TableHead>Product</TableHead>
                 <TableHead>Category</TableHead>
+                <TableHead>Brand</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead className="hidden md:table-cell">Stock</TableHead>
                 <TableHead className="hidden md:table-cell">Flags</TableHead>
@@ -258,7 +281,7 @@ const ViewAllProducts = () => {
               {filteredProducts.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={10}
+                    colSpan={11}
                     className="text-center text-muted-foreground py-8"
                   >
                     No products found
@@ -289,6 +312,11 @@ const ViewAllProducts = () => {
                     <TableCell>
                       <Badge variant="outline">
                         {product.category?.name || '\u2014'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">
+                        {product.brand?.name || '\u2014'}
                       </Badge>
                     </TableCell>
                     <TableCell>

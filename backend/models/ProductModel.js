@@ -96,6 +96,7 @@ const productSchema = new mongoose.Schema(
     },
 
     flags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Flag' }],
+    brand: { type: mongoose.Schema.Types.ObjectId, ref: 'Brand' },
 
     metaTitle: { type: String, trim: true },
     metaDescription: { type: String, trim: true },

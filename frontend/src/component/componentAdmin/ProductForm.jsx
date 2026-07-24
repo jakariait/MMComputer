@@ -7,6 +7,7 @@ import useFlagStore from '../../store/useFlagStore.js';
 import useProductOptionStore from '../../store/useProductOptionStore.js';
 import AuthAdminStore from '../../store/AuthAdminStore.js';
 import useProductStore from '../../store/useProductStore.js';
+import useBrandStore from '../../store/useBrandStore.js';
 const Editor = lazy(() =>
   import('primereact/editor').then((module) => ({ default: module.Editor })),
 );
@@ -48,6 +49,8 @@ import {
   Image,
   Loader2,
   ChevronDown,
+  Check,
+  Search,
 } from 'lucide-react';
 import axios from 'axios';
 import { SectionHeader } from '#component/componentAdmin/SectionHeader.jsx';
@@ -59,8 +62,9 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const { categories } = useCategoryStore();
   const { subCategories } = useSubCategoryStore();
   const { childCategories } = useChildCategoryStore();
-  const { flags } = useFlagStore();
+  const { flags, fetchFlags } = useFlagStore();
   const { productOptions, fetchProductOptions } = useProductOptionStore();
+  const { brands, fetchBrands } = useBrandStore();
   const apiUrl = import.meta.env.VITE_API_URL;
   const { token } = AuthAdminStore();
   const navigate = useNavigate();
@@ -70,6 +74,9 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const [longDesc, setLongDesc] = useState('');
   const [productCode, setProductCode] = useState('');
   const [rewardPoints, setRewardPoints] = useState('');
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const [brandSearch, setBrandSearch] = useState('');
+  const [brandOpen, setBrandOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [filteredSubCategories, setFilteredSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
@@ -91,6 +98,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const [finalStock, setFinalStock] = useState('');
   const [purchasePrice, setPurchasePrice] = useState('');
   const [selectedFlags, setSelectedFlags] = useState([]);
+  const [flagSearch, setFlagSearch] = useState('');
   const [hasVariant, setHasVariant] = useState(true);
   const [variants, setVariants] = useState([
     {
@@ -122,7 +130,16 @@ const ProductForm = ({ isEdit: isEditMode }) => {
       fetchProductBySlug(slug);
     }
     fetchProductOptions();
-  }, [isEditMode, slug, fetchProductBySlug, fetchProductOptions]);
+    fetchBrands();
+    fetchFlags();
+  }, [
+    isEditMode,
+    slug,
+    fetchProductBySlug,
+    fetchProductOptions,
+    fetchBrands,
+    fetchFlags,
+  ]);
 
   useEffect(() => {
     if (isEditMode && product) {
@@ -141,6 +158,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
       setFinalStock(product.finalStock || '');
       setPurchasePrice(product.purchasePrice || '');
       setSelectedFlags(product.flags?.map((f) => f._id) || []);
+      setSelectedBrand(product.brand?._id || '');
       setIsActive(String(product.isActive));
       setFreeShipping(product.freeShipping || false);
 
@@ -478,6 +496,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     formData.append('isActive', isActive);
     formData.append('freeShipping', freeShipping);
 
+    if (selectedBrand) formData.append('brand', selectedBrand);
     if (selectedCategory) formData.append('category', selectedCategory);
     if (selectedSubCategory)
       formData.append('subCategory', selectedSubCategory);
@@ -565,6 +584,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
         setFinalDiscount('');
         setFinalStock('');
         setPurchasePrice('');
+        setSelectedBrand('');
         setSelectedCategory('');
         setSelectedSubCategory('');
         setSelectedChildCategory('');
@@ -987,45 +1007,160 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </div>
 
-            <Card className="shadow-md border-0">
-              <CardHeader>
-                <CardTitle>Flags</CardTitle>
-              </CardHeader>
-              <CardContent>
+        <Card className="shadow-md border-0">
+          <CardHeader>
+            <CardTitle>Brand & Flags</CardTitle>
+          </CardHeader>
+          <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Brand</Label>
+                <Popover open={brandOpen} onOpenChange={setBrandOpen}>
+                  <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className="flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs h-9 font-normal data-[placeholder]:text-muted-foreground"
+                        >
+                          <span className={!selectedBrand ? 'text-muted-foreground' : ''}>
+                            {selectedBrand
+                              ? brands.find((b) => b._id === selectedBrand)?.name
+                              : 'Select a brand'}
+                          </span>
+                          <ChevronDown className="size-4 opacity-50 shrink-0" />
+                        </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-2" align="start">
+                    <div className="space-y-2">
+                      <div className="relative">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Search brands..."
+                          value={brandSearch}
+                          onChange={(e) => setBrandSearch(e.target.value)}
+                          className="pl-8 h-9"
+                        />
+                      </div>
+                      <div className="max-h-48 overflow-y-auto space-y-1">
+                        {brands
+                          .filter(
+                            (b) =>
+                              !brandSearch ||
+                              b.name
+                                .toLowerCase()
+                                .includes(brandSearch.toLowerCase()),
+                          )
+                          .map((brand) => (
+                            <div
+                              key={brand._id}
+                              className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted cursor-pointer"
+                              onClick={() => {
+                                setSelectedBrand(brand._id);
+                                setBrandOpen(false);
+                                setBrandSearch('');
+                              }}
+                            >
+                              <div
+                                className={`size-4 rounded-sm border flex items-center justify-center ${
+                                  selectedBrand === brand._id
+                                    ? 'bg-primary border-primary text-primary-foreground'
+                                    : 'border-input'
+                                }`}
+                              >
+                                {selectedBrand === brand._id && (
+                                  <Check className="size-3" />
+                                )}
+                              </div>
+                              <Label className="cursor-pointer font-normal">
+                                {brand.name}
+                              </Label>
+                            </div>
+                          ))}
+                        {brands.filter(
+                          (b) =>
+                            !brandSearch ||
+                            b.name
+                              .toLowerCase()
+                              .includes(brandSearch.toLowerCase()),
+                        ).length === 0 && (
+                          <p className="text-sm text-muted-foreground px-2">
+                            No brands found
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="space-y-2">
+                <Label>Flags</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
                       role="combobox"
-                      className="w-full justify-between"
+                      className="flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs h-9 font-normal data-[placeholder]:text-muted-foreground"
                     >
-                      {selectedFlags.length > 0
-                        ? `${selectedFlags.length} flag(s) selected`
-                        : 'Select flags'}
-                      <ChevronDown className="size-4 opacity-50" />
+                      <span className={!selectedFlags.length ? 'text-muted-foreground' : ''}>
+                        {selectedFlags.length > 0
+                          ? `${selectedFlags.length} flag(s) selected`
+                          : 'Select flags'}
+                      </span>
+                      <ChevronDown className="size-4 opacity-50 shrink-0" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-2" align="start">
-                    <div className="space-y-1">
-                      {flags.map((flag) => (
-                        <div
-                          key={flag._id}
-                          className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted cursor-pointer"
-                          onClick={() => handleFlagToggle(flag._id)}
-                        >
-                          <Checkbox
-                            checked={selectedFlags.includes(flag._id)}
-                            onCheckedChange={() => handleFlagToggle(flag._id)}
-                          />
-                          <Label className="cursor-pointer">{flag.name}</Label>
-                        </div>
-                      ))}
-                      {flags.length === 0 && (
-                        <p className="text-sm text-muted-foreground px-2">
-                          No flags available
-                        </p>
-                      )}
+                    <div className="space-y-2">
+                      <div className="relative">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Search flags..."
+                          value={flagSearch}
+                          onChange={(e) => setFlagSearch(e.target.value)}
+                          className="pl-8 h-9"
+                        />
+                      </div>
+                      <div className="max-h-48 overflow-y-auto space-y-1">
+                        {flags
+                          .filter(
+                            (f) =>
+                              !flagSearch ||
+                              f.name
+                                .toLowerCase()
+                                .includes(flagSearch.toLowerCase()),
+                          )
+                          .map((flag) => (
+                            <div
+                              key={flag._id}
+                              className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted cursor-pointer"
+                              onClick={() => handleFlagToggle(flag._id)}
+                            >
+                              <Checkbox
+                                checked={selectedFlags.includes(flag._id)}
+                                onCheckedChange={() =>
+                                  handleFlagToggle(flag._id)
+                                }
+                              />
+                              <Label className="cursor-pointer">
+                                {flag.name}
+                              </Label>
+                            </div>
+                          ))}
+                        {flags.filter(
+                          (f) =>
+                            !flagSearch ||
+                            f.name
+                              .toLowerCase()
+                              .includes(flagSearch.toLowerCase()),
+                        ).length === 0 && (
+                          <p className="text-sm text-muted-foreground px-2">
+                            No flags found
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </PopoverContent>
                 </Popover>
@@ -1042,10 +1177,10 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     })}
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         <Card className="shadow-md border-0">
           <CardHeader>

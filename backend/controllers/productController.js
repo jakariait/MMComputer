@@ -166,6 +166,7 @@ const getAllProducts = async (req, res) => {
       stock,
       flags,
       search,
+      brand,
     } = req.query;
 
     const productsData = await productService.getAllProducts({
@@ -179,6 +180,7 @@ const getAllProducts = async (req, res) => {
       flags,
       isActive: true,
       search,
+      brand,
     });
 
     res.status(200).json({
@@ -262,6 +264,7 @@ const getAllProductsAdmin = async (req, res) => {
       stock,
       flags,
       search,
+      brand,
     } = req.query;
 
     // Call the service without the isActive filter (to get all products)
@@ -275,6 +278,7 @@ const getAllProductsAdmin = async (req, res) => {
       stock,
       flags,
       search,
+      brand,
       // Don't pass isActive filter here, meaning it will return all products
     });
 
