@@ -24,9 +24,9 @@ const createChildCategory = async (childCategoryData) => {
 };
 
 // Get all child categories
-const getAllChildCategories = async () => {
+const getAllChildCategories = async (filter = {}) => {
   try {
-    const childCategories = await ChildCategory.find()
+    const childCategories = await ChildCategory.find(filter)
       .populate('category', 'name')
       .populate('subCategory', 'name')
       .select('-createdAt -updatedAt')

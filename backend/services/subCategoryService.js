@@ -33,9 +33,9 @@ const createSubCategory = async (subCategoryData) => {
 };
 
 // Get all subcategories
-const getAllSubCategories = async () => {
+const getAllSubCategories = async (filter = {}) => {
   try {
-    return await SubCategory.find().populate('category', 'name').select('-createdAt -updatedAt');
+    return await SubCategory.find(filter).populate('category', 'name').select('-createdAt -updatedAt');
   } catch (error) {
     throw new Error('Error fetching subcategories: ' + error.message);
   }

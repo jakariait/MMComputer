@@ -1015,23 +1015,27 @@ const ProductForm = ({ isEdit: isEditMode }) => {
             <CardTitle>Brand & Flags</CardTitle>
           </CardHeader>
           <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Brand</Label>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Brand</Label>
                 <Popover open={brandOpen} onOpenChange={setBrandOpen}>
                   <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className="flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs h-9 font-normal data-[placeholder]:text-muted-foreground"
-                        >
-                          <span className={!selectedBrand ? 'text-muted-foreground' : ''}>
-                            {selectedBrand
-                              ? brands.find((b) => b._id === selectedBrand)?.name
-                              : 'Select a brand'}
-                          </span>
-                          <ChevronDown className="size-4 opacity-50 shrink-0" />
-                        </Button>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className="flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs h-9 font-normal data-[placeholder]:text-muted-foreground"
+                    >
+                      <span
+                        className={
+                          !selectedBrand ? 'text-muted-foreground' : ''
+                        }
+                      >
+                        {selectedBrand
+                          ? brands.find((b) => b._id === selectedBrand)?.name
+                          : 'Select a brand'}
+                      </span>
+                      <ChevronDown className="size-4 opacity-50 shrink-0" />
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-2" align="start">
                     <div className="space-y-2">
@@ -1104,7 +1108,11 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                       role="combobox"
                       className="flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs h-9 font-normal data-[placeholder]:text-muted-foreground"
                     >
-                      <span className={!selectedFlags.length ? 'text-muted-foreground' : ''}>
+                      <span
+                        className={
+                          !selectedFlags.length ? 'text-muted-foreground' : ''
+                        }
+                      >
                         {selectedFlags.length > 0
                           ? `${selectedFlags.length} flag(s) selected`
                           : 'Select flags'}

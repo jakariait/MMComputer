@@ -16,7 +16,12 @@ const createSubCategory = async (req, res) => {
 // Get all subcategories
 const getAllSubCategories = async (req, res) => {
   try {
-    const subCategories = await subCategoryService.getAllSubCategories();
+    const filter = {};
+    if (req.query.showInHomepage === 'true') {
+      filter.showInHomepage = true;
+      filter.isActive = true;
+    }
+    const subCategories = await subCategoryService.getAllSubCategories(filter);
     res.status(200).json({ message: 'Subcategories fetched successfully', subCategories });
   } catch (error) {
     res.status(400).json({ message: 'Error fetching subcategories: ' + error.message });

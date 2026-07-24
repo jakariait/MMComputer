@@ -5,8 +5,8 @@ const createCategory = async (categoryData) => {
   return await category.save();
 };
 
-const getCategories = async () => {
-  return await CategoryModel.find();
+const getCategories = async (filter = {}) => {
+  return await CategoryModel.find(filter);
 };
 
 const getCategoryById = async (id) => {

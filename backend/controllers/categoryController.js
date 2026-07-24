@@ -31,7 +31,9 @@ const createCategory = async (req, res) => {
 
 const getCategories = async (req, res) => {
   try {
-    const categories = await categoryService.getCategories();
+    const filter = {};
+    if (req.query.showInHomepage === 'true') filter.showInHomepage = true;
+    const categories = await categoryService.getCategories(filter);
     if (categories.length === 0) {
       return res.status(200).json({ message: 'No categories found', categories });
     }

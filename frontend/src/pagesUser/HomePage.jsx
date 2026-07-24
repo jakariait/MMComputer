@@ -7,6 +7,7 @@ import Feature from '../component/componentGeneral/Feature.jsx';
 import ProductByFlag from '../component/componentGeneral/ProductByFlag.jsx';
 import Headers from '@/component/componentGeneral/Headers.jsx';
 import MarqueeModern from '@/component/componentGeneral/MarqueeModern.jsx';
+import FeatureCategory from '@/component/componentGeneral/FeatureCategory.jsx';
 
 const HomePage = () => {
   const { CarouselStoreListRequest } = CarouselStore();
@@ -25,6 +26,7 @@ const HomePage = () => {
       <ProductCarousel />
       <MarqueeModern />
       <Feature />
+      <FeatureCategory />
       <ProductByFlag />
     </>
   );

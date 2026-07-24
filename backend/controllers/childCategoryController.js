@@ -31,15 +31,15 @@ const createChildCategory = async (req, res) => {
 // Get all child categories
 const getAllChildCategories = async (req, res) => {
   try {
-    const childCategories = await childCategoryService.getAllChildCategories();
-    if (!childCategories || childCategories.length === 0) {
-      return res.status(404).json({
-        message: 'No child categories found',
-      });
+    const filter = {};
+    if (req.query.showInHomepage === 'true') {
+      filter.showInHomepage = true;
+      filter.isActive = true;
     }
+    const childCategories = await childCategoryService.getAllChildCategories(filter);
     res.status(200).json({
       message: 'Child categories fetched successfully',
-      childCategories,
+      childCategories: childCategories || [],
     });
   } catch (error) {
     res.status(500).json({
