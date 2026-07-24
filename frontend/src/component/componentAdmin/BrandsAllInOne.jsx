@@ -23,6 +23,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { SectionHeader } from '@/component/componentAdmin/SectionHeader.jsx';
+import Skeleton from 'react-loading-skeleton';
 
 const BrandsAllInOne = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
