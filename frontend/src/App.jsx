@@ -26,6 +26,7 @@ import AdminLoading from './component/skeleton/AdminLoading.jsx';
 
 import UserLayout from './component/componentGeneral/UserLayout.jsx';
 import BrandsPage from '@/pagesAdmin/BrandsPage.jsx';
+import CompareProductPage from '@/pagesUser/CompareProductPage.jsx';
 const LayoutAdmin = lazy(
   () => import('./component/componentAdmin/LayoutAdmin.jsx'),
 );
@@ -218,6 +219,7 @@ function App() {
       <MetaProvider />
       <ScrollToTop />
       <ScrollToTopButton />
+
       <Routes>
         <Route element={<PublicLayoutWrapper />}>
           <Route element={<PublicSuspenseWrapper />}>
@@ -241,6 +243,7 @@ function App() {
             <Route path="/blogs/:slug" element={<BlogDetailsPage />} />
             <Route path="/forgot-password" element={<ForgetPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/product-compare" element={<CompareProductPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Route>
