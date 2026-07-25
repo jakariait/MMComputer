@@ -184,7 +184,7 @@ export const MENU_CONFIG = [
         icon: FaTags,
         path: '/admin/manage-products',
         permission: 'view_products',
-        showCount: 'totalProductsAdmin',
+        showCount: '',
       },
     ],
   },

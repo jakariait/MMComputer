@@ -169,6 +169,7 @@ function stripHtml(str) {
   if (!str) return '';
   return str
     .replace(/<[^>]*>/g, '')
+    .replace(/\\r\\n|[\r\n]+/g, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
