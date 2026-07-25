@@ -544,6 +544,11 @@ const updateProduct = async (productId, updatedData, files) => {
       });
     }
 
+    // Parse keyFeatures from JSON string if needed
+    if (updatedData.keyFeatures && typeof updatedData.keyFeatures === 'string') {
+      updatedData.keyFeatures = JSON.parse(updatedData.keyFeatures);
+    }
+
     // Handle other updates and save...
     Object.assign(product, updatedData);
 
@@ -668,7 +673,7 @@ const getProductDetailsService = async ({ productId, variantId }) => {
     data: {
       productId: product._id,
       name: product.name,
-      shortDesc: product.shortDesc,
+      keyFeatures: product.keyFeatures,
       longDesc: product.longDesc,
       thumbnailImage: product.thumbnailImage,
       images: product.images,

@@ -8,6 +8,10 @@ const createProduct = async (req, res) => {
   try {
     const productData = { ...req.body };
 
+    if (productData.keyFeatures && typeof productData.keyFeatures === 'string') {
+      productData.keyFeatures = JSON.parse(productData.keyFeatures);
+    }
+
     // Check if thumbnailImage is uploaded
     if (req.files && req.files.thumbnailImage) {
       // Store only the image name (without the full path)

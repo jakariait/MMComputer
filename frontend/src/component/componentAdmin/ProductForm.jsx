@@ -70,7 +70,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
-  const [shortDesc, setShortDesc] = useState('');
+  const [keyFeatures, setKeyFeatures] = useState([{ key: '', value: '' }]);
   const [longDesc, setLongDesc] = useState('');
   const [productCode, setProductCode] = useState('');
   const [rewardPoints, setRewardPoints] = useState('');
@@ -144,7 +144,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   useEffect(() => {
     if (isEditMode && product) {
       setName(product.name || '');
-      setShortDesc(product.shortDesc || '');
+      setKeyFeatures(product.keyFeatures?.length ? product.keyFeatures : [{ key: '', value: '' }]);
       setLongDesc(product.longDesc || '');
       setProductCode(product.productCode || '');
       setRewardPoints(product.rewardPoints || '');
@@ -456,6 +456,20 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     );
   };
 
+  const handleAddKeyFeature = () => {
+    setKeyFeatures([...keyFeatures, { key: '', value: '' }]);
+  };
+
+  const handleRemoveKeyFeature = (index) => {
+    setKeyFeatures(keyFeatures.filter((_, i) => i !== index));
+  };
+
+  const handleKeyFeatureChange = (index, field, value) => {
+    const updated = [...keyFeatures];
+    updated[index][field] = value;
+    setKeyFeatures(updated);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
@@ -482,7 +496,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     setSubmitting(true);
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('shortDesc', shortDesc);
+    formData.append('keyFeatures', JSON.stringify(keyFeatures.filter(kf => kf.key.trim() && kf.value.trim())));
     formData.append('longDesc', longDesc);
     formData.append('productCode', productCode);
     formData.append('rewardPoints', rewardPoints);
@@ -573,7 +587,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
         });
         toast.success('Product created successfully!');
         setName('');
-        setShortDesc('');
+        setKeyFeatures([{ key: '', value: '' }]);
         setLongDesc('');
         setProductCode('');
         setRewardPoints('');
@@ -687,12 +701,43 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Short Description</Label>
-                  <Editor
-                    value={shortDesc}
-                    onTextChange={(e) => setShortDesc(e.htmlValue)}
-                    style={{ height: '260px' }}
-                  />
+                  <Label>Key Features</Label>
+                  <div className="space-y-2">
+                    {keyFeatures.map((feature, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <Input
+                          placeholder="Key"
+                          value={feature.key}
+                          onChange={(e) => handleKeyFeatureChange(index, 'key', e.target.value)}
+                          className="flex-1"
+                        />
+                        <Input
+                          placeholder="Value"
+                          value={feature.value}
+                          onChange={(e) => handleKeyFeatureChange(index, 'value', e.target.value)}
+                          className="flex-1"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-xs"
+                          onClick={() => handleRemoveKeyFeature(index)}
+                          className="text-destructive hover:text-destructive shrink-0"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleAddKeyFeature}
+                    >
+                      <Plus className="size-3 mr-1" />
+                      Add Feature
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="space-y-2">

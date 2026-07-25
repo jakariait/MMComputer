@@ -753,13 +753,38 @@ const ProductAddToCart = ({ product }) => {
             )}
           </div>
 
-          {product.shortDesc && (
-            <div
-              className="rendered-html"
-              dangerouslySetInnerHTML={{
-                __html: cleanHtml(product.shortDesc),
-              }}
-            />
+          {/* Key Features */}
+          {product.keyFeatures?.length > 0 && (
+            <div className="space-y-3 pt-2">
+              <h3 className="text-lg font-semibold tracking-tight primaryTextColor text-center">
+                Key Features
+              </h3>
+              <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800">
+                {product.keyFeatures.map((feature, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center justify-between gap-4 px-4 py-3 text-sm
+                      ${
+                        index % 2 === 0
+                          ? 'bg-white dark:bg-gray-950'
+                          : 'bg-gray-50 dark:bg-gray-900/50'
+                      }
+                      ${
+                        index !== product.keyFeatures.length - 1
+                          ? 'border-b border-gray-100 dark:border-gray-800'
+                          : ''
+                      }`}
+                  >
+                    <span className="text-gray-500 dark:text-gray-400 font-medium">
+                      {feature.key}
+                    </span>
+                    <span className="text-gray-900 dark:text-gray-100 font-semibold text-right">
+                      {feature.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
 
           {!selectedVariant && product.variants?.length > 0 && (
@@ -791,31 +816,30 @@ const ProductAddToCart = ({ product }) => {
             </div>
           ))}
 
-          <div
-            className={
-              'flex gap-2  md:gap-6 xl:gap-15 items-center justify-baseline mt-2'
-            }
-          >
-            <div className={'rounded flex items-center justify-between'}>
+          <div className="flex flex-wrap gap-3 md:gap-4 items-center mt-3">
+            {/* Quantity Stepper */}
+            <div className="flex items-center rounded-lg border border-gray-300 dark:border-gray-700 overflow-hidden shrink-0">
               <button
-                className={
-                  'primaryBgColor accentTextColor px-2 py-2 md:py-3 rounded-l cursor-pointer'
-                }
+                className="flex items-center justify-center w-9 h-9 md:w-10 md:h-10
+                 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800
+                 active:scale-95 transition-all duration-150 cursor-pointer
+                 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 onClick={() => handleQuantityChange('decrease')}
                 disabled={
                   product.variants?.length > 0 &&
                   (!selectedVariant || selectedVariant.stock === 0)
                 }
               >
-                <FiMinus />
+                <FiMinus size={14} />
               </button>
-              <span className={'px-3 py-1 md:py-2 bg-gray-200'}>
+              <span className="w-10 md:w-12 text-center text-sm font-semibold text-gray-900 dark:text-gray-100 select-none">
                 {quantity}
               </span>
               <button
-                className={
-                  'primaryBgColor accentTextColor px-2 py-2 md:py-3 rounded-r cursor-pointer'
-                }
+                className="flex items-center justify-center w-9 h-9 md:w-10 md:h-10
+                 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800
+                 active:scale-95 transition-all duration-150 cursor-pointer
+                 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 onClick={() => handleQuantityChange('increase')}
                 disabled={
                   (product.variants?.length > 0 && !selectedVariant) ||
@@ -823,25 +847,40 @@ const ProductAddToCart = ({ product }) => {
                   selectedVariant?.stock === 0
                 }
               >
-                <FaPlus />
+                <FaPlus size={12} />
               </button>
             </div>
+
+            {/* Add to Cart / Stock Out */}
             {selectedVariant?.stock === 0 ? (
-              <button className="text-red-600 w-44 font-semibold" disabled>
+              <button
+                className="flex-1 min-w-[120px] max-w-[140px] h-9 md:h-10 rounded-lg
+                 border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30
+                 text-red-600 dark:text-red-400 text-sm font-semibold cursor-not-allowed"
+                disabled
+              >
                 Stock Out
               </button>
             ) : (
               <button
-                className="primaryBgColor accentTextColor px-2 py-1 md:py-2 rounded w-44 cursor-pointer"
+                className="flex-1 min-w-[120px] max-w-[180px] h-9 md:h-10 rounded-lg
+                 border-2 primaryBorderColor primaryTextColor bg-transparent
+                 text-sm font-semibold tracking-wide
+                 hover:primaryBgColor hover:secondaryTextColor
+                 active:scale-[0.98] transition-all duration-150 cursor-pointer"
                 onClick={handleAddToCart}
               >
                 ADD TO CART
               </button>
             )}
 
+            {/* Buy Now */}
             {selectedVariant?.stock !== 0 && (
               <button
-                className="primaryBgColor w-44 accentTextColor px-2 py-1 md:py-2 rounded cursor-pointer"
+                className="flex-1 min-w-[120px] max-w-[180px] h-9 md:h-10 rounded-lg
+                 primaryBgColor accentTextColor text-sm font-semibold tracking-wide
+                 shadow-sm hover:shadow-md hover:brightness-110
+                 active:scale-[0.98] transition-all duration-150 cursor-pointer"
                 onClick={() => {
                   if (product.variants?.length > 0 && !selectedVariant) {
                     const requiredOptions = options.map((o) => o.name);
