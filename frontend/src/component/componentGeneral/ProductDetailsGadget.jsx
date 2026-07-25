@@ -164,6 +164,20 @@ const ProductDetailsGadget = () => {
     localStorage.setItem('recentlyViewed', JSON.stringify(viewed));
   }, [product]);
 
+  const [activeTab, setActiveTab] = useState('spec');
+
+  const tabs = [
+    { id: 'spec', label: 'Specification', ref: specRef },
+    { id: 'desc', label: 'Description', ref: descRef },
+    { id: 'question', label: 'Question', ref: questionRef },
+    { id: 'review', label: 'Review', ref: reviewRef },
+  ];
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab.id);
+    handleScroll(tab.ref);
+  };
+
   // If product is loading, show a loading screen
   if (loading || product?.slug !== slug) {
     return (
@@ -274,33 +288,24 @@ const ProductDetailsGadget = () => {
             </div>
           )}
 
-          <div className="grid-cols-2 md:grid-cols-4 grid gap-4 my-4 bg-gray-100 px-2 py-2">
-            <button
-              onClick={() => handleScroll(specRef)}
-              className="px-4 py-2 secondaryBgColor text-white rounded-md  transition text-lg font-semibold cursor-pointer"
-            >
-              Specification
-            </button>
-            <button
-              onClick={() => handleScroll(descRef)}
-              className="px-4 py-2  rounded-md bg-white secondaryTextColor transition text-lg font-semibold cursor-pointer"
-            >
-              Description
-            </button>
-
-            <button
-              onClick={() => handleScroll(questionRef)}
-              className="px-4 py-2  rounded-md bg-white secondaryTextColor transition text-lg font-semibold cursor-pointer"
-            >
-              Question
-            </button>
-
-            <button
-              onClick={() => handleScroll(reviewRef)}
-              className="px-4 py-2  rounded-md bg-white secondaryTextColor transition text-lg font-semibold cursor-pointer"
-            >
-              Review
-            </button>
+          <div className="sticky top-0 z-20 bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800 shadow mt-10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-2 px-2 py-2 max-w-6xl mx-auto">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabClick(tab)}
+                  className={`relative px-4 py-2.5 rounded-lg text-sm md:text-base font-semibold 
+                      transition-all duration-200 cursor-pointer
+                      ${
+                        activeTab === tab.id
+                          ? 'secondaryBgColor text-white shadow-sm'
+                          : 'bg-transparent secondaryTextColor hover:bg-gray-100 dark:hover:bg-gray-800'
+                      }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className={'md:grid gap-4 grid-cols-5 '}>
@@ -326,6 +331,7 @@ const ProductDetailsGadget = () => {
                   </div>
                 )}
               </div>
+
               {/*Product Question and Answer*/}
               <div ref={questionRef}>
                 <ProductQuestionsSection productId={product.id} />

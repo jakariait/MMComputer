@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useCategoryStore from '../../store/useCategoryStore.js';
 import useSubCategoryStore from '../../store/useSubCategoryStore.js';
@@ -20,6 +20,7 @@ const MenuBar = () => {
   const { childCategories } = useChildCategoryStore();
   const navigate = useNavigate();
   const location = useLocation();
+  const [activeMenu, setActiveMenu] = useState('');
 
   const buildQueryString = useCallback((params) => {
     const urlParams = new URLSearchParams();
@@ -60,10 +61,16 @@ const MenuBar = () => {
   return (
     <div className="shadow">
       <nav>
-        <Menubar className="flex-wrap justify-center border-0 bg-transparent shadow-none h-auto gap-0">
+        <Menubar
+          value={activeMenu}
+          onValueChange={setActiveMenu}
+          className="flex-wrap justify-center border-0 bg-transparent shadow-none h-auto gap-0"
+        >
           {categories?.length ? (
             categories.map((category) => {
-              const categoryQuery = buildQueryString({ category: category.name });
+              const categoryQuery = buildQueryString({
+                category: category.name,
+              });
               const categoryPath = `/shop?${categoryQuery}`;
               const hasSubCategories =
                 Array.isArray(subCategories) &&
@@ -86,8 +93,12 @@ const MenuBar = () => {
               }
 
               return (
-                <MenubarMenu key={category._id}>
-                  <MenubarTrigger className="uppercase text-sm font-semibold tracking-wide px-3 py-2 data-[state=open]:bg-transparent focus:bg-transparent cursor-pointer">
+                <MenubarMenu key={category._id} value={category._id}>
+                  <MenubarTrigger
+                    className="uppercase text-sm font-semibold tracking-wide px-3 py-2 data-[state=open]:bg-transparent focus:bg-transparent cursor-pointer"
+                    onPointerEnter={() => setActiveMenu(category._id)}
+                    onClick={() => handleNavigate(categoryPath)}
+                  >
                     {category.name}
                   </MenubarTrigger>
                   <MenubarContent>
@@ -123,9 +134,7 @@ const SubMenu = memo(
     handleNavigate,
   }) => {
     const filteredSubCategories = Array.isArray(subCategories)
-      ? subCategories.filter(
-          (subCat) => subCat?.category?._id === categoryId,
-        )
+      ? subCategories.filter((subCat) => subCat?.category?._id === categoryId)
       : [];
 
     return (
@@ -160,7 +169,10 @@ const SubMenu = memo(
 
             return (
               <MenubarSub key={subCategory._id}>
-                <MenubarSubTrigger>
+                <MenubarSubTrigger
+                  className="cursor-pointer"
+                  onClick={() => handleNavigate(subCategoryPath)}
+                >
                   {subCategory.name}
                 </MenubarSubTrigger>
                 <MenubarSubContent>
@@ -176,10 +188,7 @@ const SubMenu = memo(
           })}
 
         {items?.map((item, index) => (
-          <MenubarItem
-            key={index}
-            onSelect={() => handleNavigate(item.path)}
-          >
+          <MenubarItem key={index} onSelect={() => handleNavigate(item.path)}>
             {item.name}
           </MenubarItem>
         ))}
@@ -189,12 +198,7 @@ const SubMenu = memo(
 );
 
 const ChildSubMenu = memo(
-  ({
-    childCategories,
-    subCategoryId,
-    buildQueryString,
-    handleNavigate,
-  }) => {
+  ({ childCategories, subCategoryId, buildQueryString, handleNavigate }) => {
     const filteredChildCategories = Array.isArray(childCategories)
       ? childCategories.filter(
           (childCategory) =>
