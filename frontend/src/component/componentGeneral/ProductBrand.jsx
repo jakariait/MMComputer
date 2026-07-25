@@ -18,7 +18,7 @@ const ProductBrand = ({ product }) => {
 
           {/* Brand Name */}
           <Link
-            to={`/shop?page=1&limit=20&brand=${product.brand.slug}`}
+            to={`/shop?page=1&limit=20&brand=${product.brand.name}`}
             key={product.brand._id}
           >
             <h2 className="text-lg font-semibold text-gray-800">

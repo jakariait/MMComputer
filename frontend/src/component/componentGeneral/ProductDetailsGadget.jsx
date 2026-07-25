@@ -35,10 +35,7 @@ const ProductDetailsGadget = () => {
 
   const handleScroll = (ref) => {
     if (ref.current) {
-      const yOffset = -140; // Offset for fixed header
-      const y =
-        ref.current.getBoundingClientRect().top + window.scrollY + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
@@ -308,16 +305,17 @@ const ProductDetailsGadget = () => {
 
           <div className={'md:grid gap-4 grid-cols-5 '}>
             <div className={'col-span-3 flex flex-col gap-4'}>
-              {/*Specification*/}
-              <div ref={specRef}>
+              <div ref={specRef} className="scroll-mt-[140px]">
                 <Specification product={product} />
               </div>
 
-              <div ref={descRef} className={' shadow-sm rounded-lg '}>
-                {/*product Description*/}
-                {product.longDesc && (
+              {product.longDesc && (
+                <div
+                  ref={descRef}
+                  className={'shadow-sm rounded-lg scroll-mt-[140px]'}
+                >
                   <div className={'p-3'}>
-                    <span className={'text-2xl  primaryTextColor'}>
+                    <span className={'text-2xl primaryTextColor'}>
                       Description
                     </span>
                     <div
@@ -327,21 +325,19 @@ const ProductDetailsGadget = () => {
                       }}
                     />
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
-              {/*Product Question and Answer*/}
-              <div ref={questionRef}>
+              <div ref={questionRef} className="scroll-mt-[140px]">
                 <ProductQuestionsSection productId={product.id} />
               </div>
 
-              {/*Product Review*/}
-              <div ref={reviewRef}>
+              <div ref={reviewRef} className="scroll-mt-[140px]">
                 <ProductReviewSections productId={product.id} />
               </div>
             </div>
 
-            <div className={'col-span-2 '}>
+            <div className={'col-span-2'}>
               <SimilarProducts
                 categoryId={product?.category?._id}
                 productId={product?._id}
