@@ -549,6 +549,11 @@ const updateProduct = async (productId, updatedData, files) => {
       updatedData.keyFeatures = JSON.parse(updatedData.keyFeatures);
     }
 
+    // Parse specifications from JSON string if needed
+    if (updatedData.specifications && typeof updatedData.specifications === 'string') {
+      updatedData.specifications = JSON.parse(updatedData.specifications);
+    }
+
     // Handle other updates and save...
     Object.assign(product, updatedData);
 

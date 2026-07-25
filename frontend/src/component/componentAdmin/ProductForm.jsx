@@ -85,6 +85,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const [videoUrl, setVideoUrl] = useState('');
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
+  const [specifications, setSpecifications] = useState([{ title: '', labels: [{ label: '', value: '' }] }]);
   const [metaKeywords, setMetaKeywords] = useState([]);
   const [keywordInput, setKeywordInput] = useState('');
   const [searchTags, setSearchTags] = useState([]);
@@ -145,6 +146,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     if (isEditMode && product) {
       setName(product.name || '');
       setKeyFeatures(product.keyFeatures?.length ? product.keyFeatures : [{ key: '', value: '' }]);
+      setSpecifications(product.specifications?.length ? product.specifications : [{ title: '', labels: [{ label: '', value: '' }] }]);
       setLongDesc(product.longDesc || '');
       setProductCode(product.productCode || '');
       setRewardPoints(product.rewardPoints || '');
@@ -470,6 +472,38 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     setKeyFeatures(updated);
   };
 
+  const handleAddSpecification = () => {
+    setSpecifications([...specifications, { title: '', labels: [{ label: '', value: '' }] }]);
+  };
+
+  const handleRemoveSpecification = (index) => {
+    setSpecifications(specifications.filter((_, i) => i !== index));
+  };
+
+  const handleSpecificationTitleChange = (index, value) => {
+    const updated = [...specifications];
+    updated[index].title = value;
+    setSpecifications(updated);
+  };
+
+  const handleAddSpecLabel = (specIndex) => {
+    const updated = [...specifications];
+    updated[specIndex].labels.push({ label: '', value: '' });
+    setSpecifications(updated);
+  };
+
+  const handleRemoveSpecLabel = (specIndex, labelIndex) => {
+    const updated = [...specifications];
+    updated[specIndex].labels.splice(labelIndex, 1);
+    setSpecifications(updated);
+  };
+
+  const handleSpecLabelChange = (specIndex, labelIndex, field, value) => {
+    const updated = [...specifications];
+    updated[specIndex].labels[labelIndex][field] = value;
+    setSpecifications(updated);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
@@ -497,6 +531,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     const formData = new FormData();
     formData.append('name', name);
     formData.append('keyFeatures', JSON.stringify(keyFeatures.filter(kf => kf.key.trim() && kf.value.trim())));
+    formData.append('specifications', JSON.stringify(specifications.filter(s => s.title.trim())));
     formData.append('longDesc', longDesc);
     formData.append('productCode', productCode);
     formData.append('rewardPoints', rewardPoints);
@@ -588,6 +623,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
         toast.success('Product created successfully!');
         setName('');
         setKeyFeatures([{ key: '', value: '' }]);
+        setSpecifications([{ title: '', labels: [{ label: '', value: '' }] }]);
         setLongDesc('');
         setProductCode('');
         setRewardPoints('');
@@ -748,6 +784,80 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     style={{ height: '260px' }}
                   />
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-md border-0">
+              <CardHeader>
+                <CardTitle>Specifications</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {specifications.map((spec, specIndex) => (
+                  <div key={specIndex} className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Input
+                        placeholder="Specification Title"
+                        value={spec.title}
+                        onChange={(e) => handleSpecificationTitleChange(specIndex, e.target.value)}
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-xs"
+                        onClick={() => handleRemoveSpecification(specIndex)}
+                        className="text-destructive hover:text-destructive shrink-0"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </Button>
+                    </div>
+                    <div className="space-y-2 pl-6 border-l-2 border-muted">
+                      {spec.labels.map((labelItem, labelIndex) => (
+                        <div key={labelIndex} className="flex items-center gap-2">
+                          <Input
+                            placeholder="Label"
+                            value={labelItem.label}
+                            onChange={(e) => handleSpecLabelChange(specIndex, labelIndex, 'label', e.target.value)}
+                            className="flex-1"
+                          />
+                          <Input
+                            placeholder="Value"
+                            value={labelItem.value}
+                            onChange={(e) => handleSpecLabelChange(specIndex, labelIndex, 'value', e.target.value)}
+                            className="flex-1"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-xs"
+                            onClick={() => handleRemoveSpecLabel(specIndex, labelIndex)}
+                            className="text-destructive hover:text-destructive shrink-0"
+                          >
+                            <Trash2 className="size-3.5" />
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleAddSpecLabel(specIndex)}
+                      >
+                        <Plus className="size-3 mr-1" />
+                        Add Label
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleAddSpecification}
+                >
+                  <Plus className="size-3 mr-1" />
+                  Add Specification
+                </Button>
               </CardContent>
             </Card>
 

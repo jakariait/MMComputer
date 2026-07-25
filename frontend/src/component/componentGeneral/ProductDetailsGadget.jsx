@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link as RouterLink, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import useProductStore from '../../store/useProductStore.js';
 import GeneralInfoStore from '../../store/GeneralInfoStore.js';
 import Skeleton from 'react-loading-skeleton';
@@ -15,8 +15,6 @@ import {
   WhatsappIcon,
 } from 'react-share';
 import { Helmet } from 'react-helmet';
-import { Breadcrumbs } from '@/components/ui/breadcrumbs.jsx';
-import { Typography } from '@/components/ui/typography.jsx';
 
 import ProductGallery from './ProductGallery.jsx';
 import ProductAddToCart from './ProductAddToCart.jsx';
@@ -319,7 +317,7 @@ const ProductDetailsGadget = () => {
                 {/*product Description*/}
                 {product.longDesc && (
                   <div className={'p-3'}>
-                    <span className={'text-2xl  secondaryTextColor'}>
+                    <span className={'text-2xl  primaryTextColor'}>
                       Description
                     </span>
                     <div

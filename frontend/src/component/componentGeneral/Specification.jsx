@@ -1,58 +1,74 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 const Specification = ({ product, comparePage }) => {
-  const { specification } = product;
+  const { specifications } = product;
+  const [collapsed, setCollapsed] = useState({});
 
-  if (!specification || specification.length === 0) {
+  if (!specifications || specifications.length === 0) {
     return null;
   }
 
-  return (
-    <div className={`rounded-lg ${comparePage ? '' : 'shadow-sm p-3 '}`}>
-      <h2 className={'text-2xl mb-4 secondaryTextColor '}>Specification</h2>
+  const toggleGroup = (index) => {
+    setCollapsed((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
 
-      {specification.map((specGroup, index) => (
-        <div key={index} className="mb-6">
-          <h3 className="mb-2 text-lg font-bold bg-gray-100 px-3 py-2 secondaryTextColor">
-            {specGroup.title}
-          </h3>
-          <div className="border border-gray-200 rounded">
-            <div className="divide-y divide-gray-200">
-              {specGroup.specs.map((spec, specIndex) => {
-                const isEven = specIndex % 2 === 0;
-                if (comparePage) {
-                  return (
-                    <div
-                      key={specIndex}
-                      className={`p-4 ${
-                        isEven ? 'bg-gray-50' : 'bg-white'
-                      } flex flex-col`}
-                    >
-                      <div className="font-bold text-gray-700 mb-1">
-                        {spec.label}:
-                      </div>
-                      <div className="text-gray-900">{spec.value}</div>
-                    </div>
-                  );
-                }
-                return (
-                  <div
-                    key={specIndex}
-                    className={`p-4 ${
-                      isEven ? 'bg-gray-50' : 'bg-white'
-                    } md:flex`}
-                  >
-                    <div className="font-bold text-gray-700 md:w-1/3 mb-1 md:mb-0">
-                      {spec.label}
-                    </div>
-                    <div className="text-gray-900">{spec.value}</div>
-                  </div>
-                );
-              })}
+  return (
+    <div className={`rounded-lg ${comparePage ? '' : 'bg-gray-50 mt-5 p-3'}`}>
+      <h2 className="text-2xl mb-4 font-semibold primaryTextColor">
+        Specifications
+      </h2>
+
+      <div className="border border-gray-100 rounded-lg overflow-hidden divide-y divide-gray-200">
+        {specifications.map((specGroup, index) => {
+          const isCollapsed = !!collapsed[index];
+          return (
+            <div key={index}>
+              <button
+                type="button"
+                onClick={() => toggleGroup(index)}
+                className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+              >
+                <span className="text-[13px] font-semibold uppercase tracking-wide secondaryTextColor">
+                  {specGroup.title}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 text-gray-400 transition-transform ${
+                    isCollapsed ? '-rotate-90' : ''
+                  }`}
+                />
+              </button>
+
+              {!isCollapsed && (
+                <table className="w-full text-sm">
+                  <tbody>
+                    {specGroup.labels.map((spec, specIndex) => {
+                      const isEven = specIndex % 2 === 0;
+                      return (
+                        <tr
+                          key={specIndex}
+                          className={isEven ? 'bg-white' : 'bg-gray-50/60'}
+                        >
+                          <td
+                            className={`align-top py-3 pl-4 pr-3 text-gray-500 font-medium whitespace-nowrap ${
+                              comparePage ? 'w-auto' : 'w-2/5 md:w-1/3'
+                            }`}
+                          >
+                            {spec.label}
+                          </td>
+                          <td className="align-top py-3 pr-4 text-gray-900 font-medium">
+                            {spec.value}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
             </div>
-          </div>
-        </div>
-      ))}
+          );
+        })}
+      </div>
     </div>
   );
 };

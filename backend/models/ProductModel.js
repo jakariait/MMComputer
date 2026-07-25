@@ -74,6 +74,17 @@ const productSchema = new mongoose.Schema(
         value: { type: String, trim: true },
       },
     ],
+    specifications: [
+      {
+        title: { type: String, trim: true },
+        labels: [
+          {
+            label: { type: String, trim: true },
+            value: { type: String, trim: true },
+          },
+        ],
+      },
+    ],
     longDesc: { type: String, trim: true },
     productCode: { type: String, trim: true },
 

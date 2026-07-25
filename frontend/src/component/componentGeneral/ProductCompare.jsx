@@ -23,7 +23,7 @@ const ProductCompare = () => {
 
   if (compareList.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 bg-gray-50">
+      <div className="flex flex-col items-center justify-center h-200 bg-gray-50">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">
           No products to compare
         </h2>
@@ -35,7 +35,7 @@ const ProductCompare = () => {
   }
 
   return (
-    <div className="xl:container xl:mx-auto shadow p-4 rounded-lg mt-6 mb-6">
+    <div className="xl:container xl:mx-auto  shadow p-4 rounded-lg mt-6 mb-6">
       <div className="flex flex-col md:flex-row gap-3 justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Compare Product</h1>

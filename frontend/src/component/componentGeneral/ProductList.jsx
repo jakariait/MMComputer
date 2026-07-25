@@ -71,10 +71,11 @@ const ProductList = ({ products, productPage }) => {
                 </div>
                 <div>
                   <Link to={`/product/${product.slug}`}>
-                    <div className=" font-semibold hover:underline mb-2">
+                    <div className=" font-semibold hover:underline mb-2 ">
                       {product.name}
                     </div>
                   </Link>
+
                   <div className="flex gap-2 items-center">
                     {/*Base Price*/}
                     {product.variants?.length ? (

@@ -59,7 +59,7 @@ const MenuBar = () => {
   );
 
   return (
-    <div className="shadow">
+    <div className="bg-gray-100">
       <nav>
         <Menubar
           value={activeMenu}
@@ -160,6 +160,7 @@ const SubMenu = memo(
               return (
                 <MenubarItem
                   key={subCategory._id}
+                  className="cursor-pointer"
                   onSelect={() => handleNavigate(subCategoryPath)}
                 >
                   {subCategory.name}
@@ -188,7 +189,11 @@ const SubMenu = memo(
           })}
 
         {items?.map((item, index) => (
-          <MenubarItem key={index} onSelect={() => handleNavigate(item.path)}>
+          <MenubarItem
+            key={index}
+            className="cursor-pointer"
+            onSelect={() => handleNavigate(item.path)}
+          >
             {item.name}
           </MenubarItem>
         ))}
@@ -221,6 +226,7 @@ const ChildSubMenu = memo(
         return (
           <MenubarItem
             key={childCategory._id}
+            className="cursor-pointer"
             onSelect={() => handleNavigate(childCategoryPath)}
           >
             {childCategory.name}
