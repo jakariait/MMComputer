@@ -28,6 +28,7 @@ import UserLayout from './component/componentGeneral/UserLayout.jsx';
 import BrandsPage from '@/pagesAdmin/BrandsPage.jsx';
 import CompareProductPage from '@/pagesUser/CompareProductPage.jsx';
 import WarrantyPageUser from '@/pagesUser/WarrantyPageUser.jsx';
+import BrandsPageUser from '@/pagesUser/BrandsPageUser.jsx';
 const LayoutAdmin = lazy(
   () => import('./component/componentAdmin/LayoutAdmin.jsx'),
 );
@@ -244,6 +245,7 @@ function App() {
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/product-compare" element={<CompareProductPage />} />
             <Route path="/warranty" element={<WarrantyPageUser />} />
+            <Route path="/brands" element={<BrandsPageUser />} />
 
             <Route path="*" element={<NotFoundPage />} />
           </Route>

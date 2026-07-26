@@ -11,6 +11,7 @@ const menuLinks = [
   { label: 'Blog', to: '/blog' },
   { label: 'Contact', to: '/contact-us' },
   { label: 'Track Your Order', to: '/track-order' },
+  { label: 'Brands', to: '/brands' },
   { label: 'Warranty', to: '/warranty' },
   { label: 'Terms of Service', to: '/termofservice' },
   { label: 'Privacy Policy', to: '/privacypolicy' },
