@@ -312,7 +312,9 @@ const ProductDetailsGadget = () => {
               {product.longDesc && (
                 <div
                   ref={descRef}
-                  className={'shadow-sm rounded-lg scroll-mt-[140px]'}
+                  className={
+                    'shadow-sm overflow-hidden rounded-lg scroll-mt-[140px]'
+                  }
                 >
                   <div className={'p-3'}>
                     <span className={'text-2xl primaryTextColor'}>
