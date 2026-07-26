@@ -16,16 +16,12 @@ export default function GeneralInfoForm() {
 
   const [formData, setFormData] = useState({
     CompanyName: '',
-    PhoneNumber: [''],
+    SalesPhone: [''],
+    ServicePhone: [''],
+    HotlinePhone: [''],
     CompanyEmail: [''],
-    ShortDescription: '',
     CompanyAddress: '',
     GoogleMapLink: '',
-    PlayStoreLink: '',
-    AppStoreLink: '',
-    TradeLicense: '',
-    TINNumber: '',
-    BINNumber: '',
     FooterCopyright: '',
   });
 
@@ -43,7 +39,9 @@ export default function GeneralInfoForm() {
       setFormData((prev) => ({
         ...prev,
         ...GeneralInfoList,
-        PhoneNumber: GeneralInfoList.PhoneNumber || [''],
+        SalesPhone: GeneralInfoList.SalesPhone || [''],
+        ServicePhone: GeneralInfoList.ServicePhone || [''],
+        HotlinePhone: GeneralInfoList.HotlinePhone || [''],
         CompanyEmail: GeneralInfoList.CompanyEmail || [''],
       }));
 
@@ -264,12 +262,24 @@ export default function GeneralInfoForm() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <ArrayFieldSection
-            label="Phone Numbers"
-            fields={formData.PhoneNumber}
-            fieldName="PhoneNumber"
+            label="Sales Phone"
+            fields={formData.SalesPhone}
+            fieldName="SalesPhone"
           />
+          <ArrayFieldSection
+            label="Service Phone"
+            fields={formData.ServicePhone}
+            fieldName="ServicePhone"
+          />
+          <ArrayFieldSection
+            label="Hotline Phone"
+            fields={formData.HotlinePhone}
+            fieldName="HotlinePhone"
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <ArrayFieldSection
             label="Company Emails"
             fields={formData.CompanyEmail}
@@ -288,47 +298,17 @@ export default function GeneralInfoForm() {
                 name="CompanyName"
                 placeholder="Your company name"
               />
-              <TextField
-                label="Short Description"
-                name="ShortDescription"
-                placeholder="Brief description of your company"
-              />
             </div>
             <TextField
               label="Company Address"
               name="CompanyAddress"
               placeholder="Full company address"
             />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <TextField
-                label="Google Map Link"
-                name="GoogleMapLink"
-                placeholder="Google Maps embed URL"
-              />
-              <TextField
-                label="Play Store Link"
-                name="PlayStoreLink"
-                placeholder="Google Play Store URL"
-              />
-              <TextField
-                label="App Store Link"
-                name="AppStoreLink"
-                placeholder="Apple App Store URL"
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Legal & Compliance</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <TextField label="Trade License" name="TradeLicense" />
-              <TextField label="TIN Number" name="TINNumber" />
-              <TextField label="BIN Number" name="BINNumber" />
-            </div>
+            <TextField
+              label="Google Map Link"
+              name="GoogleMapLink"
+              placeholder="Google Maps embed URL"
+            />
           </CardContent>
         </Card>
 

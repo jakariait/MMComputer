@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 
 const generalInfoController = require('../controllers/GeneralInfoController');
-const newsletterController = require('../controllers/NewsLetterController');
+
 const CarouselController = require('../controllers/CarouselController');
 const featureImageController = require('../controllers/FeatureImageController');
 const colorController = require('../controllers/ColorController');
@@ -171,20 +171,6 @@ router.delete(
   generalInfoController.deleteGeneralInfo
 );
 
-//   Routes for Newsletter Subscription
-router.post('/subscribe', newsletterController.subscribe);
-router.get(
-  '/subscribers',
-  adminProtect,
-  checkPermission('subscribed_users'),
-  newsletterController.getSubscription
-);
-router.delete(
-  '/delete-subscriber',
-  adminProtect,
-  checkPermission('subscribed_users'),
-  newsletterController.deleteSubscriber
-);
 
 //  Routes for Carousel
 router.post(

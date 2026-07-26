@@ -469,10 +469,10 @@ const ThankYou = () => {
             </a>{' '}
             or call{' '}
             <a
-              href={`tel:${GeneralInfoList?.PhoneNumber?.[0]?.replace(/\D/g, '') || '+880'}`}
+              href={`tel:${GeneralInfoList?.HotlinePhone?.[0]?.replace(/\D/g, '') || '+880'}`}
               className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition"
             >
-              {GeneralInfoList?.PhoneNumber?.[0] || '+880-XXXX-XXXX'}
+              {GeneralInfoList?.HotlinePhone?.[0] || '+880-XXXX-XXXX'}
             </a>
           </p>
         </div>

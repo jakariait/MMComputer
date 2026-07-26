@@ -47,9 +47,15 @@ const updateGeneralInfo = async (data, files) => {
         SecondaryLogo,
         Favicon,
         ...data,
-        PhoneNumber: Array.isArray(data.PhoneNumber)
-          ? data.PhoneNumber
-          : data.PhoneNumber?.split(',') || [],
+        SalesPhone: Array.isArray(data.SalesPhone)
+          ? data.SalesPhone
+          : data.SalesPhone?.split(',') || [],
+        ServicePhone: Array.isArray(data.ServicePhone)
+          ? data.ServicePhone
+          : data.ServicePhone?.split(',') || [],
+        HotlinePhone: Array.isArray(data.HotlinePhone)
+          ? data.HotlinePhone
+          : data.HotlinePhone?.split(',') || [],
         CompanyEmail: Array.isArray(data.CompanyEmail)
           ? data.CompanyEmail
           : data.CompanyEmail?.split(',') || [],
@@ -59,20 +65,20 @@ const updateGeneralInfo = async (data, files) => {
       generalInfo.SecondaryLogo = SecondaryLogo;
       generalInfo.Favicon = Favicon;
       generalInfo.CompanyName = data.CompanyName;
-      generalInfo.PhoneNumber = Array.isArray(data.PhoneNumber)
-        ? data.PhoneNumber
-        : data.PhoneNumber?.split(',') || [];
+      generalInfo.SalesPhone = Array.isArray(data.SalesPhone)
+        ? data.SalesPhone
+        : data.SalesPhone?.split(',') || [];
+      generalInfo.ServicePhone = Array.isArray(data.ServicePhone)
+        ? data.ServicePhone
+        : data.ServicePhone?.split(',') || [];
+      generalInfo.HotlinePhone = Array.isArray(data.HotlinePhone)
+        ? data.HotlinePhone
+        : data.HotlinePhone?.split(',') || [];
       generalInfo.CompanyEmail = Array.isArray(data.CompanyEmail)
         ? data.CompanyEmail
         : data.CompanyEmail?.split(',') || [];
-      generalInfo.ShortDescription = data.ShortDescription;
       generalInfo.CompanyAddress = data.CompanyAddress;
       generalInfo.GoogleMapLink = data.GoogleMapLink;
-      generalInfo.PlayStoreLink = data.PlayStoreLink;
-      generalInfo.AppStoreLink = data.AppStoreLink;
-      generalInfo.TradeLicense = data.TradeLicense;
-      generalInfo.TINNumber = data.TINNumber;
-      generalInfo.BINNumber = data.BINNumber;
       generalInfo.FooterCopyright = data.FooterCopyright;
     }
 

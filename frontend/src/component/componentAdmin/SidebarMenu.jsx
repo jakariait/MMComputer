@@ -247,13 +247,7 @@ export const MENU_CONFIG = [
         path: '/admin/contact-request',
         permission: 'contact_request',
       },
-      {
-        type: 'link',
-        label: 'Subscribed Users',
-        icon: FaUserFriends,
-        path: '/admin/subscribed-users',
-        permission: 'subscribed_users',
-      },
+
       {
         type: 'link',
         label: 'Blogs',

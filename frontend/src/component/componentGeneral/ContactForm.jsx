@@ -141,27 +141,38 @@ const ContactForm = () => {
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <div className="shrink-0 w-10 h-10 primaryBgColor rounded-lg flex items-center justify-center">
-                    <Phone size={18} className="text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      Phone
-                    </p>
-                    <div className="flex flex-col mt-0.5">
-                      {GeneralInfoList?.PhoneNumber?.map((number, i) => (
-                        <a
-                          key={i}
-                          href={`tel:${number}`}
-                          className="text-sm text-gray-800 hover:primaryTextColor transition-colors"
-                        >
-                          {number}
-                        </a>
-                      ))}
+                {[
+                  { label: 'Sales', field: 'SalesPhone' },
+                  { label: 'Service', field: 'ServicePhone' },
+                  { label: 'Hotline', field: 'HotlinePhone' },
+                ].map(({ label, field }) =>
+                  GeneralInfoList?.[field]?.length ? (
+                    <div
+                      key={field}
+                      className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="shrink-0 w-10 h-10 primaryBgColor rounded-lg flex items-center justify-center">
+                        <Phone size={18} className="text-white" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                          {label}
+                        </p>
+                        <div className="flex flex-col mt-0.5">
+                          {GeneralInfoList[field].map((number, i) => (
+                            <a
+                              key={i}
+                              href={`tel:${number}`}
+                              className="text-sm text-gray-800 hover:primaryTextColor transition-colors"
+                            >
+                              {number}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  ) : null,
+                )}
 
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                   <div className="shrink-0 w-10 h-10 primaryBgColor rounded-lg flex items-center justify-center">

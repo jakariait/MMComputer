@@ -33,9 +33,7 @@ const LayoutAdmin = lazy(
 
 const GeneralInfoPage = lazy(() => import('./pagesAdmin/GeneralInfoPage.jsx'));
 const HomePage = lazy(() => import('./pagesUser/HomePage.jsx'));
-const SubscribedUsersPage = lazy(
-  () => import('./pagesAdmin/SubscribedUsersPage.jsx'),
-);
+
 const SliderBannerPage = lazy(
   () => import('./pagesAdmin/SliderBannerPage.jsx'),
 );
@@ -271,10 +269,7 @@ function App() {
           <Route element={<AdminSuspenseWrapper />}>
             <Route element={<LayoutAdmin />}>
               <Route path="/admin/general-info" element={<GeneralInfoPage />} />
-              <Route
-                path="/admin/subscribed-users"
-                element={<SubscribedUsersPage />}
-              />
+
               <Route
                 path="/admin/color-updater"
                 element={<ColorUpdaterPage />}
