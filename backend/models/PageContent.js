@@ -4,7 +4,7 @@ const pageContentSchema = new mongoose.Schema(
   {
     page: {
       type: String,
-      enum: ['about', 'terms', 'privacy', 'refund', 'shipping'],
+      enum: ['about', 'terms', 'privacy', 'refund', 'shipping', 'warranty'],
       required: true,
       unique: true,
     },

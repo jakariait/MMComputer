@@ -11,6 +11,7 @@ const menuLinks = [
   { label: 'Blog', to: '/blog' },
   { label: 'Contact', to: '/contact-us' },
   { label: 'Track Your Order', to: '/track-order' },
+  { label: 'Warranty', to: '/warranty' },
   { label: 'Terms of Service', to: '/termofservice' },
   { label: 'Privacy Policy', to: '/privacypolicy' },
   { label: 'Refund Policy', to: '/refundpolicy' },
@@ -123,7 +124,17 @@ const Footer = () => {
                               {label}
                             </span>
                             <p className="text-sm text-[#D8E3D9]">
-                              {GeneralInfoList[field].join(', ')}
+                              {GeneralInfoList[field].map((number, i) => (
+                                <React.Fragment key={i}>
+                                  {i > 0 && <span>, </span>}
+                                  <a
+                                    href={`tel:${number}`}
+                                    className="hover:text-[#C6A15B] transition-colors"
+                                  >
+                                    {number}
+                                  </a>
+                                </React.Fragment>
+                              ))}
                             </p>
                           </div>
                         </div>

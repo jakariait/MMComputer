@@ -67,7 +67,7 @@ const PageEditor = ({ title, endpoint }) => {
             <Editor
               value={content}
               onTextChange={(e) => setContent(e.htmlValue)}
-              style={{ height: '500px' }}
+              style={{ height: '600px' }}
               readOnly={loading}
             />
           </Suspense>
