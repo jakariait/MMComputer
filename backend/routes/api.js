@@ -38,7 +38,7 @@ const PassWordResetController = require('../controllers/PassWordResetController'
 const pathaoController = require('../controllers/pathaoController');
 const pathaoConfigController = require('../controllers/pathaoConfigController');
 const productOptionController = require('../controllers/ProductOptionController');
-const brandController = require('../controllers/BrandController');
+const brandController = require('../controllers/brandController');
 
 const { handleCourierCheck, getDynamicCourierStatus } = require('../controllers/courierController');
 const cacheMiddleware = require('../middlewares/redisCacheMiddleware');
