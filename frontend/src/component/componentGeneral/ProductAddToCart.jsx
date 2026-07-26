@@ -674,6 +674,12 @@ const ProductAddToCart = ({ product }) => {
 
   const variantForPrice = selectedVariant || product.variants?.[0];
 
+  const isOutOfStock = product.variants?.length
+    ? selectedVariant
+      ? selectedVariant.stock === 0
+      : product.variants.every((v) => v.stock === 0)
+    : product.finalStock === 0;
+
   return (
     <div>
       <div>
@@ -825,10 +831,7 @@ const ProductAddToCart = ({ product }) => {
                  active:scale-95 transition-all duration-150 cursor-pointer
                  disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 onClick={() => handleQuantityChange('decrease')}
-                disabled={
-                  product.variants?.length > 0 &&
-                  (!selectedVariant || selectedVariant.stock === 0)
-                }
+                disabled={isOutOfStock}
               >
                 <FiMinus size={14} />
               </button>
@@ -842,24 +845,23 @@ const ProductAddToCart = ({ product }) => {
                  disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 onClick={() => handleQuantityChange('increase')}
                 disabled={
-                  (product.variants?.length > 0 && !selectedVariant) ||
-                  quantity >= MAX_QUANTITY ||
-                  selectedVariant?.stock === 0
+                  isOutOfStock ||
+                  quantity >= MAX_QUANTITY
                 }
               >
                 <FaPlus size={12} />
               </button>
             </div>
 
-            {/* Add to Cart / Stock Out */}
-            {selectedVariant?.stock === 0 ? (
+            {/* Add to Cart / Out of Stock */}
+            {isOutOfStock ? (
               <button
-                className="flex-1 min-w-[120px] max-w-[140px] h-9 md:h-10 rounded-lg
+                className="flex-1 min-w-[120px] max-w-[180px] h-9 md:h-10 rounded-lg
                  border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30
                  text-red-600 dark:text-red-400 text-sm font-semibold cursor-not-allowed"
                 disabled
               >
-                Stock Out
+                Out of Stock
               </button>
             ) : (
               <button
@@ -875,7 +877,7 @@ const ProductAddToCart = ({ product }) => {
             )}
 
             {/* Buy Now */}
-            {selectedVariant?.stock !== 0 && (
+            {!isOutOfStock && (
               <button
                 className="flex-1 min-w-[120px] max-w-[180px] h-9 md:h-10 rounded-lg
                  primaryBgColor accentTextColor text-sm font-semibold tracking-wide

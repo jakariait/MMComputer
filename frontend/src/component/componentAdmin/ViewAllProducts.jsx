@@ -74,6 +74,8 @@ const ViewAllProducts = () => {
     limit: 10,
     search: '',
     brand: '',
+    isActive: '',
+    stock: '',
   });
 
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -239,10 +241,36 @@ const ViewAllProducts = () => {
               ))}
             </SelectContent>
           </Select>
+          <Select
+            value={filters.isActive}
+            onValueChange={(value) => handleFilterChange('isActive', value)}
+          >
+            <SelectTrigger className="w-28 h-8 bg-background">
+              <SelectValue placeholder="All status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All status</SelectItem>
+              <SelectItem value="true">Active</SelectItem>
+              <SelectItem value="false">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={filters.stock}
+            onValueChange={(value) => handleFilterChange('stock', value)}
+          >
+            <SelectTrigger className="w-32 h-8 bg-background">
+              <SelectValue placeholder="All stock" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All stock</SelectItem>
+              <SelectItem value="in">In Stock</SelectItem>
+              <SelectItem value="out">Out of Stock</SelectItem>
+            </SelectContent>
+          </Select>
           <p className="text-sm text-muted-foreground">Show</p>
           <Select
             value={String(filters.limit)}
-            onValueChange={(value) => handleFilterChange('limit', value)}
+            onValueChange={(value) => handleFilterChange('limit', Number(value))}
           >
             <SelectTrigger className="w-16 h-8 bg-background">
               <SelectValue />
@@ -289,7 +317,7 @@ const ViewAllProducts = () => {
                 </TableRow>
               ) : (
                 filteredProducts.map((product, index) => (
-                  <TableRow key={product.id}>
+                  <TableRow key={product._id}>
                     <TableCell className="text-muted-foreground text-sm">
                       {index + 1}
                     </TableCell>
@@ -429,7 +457,7 @@ const ViewAllProducts = () => {
                               <Button
                                 variant="ghost"
                                 size="icon-xs"
-                                onClick={() => handleDuplicate(product.id)}
+                                onClick={() => handleDuplicate(product._id)}
                               >
                                 <Copy className="size-3.5" />
                               </Button>
@@ -446,7 +474,7 @@ const ViewAllProducts = () => {
                               <Button
                                 variant="ghost"
                                 size="icon-xs"
-                                onClick={() => handleOpenDialog(product.id)}
+                                onClick={() => handleOpenDialog(product._id)}
                                 className="text-destructive hover:text-destructive"
                               >
                                 <Trash2 className="size-3.5" />

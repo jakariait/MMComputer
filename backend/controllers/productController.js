@@ -273,9 +273,12 @@ const getAllProductsAdmin = async (req, res) => {
       flags,
       search,
       brand,
+      isActive,
     } = req.query;
 
-    // Call the service without the isActive filter (to get all products)
+    const isActiveFilter =
+      isActive === 'true' ? true : isActive === 'false' ? false : undefined;
+
     const productsData = await productService.getAllProducts({
       page: parseInt(page),
       limit: parseInt(limit),
@@ -287,7 +290,7 @@ const getAllProductsAdmin = async (req, res) => {
       flags,
       search,
       brand,
-      // Don't pass isActive filter here, meaning it will return all products
+      isActive: isActiveFilter,
     });
 
     const [activeCount, inactiveCount] = await Promise.all([
