@@ -4,16 +4,13 @@ import { Link } from 'react-router-dom';
 import SocialMedia from './SocialMedia.jsx';
 import ImageComponent from './ImageComponent.jsx';
 import Skeleton from 'react-loading-skeleton';
-import { MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react';
+import { MapPin, Phone, ArrowUpRight } from 'lucide-react';
 
-const companyLinks = [
+const menuLinks = [
   { label: 'About', to: '/about' },
   { label: 'Blog', to: '/blog' },
   { label: 'Contact', to: '/contact-us' },
   { label: 'Track Your Order', to: '/track-order' },
-];
-
-const policyLinks = [
   { label: 'Terms of Service', to: '/termofservice' },
   { label: 'Privacy Policy', to: '/privacypolicy' },
   { label: 'Refund Policy', to: '/refundpolicy' },
@@ -30,7 +27,7 @@ const phoneFields = [
 // Small caps "label" used the way a care-tag prints a category —
 // e.g. SALES / SERVICE / HOTLINE — the recurring visual motif of this footer.
 const TagLabel = ({ children }) => (
-  <span className="text-[10px] font-semibold tracking-[0.18em] uppercase text-[#9FB3A4]">
+  <span className=" tracking-[0.18em] uppercase text-[#C6A15B]">
     {children}
   </span>
 );
@@ -82,20 +79,20 @@ const Footer = () => {
             }}
           />
 
-          <div className="xl:container xl:mx-auto px-6 py-14">
-            <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          <div className="xl:container xl:mx-auto px-6 py-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Brand */}
-              <div className="space-y-4 lg:col-span-1">
+              <div className="flex items-center justify-between flex-col gap-4">
                 <Link to="/" className="inline-block">
                   <ImageComponent
                     imageName={GeneralInfoList?.PrimaryLogo}
-                    className="max-h-11 object-contain brightness-0 invert"
+                    className="max-h-11 object-contain "
                     altName={GeneralInfoList?.CompanyName}
                     skeletonHeight={44}
                   />
                 </Link>
                 {GeneralInfoList?.CompanyName && (
-                  <p className="text-lg font-medium text-[#F3EFE4]">
+                  <p className="text-lg font-medium text-[#C6A15B]">
                     {GeneralInfoList.CompanyName}
                   </p>
                 )}
@@ -112,32 +109,8 @@ const Footer = () => {
                 </div>
               </div>
 
-              {/* Company links */}
-              <div className="space-y-4">
-                <TagLabel>Company</TagLabel>
-                <nav className="flex flex-col gap-3">
-                  {companyLinks.map((link) => (
-                    <FooterLink key={link.to} to={link.to}>
-                      {link.label}
-                    </FooterLink>
-                  ))}
-                </nav>
-              </div>
-
-              {/* Policy links */}
-              <div className="space-y-4">
-                <TagLabel>Policies</TagLabel>
-                <nav className="flex flex-col gap-3">
-                  {policyLinks.map((link) => (
-                    <FooterLink key={link.to} to={link.to}>
-                      {link.label}
-                    </FooterLink>
-                  ))}
-                </nav>
-              </div>
-
-              {/* Contact + social */}
-              <div className="space-y-4">
+              {/* Get in touch */}
+              <div className="space-y-4 flex flex-col items-center ">
                 <TagLabel>Get in touch</TagLabel>
                 <div className="space-y-3">
                   {phoneFields.map(
@@ -149,20 +122,26 @@ const Footer = () => {
                             <span className="block text-[11px] text-[#9FB3A4]">
                               {label}
                             </span>
-                            {GeneralInfoList[field].map((number, i) => (
-                              <a
-                                key={i}
-                                href={`tel:${number}`}
-                                className="block text-sm text-[#D8E3D9] hover:text-[#C6A15B] transition-colors"
-                              >
-                                {number}
-                              </a>
-                            ))}
+                            <p className="text-sm text-[#D8E3D9]">
+                              {GeneralInfoList[field].join(', ')}
+                            </p>
                           </div>
                         </div>
                       ),
                   )}
                 </div>
+              </div>
+
+              {/* Menu */}
+              <div className="space-y-4">
+                <TagLabel>Menu</TagLabel>
+                <nav className="grid grid-cols-2 gap-x-6 gap-y-3 pt-5">
+                  {menuLinks.map((link) => (
+                    <FooterLink key={link.to} to={link.to}>
+                      {link.label}
+                    </FooterLink>
+                  ))}
+                </nav>
               </div>
             </div>
           </div>
