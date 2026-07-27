@@ -158,10 +158,15 @@ const Headers = () => {
                 skeletonHeight={'10'}
               />
             </Link>
+            <div className={'hidden lg:block'}>
+              <HeaderSearch fullSize={true} />
+            </div>
 
             {/* Right Icons */}
             <div className="flex items-center justify-center gap-2 relative">
-              <HeaderSearch />
+              <div className={'lg:hidden'}>
+                <HeaderSearch />
+              </div>
               {/* Wishlist */}
 
               <Link
