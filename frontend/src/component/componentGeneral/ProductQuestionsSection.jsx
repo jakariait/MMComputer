@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Send, MessageCircle, MessageSquareReply } from 'lucide-react';
-import { Alert } from '@/components/ui/alert';
-import { Snackbar } from '@/components/ui/snackbar';
+import { toast } from 'sonner';
 import useAuthUserStore from '../../store/AuthUserStore.js';
 
 const ProductQuestionsSection = ({ productId }) => {
@@ -14,12 +13,6 @@ const ProductQuestionsSection = ({ productId }) => {
   const [questions, setQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState('');
   const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
-
   // Fetch questions for this product
   const fetchQuestions = async () => {
     try {
@@ -51,20 +44,12 @@ const ProductQuestionsSection = ({ productId }) => {
           },
         },
       );
-      setSnackbar({
-        open: true,
-        message: 'Question submitted successfully!',
-        severity: 'success',
-      });
+      toast.success('Question submitted successfully!');
       setNewQuestion('');
       fetchQuestions(); // refresh list
     } catch (error) {
       console.error(error);
-      setSnackbar({
-        open: true,
-        message: 'Failed to submit question',
-        severity: 'error',
-      });
+      toast.error('Failed to submit question');
     } finally {
       setLoading(false);
     }
@@ -152,15 +137,6 @@ const ProductQuestionsSection = ({ productId }) => {
         )}
       </div>
 
-      {/* Snackbar */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
-      </Snackbar>
     </div>
   );
 };

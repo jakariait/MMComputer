@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Snackbar } from '@/components/ui/snackbar';
-import { Alert as MuiAlert } from '@/components/ui/alert';
+import { toast } from 'sonner';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -16,16 +15,6 @@ export default function ResetPassword() {
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
-
-  const handleSnackbarClose = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
   const handleReset = async (e) => {
     e.preventDefault();
     try {
@@ -35,22 +24,14 @@ export default function ResetPassword() {
         newPassword,
       });
 
-      setSnackbar({
-        open: true,
-        message: res.data.message || 'Password reset successful',
-        severity: 'success',
-      });
+      toast.success(res.data.message || 'Password reset successful');
 
       // Redirect to login after short delay
       setTimeout(() => {
         navigate('/login');
       }, 2000);
     } catch (err) {
-      setSnackbar({
-        open: true,
-        message: err.response?.data?.message || 'Failed to reset password.',
-        severity: 'error',
-      });
+      toast.error(err.response?.data?.message || 'Failed to reset password.');
     }
   };
 
@@ -89,22 +70,6 @@ export default function ResetPassword() {
         </button>
       </form>
 
-      {/* MUI Snackbar */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="filled"
-          onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-        >
-          {snackbar.message}
-        </MuiAlert>
-      </Snackbar>
     </div>
   );
 }

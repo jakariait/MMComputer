@@ -12,8 +12,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuthUserStore from '../../store/AuthUserStore.js';
 import useCartStore from '../../store/useCartStore.js';
-import { Snackbar } from '@/components/ui/snackbar';
-import { Alert } from '@/components/ui/alert';
+import { toast } from 'sonner';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -33,9 +32,6 @@ const RegisterForm = () => {
   const { syncCartToDB, loadCartFromBackend } = useCartStore();
   const [registrationLoading, setRegistrationLoading] = useState(false);
   const [registrationError, setRegistrationError] = useState(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -80,10 +76,9 @@ const RegisterForm = () => {
             await loadCartFromBackend(token);
             navigate('/user/home');
           } catch (cartError) {
-            setSnackbarMessage(
+            toast.error(
               'Registration successful, but there was a problem loading your cart. Please try again.',
             );
-            setSnackbarOpen(true);
             navigate('/user/home');
           }
         } else {
@@ -239,21 +234,6 @@ const RegisterForm = () => {
         </p>
       </div>
 
-      {/* Snackbar for cart sync/load error */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity="error"
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

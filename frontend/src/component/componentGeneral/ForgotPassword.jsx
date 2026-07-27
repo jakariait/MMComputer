@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { Snackbar } from '@/components/ui/snackbar';
-import { Alert as MuiAlert } from '@/components/ui/alert';
+import { toast } from 'sonner';
 import { CircularProgress } from '@/components/ui/circular-progress';
 import { Mail, Lock, ArrowLeft } from 'lucide-react';
 
@@ -12,16 +11,7 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
   const navigate = useNavigate();
-
-  const handleSnackbarClose = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
 
   const handleSendOTP = async (e) => {
     e.preventDefault();
@@ -31,24 +21,17 @@ export default function ForgotPassword() {
       const res = await axios.post(`${apiUrl}/request-reset`, { email });
 
       setSubmitted(true);
-      setSnackbar({
-        open: true,
-        message: res.data.message || 'OTP sent successfully! Check your email.',
-        severity: 'success',
-      });
+      toast.success(res.data.message || 'OTP sent successfully! Check your email.');
 
       // Redirect after delay
       setTimeout(() => {
         navigate(`/reset-password?email=${encodeURIComponent(email)}`);
       }, 2000);
     } catch (err) {
-      setSnackbar({
-        open: true,
-        message:
-          err.response?.data?.message ||
+      toast.error(
+        err.response?.data?.message ||
           'Failed to send OTP. Please try again.',
-        severity: 'error',
-      });
+      );
     } finally {
       setLoading(false);
     }
@@ -167,23 +150,6 @@ export default function ForgotPassword() {
         </div>
       </div>
 
-      {/* MUI Snackbar */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="filled"
-          onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          sx={{ borderRadius: '8px' }}
-        >
-          {snackbar.message}
-        </MuiAlert>
-      </Snackbar>
     </div>
   );
 }

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
-import { Snackbar } from '@/components/ui/snackbar';
-import { Alert } from '@/components/ui/alert';
+import { toast } from 'sonner';
 import useAuthUserStore from '../../store/AuthUserStore.js';
 import useCartStore from '../../store/useCartStore.js';
 
@@ -13,10 +12,6 @@ const LoginForm = () => {
 
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
-
-  // Snackbar state
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,10 +26,9 @@ const LoginForm = () => {
         await loadCartFromBackend(token);
         navigate('/user/home');
       } catch (err) {
-        setSnackbarMessage(
+        toast.error(
           'There was a problem loading your cart. Please try again.',
         );
-        setSnackbarOpen(true);
       }
     }
   };
@@ -118,21 +112,6 @@ const LoginForm = () => {
         </p>
       </div>
 
-      {/* Snackbar for cart sync/load error */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity="error"
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

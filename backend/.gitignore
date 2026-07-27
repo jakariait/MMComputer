@@ -136,3 +136,6 @@ dist
 .pnp.*
 
 #uploads/
+
+
+mongo_backup.sh

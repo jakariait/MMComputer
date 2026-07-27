@@ -1,6 +1,13 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { X } from 'lucide-react';
+import { X, CircleCheckIcon, OctagonXIcon, InfoIcon, TriangleAlertIcon } from 'lucide-react';
+
+const iconMap = {
+  success: CircleCheckIcon,
+  error: OctagonXIcon,
+  info: InfoIcon,
+  warning: TriangleAlertIcon,
+};
 
 function Snackbar({
   className,
@@ -9,10 +16,12 @@ function Snackbar({
   autoHideDuration,
   onClose,
   children,
+  variant = 'info',
   anchorOrigin,
   ...props
 }) {
   const [visible, setVisible] = React.useState(open);
+  const Icon = iconMap[variant] || InfoIcon;
 
   React.useEffect(() => {
     setVisible(open);
@@ -40,11 +49,11 @@ function Snackbar({
           : anchorOrigin?.horizontal === 'right'
             ? 'right-4'
             : 'left-1/2 -translate-x-1/2',
-        'animate-in slide-in-from-bottom-5',
         className,
       )}
       {...props}
     >
+      {Icon && <Icon className="size-4 shrink-0" />}
       {children || <span>{message}</span>}
       {onClose && (
         <button

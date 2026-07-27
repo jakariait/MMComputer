@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Snackbar } from '@/components/ui/snackbar';
-import { Alert } from '@/components/ui/alert';
+import { toast } from 'sonner';
 
 // Stores
 import useCartStore from '../../store/useCartStore.js';
@@ -61,18 +60,12 @@ const Checkout = () => {
     setRewardPointsUsed(value);
   };
 
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success', // "success" | "error"
-  });
-
   const showSnackbar = (message, severity = 'success') => {
-    setSnackbar({ open: true, message, severity });
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
+    if (severity === 'error') {
+      toast.error(message);
+    } else {
+      toast.success(message);
+    }
   };
 
   // Fetch free delivery threshold
@@ -343,20 +336,6 @@ const Checkout = () => {
           </div>
         </div>
       </form>
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
       <AbandonedCartTracker
         addressData={addressData}
         cart={cart}

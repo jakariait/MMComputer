@@ -176,7 +176,7 @@ const Headers = () => {
               >
                 <Heart className="md:w-8 md:h-8 cursor-pointer text-white" />
                 {wishlist.length > 0 && (
-                  <span className="absolute top-0 right-0 -mt-2 -mr-2 md:mr-0 primaryBgColor rounded-full h-6 w-6 flex items-center justify-center text-xs accentTextColor">
+                  <span className="absolute top-0 -right-2 -mt-2 -mr-2 md:mr-0 secondaryBgColor rounded-full h-6 w-6 flex items-center justify-center text-xs accentTextColor">
                     {wishlist.length}
                   </span>
                 )}
@@ -201,7 +201,7 @@ const Headers = () => {
 
                 {/* Cart Quantity Badge */}
                 {totalQuantity > 0 && (
-                  <span className="absolute top-0 right-0 -mt-2 -mr-2 md:mr-0 primaryBgColor rounded-full h-6 w-6 flex items-center justify-center text-xs accentTextColor">
+                  <span className="absolute top-0 -right-2 -mt-2 -mr-2 md:mr-0 secondaryBgColor rounded-full h-6 w-6 flex items-center justify-center text-xs accentTextColor">
                     {totalQuantity}
                   </span>
                 )}
