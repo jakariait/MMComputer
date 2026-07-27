@@ -9,6 +9,7 @@ const TABS = [
   { id: 'refund', label: 'Refund Policy' },
   { id: 'shipping', label: 'Shipping Policy' },
   { id: 'warranty', label: 'Warranty' },
+  { id: 'repair-service', label: 'Repair & Service' },
 ];
 
 const TermsPage = () => {
@@ -44,6 +45,7 @@ const TermsPage = () => {
         {activeTab === 'refund' && <PageEditor title="Refund Policy" endpoint="refund" />}
         {activeTab === 'shipping' && <PageEditor title="Shipping Policy" endpoint="shipping" />}
         {activeTab === 'warranty' && <PageEditor title="Warranty" endpoint="warranty" />}
+        {activeTab === 'repair-service' && <PageEditor title="Repair & Service" endpoint="repair-service" />}
       </div>
     </RequirePermission>
   );

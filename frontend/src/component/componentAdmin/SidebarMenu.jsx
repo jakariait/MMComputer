@@ -288,6 +288,13 @@ export const MENU_CONFIG = [
         path: '/admin/about-us',
         permission: 'about_terms-policies',
       },
+      {
+        type: 'link',
+        label: 'Product Reviews',
+        icon: FaStar,
+        path: '/admin/product-reviews',
+        permission: 'product_reviews',
+      },
     ],
   },
   {

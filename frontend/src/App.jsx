@@ -26,9 +26,11 @@ import AdminLoading from './component/skeleton/AdminLoading.jsx';
 
 import UserLayout from './component/componentGeneral/UserLayout.jsx';
 import BrandsPage from '@/pagesAdmin/BrandsPage.jsx';
+import AdminProductReviewPage from '@/pagesAdmin/AdminProductReviewPage.jsx';
 import CompareProductPage from '@/pagesUser/CompareProductPage.jsx';
 import WarrantyPageUser from '@/pagesUser/WarrantyPageUser.jsx';
 import BrandsPageUser from '@/pagesUser/BrandsPageUser.jsx';
+import RepairServicePage from '@/pagesUser/RepairServicePage.jsx';
 const LayoutAdmin = lazy(
   () => import('./component/componentAdmin/LayoutAdmin.jsx'),
 );
@@ -140,6 +142,7 @@ const ProductOptionsPage = lazy(
   () => import('./pagesAdmin/ProductOptionsPage.jsx'),
 );
 const WishlistPage = lazy(() => import('./pagesUser/WishlistPage.jsx'));
+const UserReviewHistoryPage = lazy(() => import('./pagesUser/UserReviewHistoryPage.jsx'));
 
 function App() {
   const { GeneralInfoListRequest, GeneralInfoList } = GeneralInfoStore();
@@ -246,6 +249,7 @@ function App() {
             <Route path="/product-compare" element={<CompareProductPage />} />
             <Route path="/warranty" element={<WarrantyPageUser />} />
             <Route path="/brands" element={<BrandsPageUser />} />
+            <Route path="/repair-service" element={<RepairServicePage />} />
 
             <Route path="*" element={<NotFoundPage />} />
           </Route>
@@ -267,6 +271,7 @@ function App() {
               element={<ChangePasswordPage />}
             />
             <Route path="/user/wishlist" element={<WishlistPage />} />
+            <Route path="/user/reviews" element={<UserReviewHistoryPage />} />
           </Route>
         </Route>
 
@@ -348,6 +353,10 @@ function App() {
               <Route path="/admin/blogs" element={<BlogsListPage />} />
               <Route path="/admin/blogs/:id" element={<EditBlogPage />} />
               <Route path="/admin/brands" element={<BrandsPage />} />
+              <Route
+                path="/admin/product-reviews"
+                element={<AdminProductReviewPage />}
+              />
             </Route>
           </Route>
         </Route>

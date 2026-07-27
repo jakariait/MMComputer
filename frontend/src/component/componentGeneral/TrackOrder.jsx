@@ -126,14 +126,16 @@ const TrackOrder = () => {
             </div>
 
             {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full cursor-pointer primaryBgColor accentTextColor px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              <Search size={20} />
-              {loading ? 'Tracking...' : 'Track Order'}
-            </button>
+            <div className={'flex items-center justify-center'}>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-65  cursor-pointer primaryBgColor accentTextColor px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <Search size={20} />
+                {loading ? 'Tracking...' : 'Track Order'}
+              </button>
+            </div>
           </form>
         </div>
 

@@ -37,8 +37,6 @@ const SimilarProducts = ({ categoryId, productId }) => {
   if (loading) return null;
   if (error || similarProducts.length === 0) return null;
 
-  console.table(similarProducts);
-
   return (
     <div>
       <div className={'px-2 py-4 shadow-lg rounded-lg'}>

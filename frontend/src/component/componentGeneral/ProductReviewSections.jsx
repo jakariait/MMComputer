@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Alert } from '@/components/ui/alert';
-import { Snackbar } from '@/components/ui/snackbar';
-import { Send, Star } from 'lucide-react';
+import { Send, Star, Pencil, Check } from 'lucide-react';
 import useAuthUserStore from '../../store/AuthUserStore.js';
 
 const StarRating = ({ value, readOnly, onChange, disabled, size = 'md' }) => {
@@ -39,21 +37,51 @@ const ProductReviewSections = ({ productId }) => {
   const [newComment, setNewComment] = useState('');
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
+  const [submitted, setSubmitted] = useState(false);
+  const [editingReview, setEditingReview] = useState(false);
+  const [userReviewStatus, setUserReviewStatus] = useState(null);
 
   // Fetch reviews for this product
   const fetchReviews = async () => {
     try {
-      const res = await axios.get(`${apiBaseUrl}/reviews/product/${productId}`);
-      setReviews(res.data.reviews || []);
+      const res = await axios.get(`${apiBaseUrl}/reviews/product/${productId}`, {
+        params: userId ? { userId } : {},
+      });
+      const fetched = res.data.reviews || [];
+      setReviews(fetched);
       setTotalReviews(res.data.totalReviews || 0);
       setAverageRating(res.data.averageRating || 0);
+
+      // Check user's existing review
+      if (userId) {
+        const existing = fetched.find((r) => r.userId?._id === userId);
+        if (existing) {
+          setUserReviewStatus(existing.status);
+          if (existing.status === 'rejected') {
+            setRating(existing.rating);
+            setNewComment(existing.comment || '');
+            setEditingReview(true);
+          } else {
+            setEditingReview(true);
+          }
+        } else {
+          setUserReviewStatus(null);
+          setEditingReview(false);
+        }
+      }
     } catch (error) {
       console.error('Failed to fetch reviews:', error);
+    }
+  };
+
+  const startEditing = () => {
+    const existing = reviews.find((r) => r.userId?._id === userId);
+    if (existing) {
+      setRating(existing.rating);
+      setNewComment(existing.comment || '');
+      setUserReviewStatus(null);
+      setEditingReview(true);
+      setSubmitted(false);
     }
   };
 
@@ -61,11 +89,6 @@ const ProductReviewSections = ({ productId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (rating === 0 || !newComment.trim() || !user) {
-      setSnackbar({
-        open: true,
-        message: 'Please provide a rating and a comment.',
-        severity: 'warning',
-      });
       return;
     }
 
@@ -85,22 +108,10 @@ const ProductReviewSections = ({ productId }) => {
           },
         },
       );
-      setSnackbar({
-        open: true,
-        message:
-          'Review submitted successfully! It will be visible after approval.',
-        severity: 'success',
-      });
-      setNewComment('');
-      setRating(0);
+      setSubmitted(true);
       fetchReviews(); // refresh list
     } catch (error) {
       console.error(error);
-      setSnackbar({
-        open: true,
-        message: 'Failed to submit review',
-        severity: 'error',
-      });
     } finally {
       setLoading(false);
     }
@@ -130,36 +141,72 @@ const ProductReviewSections = ({ productId }) => {
 
       {/* Write a Review Form */}
       {user ? (
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-3 border-t pt-4"
-        >
-          <h3 className="font-semibold">Write a review</h3>
-          <Rating
-            name="simple-controlled"
-            value={rating}
-            onChange={(event, newValue) => {
-              setRating(newValue);
-            }}
-            disabled={loading}
-          />
-          <textarea
-            placeholder="Share your thoughts about this product..."
-            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none"
-            rows="3"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            disabled={loading}
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-all flex items-center cursor-pointer justify-center gap-2 w-full sm:w-auto"
+        userReviewStatus === 'approved' ? (
+          <div className="border-t pt-4 flex items-center justify-between gap-4">
+            <p className="text-sm text-green-600 bg-green-50 rounded-lg px-4 py-3 flex-1">
+              You have already reviewed this product. Thank you for your feedback!
+            </p>
+            <button
+              onClick={startEditing}
+              className="shrink-0 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer"
+            >
+              <Pencil className="w-4 h-4 inline mr-1" /> Edit
+            </button>
+          </div>
+        ) : userReviewStatus === 'pending' ? (
+          <div className="border-t pt-4">
+            <p className="text-sm text-amber-600 bg-amber-50 rounded-lg px-4 py-3">
+              Your review is pending approval. You'll be able to submit a new one once it's reviewed.
+            </p>
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-3 border-t pt-4"
           >
-            <Send size={16} />
-            {loading ? 'Submitting...' : 'Submit Review'}
-          </button>
-        </form>
+            <h3 className="font-semibold flex items-center gap-2">
+              {userReviewStatus === 'rejected' ? (
+                <><Pencil className="w-4 h-4" /> Your review was rejected — submit an updated one</>
+              ) : editingReview ? (
+                <><Pencil className="w-4 h-4" /> Update your review</>
+              ) : (
+                'Write a review'
+              )}
+            </h3>
+            <StarRating
+              value={rating}
+              onChange={(_, newValue) => setRating(newValue)}
+              disabled={loading}
+            />
+            <textarea
+              placeholder="Share your thoughts about this product..."
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none"
+              rows="3"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              disabled={loading}
+            />
+            <button
+              type="submit"
+              disabled={loading || submitted}
+              className={`px-5 py-2 rounded-lg transition-all flex items-center justify-center gap-2 w-full sm:w-auto ${
+                submitted
+                  ? 'bg-green-100 text-green-700 cursor-default'
+                  : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
+              }`}
+            >
+              {submitted ? (
+                <><Check className="w-4 h-4" /> Submitted for approval</>
+              ) : loading ? (
+                'Submitting...'
+              ) : userReviewStatus === 'rejected' ? (
+                'Resubmit Review'
+              ) : (
+                'Submit Review'
+              )}
+            </button>
+          </form>
+        )
       ) : (
         <div className="bg-gray-100 rounded-lg py-2 text-center text-gray-500">
           Please{' '}
@@ -183,7 +230,7 @@ const ProductReviewSections = ({ productId }) => {
               className="border border-gray-200 rounded-lg p-4"
             >
               <div className="flex items-center gap-2 mb-2">
-                <Rating value={review.rating} readOnly size="small" />
+                <StarRating value={review.rating} readOnly size="small" />
                 <span className="font-semibold">
                   {review.userId?.fullName || 'Anonymous'}
                 </span>
@@ -196,22 +243,6 @@ const ProductReviewSections = ({ productId }) => {
           ))
         )}
       </div>
-
-      {/* Snackbar */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Alert
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

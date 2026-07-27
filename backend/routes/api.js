@@ -39,6 +39,7 @@ const pathaoController = require('../controllers/pathaoController');
 const pathaoConfigController = require('../controllers/pathaoConfigController');
 const productOptionController = require('../controllers/ProductOptionController');
 const brandController = require('../controllers/brandController');
+const reviewController = require('../controllers/productReviewController');
 
 const { handleCourierCheck, getDynamicCourierStatus } = require('../controllers/courierController');
 const cacheMiddleware = require('../middlewares/redisCacheMiddleware');
@@ -170,7 +171,6 @@ router.delete(
 
   generalInfoController.deleteGeneralInfo
 );
-
 
 //  Routes for Carousel
 router.post(
@@ -808,7 +808,13 @@ router.delete(
 );
 
 // Brand Routes
-router.post('/brands', adminProtect, checkPermission('brands'), upload, brandController.createBrand);
+router.post(
+  '/brands',
+  adminProtect,
+  checkPermission('brands'),
+  upload,
+  brandController.createBrand
+);
 router.get('/brands', brandController.getBrands);
 router.get('/brands/slug/:slug', brandController.getBrandBySlug);
 router.get('/brands/:id', brandController.getBrandById);
@@ -820,5 +826,14 @@ router.put(
   brandController.updateBrand
 );
 router.delete('/brands/:id', adminProtect, checkPermission('brands'), brandController.deleteBrand);
+
+// Product Reviews CRUD Routes
+router.post('/reviews', userProtect, reviewController.createReview);
+router.get('/reviews/product/:productId', reviewController.getReviewsByProduct);
+router.get('/reviews/my-reviews', userProtect, reviewController.getUserReviews);
+router.get('/reviews/:id', reviewController.getReviewById);
+router.put('/reviews/:id', adminProtect, reviewController.updateReview);
+router.delete('/reviews/:id', adminProtect, reviewController.deleteReview);
+router.get('/reviews', adminProtect, reviewController.getAllReviews);
 
 module.exports = router;

@@ -95,13 +95,13 @@ const MenuBar = () => {
               return (
                 <MenubarMenu key={category._id} value={category._id}>
                   <MenubarTrigger
-                    className="uppercase  text-sm font-semibold tracking-wide  py-2 data-[state=open]:bg-transparent focus:bg-transparent cursor-pointer"
+                    className="uppercase  text-sm font-semibold tracking-wide  px-2 py-2 data-[state=open]:bg-transparent focus:bg-transparent cursor-pointer"
                     onPointerEnter={() => setActiveMenu(category._id)}
                     onClick={() => handleNavigate(categoryPath)}
                   >
                     {category.name}
                   </MenubarTrigger>
-                  <MenubarContent>
+                  <MenubarContent className="-mt-[10px]">
                     <SubMenu
                       subCategories={subCategories}
                       categoryId={category._id}

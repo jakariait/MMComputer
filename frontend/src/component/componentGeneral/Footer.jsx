@@ -13,6 +13,7 @@ const menuLinks = [
   { label: 'Track Your Order', to: '/track-order' },
   { label: 'Brands', to: '/brands' },
   { label: 'Warranty', to: '/warranty' },
+  { label: 'Repair & Service', to: '/repair-service' },
   { label: 'Terms of Service', to: '/termofservice' },
   { label: 'Privacy Policy', to: '/privacypolicy' },
   { label: 'Refund Policy', to: '/refundpolicy' },

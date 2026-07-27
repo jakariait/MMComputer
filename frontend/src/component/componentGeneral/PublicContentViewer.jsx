@@ -27,6 +27,8 @@ const PublicContentViewer = ({ title, endpoint }) => {
     fetchContent();
   }, [apiUrl, endpoint]);
 
+  console.log(content);
+
   if (loading)
     return (
       <div className="xl:container xl:mx-auto p-4 pt-10">
@@ -46,7 +48,13 @@ const PublicContentViewer = ({ title, endpoint }) => {
         >
           {title}
         </Typography>
-        <div className="h-0.5 w-20 secondaryBgColor mx-auto rounded-full shadow-md"></div>
+        <div className="flex items-center gap-0 my-3" aria-hidden="true">
+          <span className="w-1.5 h-1.5 rounded-full secondaryBgColor" />
+          <span className="h-px w-10 md:w-14 secondaryBgColor opacity-40" />
+          <span className="w-2 h-2 rounded-sm secondaryBgColor rotate-45" />
+          <span className="h-px w-10 md:w-14 secondaryBgColor opacity-40" />
+          <span className="w-1.5 h-1.5 rounded-full secondaryBgColor" />
+        </div>
       </div>
 
       <div

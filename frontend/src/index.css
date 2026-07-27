@@ -187,15 +187,63 @@
 }
 
 .rendered-html ul {
-  @apply list-disc list-inside pl-4 mb-2;
+  @apply list-disc list-outside pl-6 mb-3 space-y-1;
 }
 
 .rendered-html ol {
-  @apply list-decimal list-inside pl-4 mb-2;
+  @apply list-decimal list-outside pl-6 mb-3 space-y-1;
 }
 
 .rendered-html li {
   @apply mb-1;
+}
+
+.rendered-html li > ul,
+.rendered-html li > ol {
+  @apply pl-6 mt-1 mb-0;
+}
+
+/* Quill editor list support */
+.rendered-html ol[data-list] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.rendered-html li[data-list="ordered"] {
+  counter-increment: list-counter;
+}
+
+.rendered-html li[data-list="ordered"]::before {
+  content: counter(list-counter) ". ";
+  font-weight: 600;
+}
+
+.rendered-html li[data-list="bullet"]::before {
+  content: "• ";
+  font-size: 1.2em;
+}
+
+.rendered-html li[data-list] {
+  @apply mb-1.5;
+  list-style: none;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.rendered-html li[data-list]::before {
+  flex-shrink: 0;
+  min-width: 1.5rem;
+  text-align: right;
+}
+
+.rendered-html li[data-list].ql-indent-1 { padding-left: 2rem; }
+.rendered-html li[data-list].ql-indent-2 { padding-left: 3.5rem; }
+.rendered-html li[data-list].ql-indent-3 { padding-left: 5rem; }
+.rendered-html li[data-list].ql-indent-4 { padding-left: 6.5rem; }
+.rendered-html li[data-list].ql-indent-5 { padding-left: 8rem; }
+
+.rendered-html li[data-list] .ql-ui {
+  display: none;
 }
 
 .rendered-html h1 {
