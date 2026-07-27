@@ -5,7 +5,7 @@ import useCategoryStore from '../../store/useCategoryStore.js';
 import useSubCategoryStore from '../../store/useSubCategoryStore.js';
 import useChildCategoryStore from '../../store/useChildCategoryStore.js';
 
-const MobileMenu = () => {
+const MobileMenu = ({ onClose }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [expandedSubCategory, setExpandedSubCategory] = useState(null);
 
@@ -31,16 +31,6 @@ const MobileMenu = () => {
     <div className="lg:hidden">
       <nav className="p-1">
         <ul className="space-y-2">
-          <li>
-            <Link to="/" className="block p-3 font-semibold">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/shop" className="block p-3 font-semibold">
-              Shop
-            </Link>
-          </li>
           {/* Categories */}
           {categories?.map((category) => {
             const hasSubs = subCategories?.some(
@@ -53,6 +43,7 @@ const MobileMenu = () => {
                   <Link
                     to={`/shop?${buildQueryString(category.name)}`}
                     className="font-semibold"
+                    onClick={onClose}
                   >
                     {category.name}
                   </Link>
@@ -78,22 +69,13 @@ const MobileMenu = () => {
                     childCategories={childCategories}
                     expandedSubCategory={expandedSubCategory}
                     toggleSubCategory={toggleSubCategory}
-                    buildQueryString={buildQueryString} // Pass the function here
+                    buildQueryString={buildQueryString}
+                    onClose={onClose}
                   />
                 )}
               </li>
             );
           })}
-          {/* More Links */}
-          <li className="p-2 font-semibold">
-            <Link to="/about">About Us</Link>
-          </li>
-          <li className="p-2 font-semibold">
-            <Link to="/blog">Blog</Link>
-          </li>
-          <li className="p-2 font-semibold">
-            <Link to="/contact-us">Contact</Link>
-          </li>
         </ul>
       </nav>
     </div>
@@ -106,7 +88,8 @@ const MobileSubMenu = ({
   childCategories,
   expandedSubCategory,
   toggleSubCategory,
-  buildQueryString, // Accept the function as a prop
+  buildQueryString,
+  onClose,
 }) => {
   const filteredSubs = subCategories?.filter(
     (sub) => sub?.category?._id === categoryId,
@@ -124,9 +107,10 @@ const MobileSubMenu = ({
             <div className="flex justify-between items-center">
               <Link
                 to={`/shop?${new URLSearchParams({
-                  subcategory: sub.slug, // Dynamically pass the subcategory
+                  subcategory: sub.slug,
                 }).toString()}`}
                 className="block flex-1"
+                onClick={onClose}
               >
                 {sub.name}
               </Link>
@@ -154,9 +138,10 @@ const MobileSubMenu = ({
                     <li key={child._id} className="py-1">
                       <Link
                         to={`/shop?${new URLSearchParams({
-                          childCategory: child.slug, // Dynamically pass the subcategory
+                          childCategory: child.slug,
                         }).toString()}`}
                         className="block text-sm text-gray-600"
+                        onClick={onClose}
                       >
                         {child.name}
                       </Link>

@@ -147,7 +147,7 @@ const Headers = () => {
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
             >
-              <Menu className="w-8 h-8 cursor-pointer" />
+              <Menu className="md:w-8 md:h-8 cursor-pointer text-white" />
             </div>
 
             <Link to="/">
@@ -169,7 +169,7 @@ const Headers = () => {
                 className="relative flex flex-col justify-center items-center"
                 aria-label="Wishlist"
               >
-                <Heart className="w-8 h-8 cursor-pointer text-white" />
+                <Heart className="md:w-8 md:h-8 cursor-pointer text-white" />
                 {wishlist.length > 0 && (
                   <span className="absolute top-0 right-0 -mt-2 -mr-2 md:mr-0 primaryBgColor rounded-full h-6 w-6 flex items-center justify-center text-xs accentTextColor">
                     {wishlist.length}
@@ -189,7 +189,7 @@ const Headers = () => {
                 <div className={'flex flex-col justify-center items-center'}>
                   {/* Shopping Cart Icon */}
                   <ShoppingCart
-                    className="w-8 h-8 cursor-pointer text-white"
+                    className="md:w-8 md:h-8 cursor-pointer text-white"
                     aria-hidden="true"
                   />
                 </div>
@@ -240,7 +240,7 @@ const Headers = () => {
                             className={'flex items-center justify-center gap-2'}
                           >
                             <User
-                              className="w-8 h-8 cursor-pointer text-white"
+                              className="md:w-8 md:h-8 cursor-pointer text-white"
                               aria-hidden="true"
                             />
                           </Link>
@@ -263,7 +263,7 @@ const Headers = () => {
                 <Link to="/login" aria-label="Login or register">
                   <div className="flex items-center gap-2 flex-col">
                     <User
-                      className="w-8 h-8 cursor-pointer text-white"
+                      className="md:w-8 md:h-8 cursor-pointer text-white"
                       aria-hidden="true"
                     />
                   </div>
@@ -310,7 +310,7 @@ const Headers = () => {
               </div>
 
               <div className="space-y-2">
-                <MobileMenu />
+                <MobileMenu onClose={() => setIsMenuOpen(false)} />
               </div>
               <div className="mt-4">
                 {user ? (

@@ -69,7 +69,7 @@ const HeaderSearch = () => {
           aria-label={isOpen ? 'Search' : 'Open search'}
         >
           <Search
-            className={`w-8 h-8 transition-colors ${
+            className={`md:w-8 md:h-8 transition-colors ${
               isOpen ? 'text-gray-900' : 'text-white'
             }`}
           />

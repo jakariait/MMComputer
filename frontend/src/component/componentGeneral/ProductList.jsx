@@ -68,15 +68,15 @@ const ProductList = ({ products, productPage }) => {
                       skeletonHeight={120}
                     />
                   </Link>
-                  {product.variants?.length
-                    ? product.variants.every((v) => v.stock === 0)
-                    : product.finalStock === 0 ? (
-                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded">
-                        <span className="bg-red-600 text-white px-2 py-1 text-xs font-bold uppercase tracking-wide rounded shadow">
-                          Out of Stock
-                        </span>
-                      </div>
-                    ) : null}
+                  {product.variants?.length ? (
+                    product.variants.every((v) => v.stock === 0)
+                  ) : product.finalStock === 0 ? (
+                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded">
+                      <span className="bg-red-600 text-white px-2 py-1 text-xs font-bold uppercase tracking-wide rounded shadow">
+                        Out of Stock
+                      </span>
+                    </div>
+                  ) : null}
                 </div>
                 <div>
                   <Link to={`/product/${product.slug}`}>
@@ -171,15 +171,15 @@ const ProductList = ({ products, productPage }) => {
                       skeletonHeight={250}
                     />
                   </Link>
-                  {product.variants?.length
-                    ? product.variants.every((v) => v.stock === 0)
-                    : product.finalStock === 0 ? (
-                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded">
-                        <span className="bg-red-600 text-white px-2 py-1 text-xs font-bold uppercase tracking-wide rounded shadow">
-                          Out of Stock
-                        </span>
-                      </div>
-                    ) : null}
+                  {product.variants?.length ? (
+                    product.variants.every((v) => v.stock === 0)
+                  ) : product.finalStock === 0 ? (
+                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded">
+                      <span className="bg-red-600 text-white px-2 py-1 text-xs font-bold uppercase tracking-wide rounded shadow">
+                        Out of Stock
+                      </span>
+                    </div>
+                  ) : null}
                 </div>
                 <Link to={`/product/${product.slug}`}>
                   <div className="text-center mt-2 mb-1 hover:underline">

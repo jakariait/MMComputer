@@ -26,7 +26,7 @@ const SlotCarousel = ({ images, aspectRatio, altName }) => {
   return (
     <div
       className={`relative w-full overflow-hidden rounded-xl group ${
-        !aspectRatio ? 'h-full' : ''
+        !aspectRatio ? 'h-full min-h-[250px]' : ''
       }`}
       style={aspectRatio ? { aspectRatio } : undefined}
     >
@@ -113,7 +113,7 @@ const ProductCarousel = () => {
 
   return (
     <section className="w-full bg-gray-50">
-      <div className="px-2 sm:px-4 py-3 sm:py-6 xl:container xl:mx-auto">
+      <div className=" xl:container xl:mx-auto">
         {CarouselStoreListLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3">
             <div className="md:col-span-2">
@@ -135,7 +135,7 @@ const ProductCarousel = () => {
                 <SlotCarousel images={leftLarge} altName="Left Large Banner" />
               </div>
             )}
-            <div className="flex flex-col justify-center gap-2 sm:gap-3">
+            <div className="flex flex-row md:flex-col justify-center gap-2 sm:gap-3">
               {rightTop.length > 0 && (
                 <SlotCarousel
                   images={rightTop}
