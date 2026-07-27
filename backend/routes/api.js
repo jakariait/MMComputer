@@ -99,7 +99,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+  const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg', 'image/svg+xml'];
   if (allowed.includes(file.mimetype)) {
     cb(null, true);
   } else {
@@ -881,10 +881,6 @@ router.get(
   productQuestionController.getAllQuestions
 );
 
-router.get(
-  '/users/me/questions',
-  userProtect,
-  productQuestionController.getUserQuestions
-);
+router.get('/users/me/questions', userProtect, productQuestionController.getUserQuestions);
 
 module.exports = router;

@@ -111,18 +111,21 @@ const ProductCompare = () => {
                       <ProductBrand product={product} />
                     </div>
 
-                    <div className="border-t border-gray-200 pt-4">
-                      {product.longDesc ? (
-                        <div
-                          className="rendered-html text-sm text-gray-600 px-2"
-                          dangerouslySetInnerHTML={{
-                            __html: cleanHtml(product.longDesc),
-                          }}
-                        />
-                      ) : (
-                        <div className="text-center text-gray-500">-</div>
-                      )}
-                    </div>
+                    {product.keyFeatures?.length > 0 && (
+                      <div className="border-t border-gray-200 pt-4">
+                        <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                          Key Features
+                        </h4>
+                        <ul className="space-y-1">
+                          {product.keyFeatures.map((feature, i) => (
+                            <li key={i} className="text-sm text-gray-700">
+                              <span className="font-medium">{feature.key}:</span>{' '}
+                              {feature.value}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
                     <div className="border-t border-gray-200 pt-4">
                       <Specification product={product} comparePage={true} />
