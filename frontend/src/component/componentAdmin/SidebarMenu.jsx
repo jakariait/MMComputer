@@ -19,6 +19,7 @@ import {
   FaClipboardList,
   FaBlog,
   FaStar,
+  FaQuestion,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import useAuthAdminStore from '../../store/AuthAdminStore.js';
@@ -280,6 +281,13 @@ export const MENU_CONFIG = [
         icon: FaQuestionCircle,
         path: '/admin/faqs',
         permission: 'faqs',
+      },
+      {
+        type: 'link',
+        label: 'Product Questions',
+        icon: FaQuestion,
+        path: '/admin/product-questions',
+        permission: 'product_questions',
       },
       {
         type: 'link',

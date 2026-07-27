@@ -21,18 +21,18 @@ const RequirePermission = ({
       ? requiredPermissions.some((perm) => userPermissions.includes(perm))
       : requiredPermissions.every((perm) => userPermissions.includes(perm)));
 
-  if (fallback === true) return <>{children}</>;
+  if (hasPermission) {
+    return <>{children}</>;
+  }
 
-  if (!hasPermission && (loading || !Array.isArray(userPermissions))) {
+  if (fallback === true) return null;
+
+  if (loading || !Array.isArray(userPermissions)) {
     return (
       <div className="flex justify-center py-4">
         <Skeleton className="h-6 w-6 rounded-full" />
       </div>
     );
-  }
-
-  if (hasPermission) {
-    return <>{children}</>;
   }
 
   if (fallback) return <>{fallback}</>;

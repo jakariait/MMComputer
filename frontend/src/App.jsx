@@ -99,6 +99,9 @@ const ShippingPolicyPage = lazy(
 );
 const FAQPage = lazy(() => import('./pagesUser/FAQPage.jsx'));
 const AdminFAQSPage = lazy(() => import('./pagesAdmin/AdminFAQSPage.jsx'));
+const AdminProductQuestionsPage = lazy(
+  () => import('./pagesAdmin/AdminProductQuestionsPage.jsx'),
+);
 const MarqueeAdminPage = lazy(
   () => import('./pagesAdmin/MarqueeAdminPage.jsx'),
 );
@@ -143,6 +146,7 @@ const ProductOptionsPage = lazy(
 );
 const WishlistPage = lazy(() => import('./pagesUser/WishlistPage.jsx'));
 const UserReviewHistoryPage = lazy(() => import('./pagesUser/UserReviewHistoryPage.jsx'));
+const UserQuestionsPage = lazy(() => import('./pagesUser/UserQuestionsPage.jsx'));
 
 function App() {
   const { GeneralInfoListRequest, GeneralInfoList } = GeneralInfoStore();
@@ -272,6 +276,7 @@ function App() {
             />
             <Route path="/user/wishlist" element={<WishlistPage />} />
             <Route path="/user/reviews" element={<UserReviewHistoryPage />} />
+            <Route path="/user/questions" element={<UserQuestionsPage />} />
           </Route>
         </Route>
 
@@ -337,6 +342,10 @@ function App() {
               <Route path="/admin/about-us" element={<AboutUsPage />} />
               <Route path="/admin/terms-policies" element={<TermsPage />} />
               <Route path="/admin/faqs" element={<AdminFAQSPage />} />
+              <Route
+                path="/admin/product-questions"
+                element={<AdminProductQuestionsPage />}
+              />
               <Route path="/admin/scroll-text" element={<MarqueeAdminPage />} />
               <Route path="/admin/homepage-seo" element={<AdminMetaPage />} />
               <Route path="/admin/gateway-api" element={<GatewayApiPage />} />

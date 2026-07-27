@@ -103,7 +103,7 @@ const ProductQuestionsSection = ({ productId }) => {
           <button
             type="submit"
             disabled={loading || !newQuestion.trim()}
-            className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-all flex items-center cursor-pointer justify-center gap-2 disabled:bg-gray-400"
+            className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-all flex items-center cursor-pointer justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <Send size={16} />
             {loading ? 'Sending...' : 'Ask'}

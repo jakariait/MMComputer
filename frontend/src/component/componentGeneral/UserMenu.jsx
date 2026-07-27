@@ -11,6 +11,7 @@ import {
   FaKey,
   FaHeart,
   FaStar,
+  FaQuestion,
 } from 'react-icons/fa';
 import Skeleton from 'react-loading-skeleton';
 
@@ -25,6 +26,7 @@ const menuItems = [
   },
   { icon: <FaKey />, label: 'Change password', path: '/user/change-password' },
   { icon: <FaStar />, label: 'My Reviews', path: '/user/reviews' },
+  { icon: <FaQuestion />, label: 'My Questions', path: '/user/questions' },
 ];
 const UserMenu = () => {
   const { initialize, user, loading, error, logout } = useAuthUserStore();

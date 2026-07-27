@@ -40,6 +40,7 @@ const pathaoConfigController = require('../controllers/pathaoConfigController');
 const productOptionController = require('../controllers/ProductOptionController');
 const brandController = require('../controllers/brandController');
 const reviewController = require('../controllers/productReviewController');
+const productQuestionController = require('../controllers/productQuestionController');
 
 const { handleCourierCheck, getDynamicCourierStatus } = require('../controllers/courierController');
 const cacheMiddleware = require('../middlewares/redisCacheMiddleware');
@@ -832,8 +833,58 @@ router.post('/reviews', userProtect, reviewController.createReview);
 router.get('/reviews/product/:productId', reviewController.getReviewsByProduct);
 router.get('/reviews/my-reviews', userProtect, reviewController.getUserReviews);
 router.get('/reviews/:id', reviewController.getReviewById);
-router.put('/reviews/:id', adminProtect, reviewController.updateReview);
-router.delete('/reviews/:id', adminProtect, reviewController.deleteReview);
-router.get('/reviews', adminProtect, reviewController.getAllReviews);
+router.put(
+  '/reviews/:id',
+  adminProtect,
+  checkPermission('product_reviews'),
+  reviewController.updateReview
+);
+router.delete(
+  '/reviews/:id',
+  adminProtect,
+  checkPermission('product_reviews'),
+  reviewController.deleteReview
+);
+router.get(
+  '/reviews',
+  adminProtect,
+  checkPermission('product_reviews'),
+  reviewController.getAllReviews
+);
+
+// Product Questions  CRUD Routes
+router.post(
+  '/products/:productId/questions',
+  userProtect,
+  productQuestionController.createQuestion
+);
+
+router.get('/products/:productId/questions', productQuestionController.getQuestionsByProduct);
+router.get('/questions/:id', productQuestionController.getQuestionById);
+router.put(
+  '/questions/:id',
+  adminProtect,
+  checkPermission('product_questions'),
+  productQuestionController.updateQuestion
+);
+router.delete(
+  '/questions/:id',
+  checkPermission('product_questions'),
+  adminProtect,
+  productQuestionController.deleteQuestion
+);
+
+router.get(
+  '/questions',
+  adminProtect,
+  checkPermission('product_questions'),
+  productQuestionController.getAllQuestions
+);
+
+router.get(
+  '/users/me/questions',
+  userProtect,
+  productQuestionController.getUserQuestions
+);
 
 module.exports = router;
