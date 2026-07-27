@@ -3,9 +3,9 @@ import ProductCompare from '@/component/componentGeneral/ProductCompare.jsx';
 
 const CompareProductPage = () => {
   return (
-    <div>
+    <>
       <ProductCompare />
-    </div>
+    </>
   );
 };
 

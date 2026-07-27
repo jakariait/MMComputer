@@ -112,11 +112,11 @@ const ProductCompare = () => {
                     </div>
 
                     <div className="border-t border-gray-200 pt-4">
-                      {product.shortDesc ? (
+                      {product.longDesc ? (
                         <div
                           className="rendered-html text-sm text-gray-600 px-2"
                           dangerouslySetInnerHTML={{
-                            __html: cleanHtml(product.shortDesc),
+                            __html: cleanHtml(product.longDesc),
                           }}
                         />
                       ) : (
