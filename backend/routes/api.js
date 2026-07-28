@@ -6,7 +6,6 @@ const path = require('path');
 const generalInfoController = require('../controllers/GeneralInfoController');
 
 const CarouselController = require('../controllers/CarouselController');
-const featureImageController = require('../controllers/FeatureImageController');
 const colorController = require('../controllers/ColorController');
 const socialMediaLinkController = require('../controllers/SocialMediaLinkController');
 const contactController = require('../controllers/ContactController');
@@ -187,35 +186,6 @@ router.delete(
   adminProtect,
   checkPermission('sliders-banners'),
   CarouselController.deleteByIdCarousel
-);
-
-// Routes for Feature Images
-router.post(
-  '/feature-images/create',
-  upload,
-  adminProtect,
-  checkPermission('sliders-banners'),
-  featureImageController.createFeatureImage
-);
-router.get('/feature-images', featureImageController.getAllFeatureImages);
-router.get(
-  '/feature-images/:id',
-  adminProtect,
-  checkPermission('sliders-banners'),
-  featureImageController.getFeatureImageById
-);
-router.put(
-  '/feature-images/:id',
-  upload,
-  adminProtect,
-  checkPermission('sliders-banners'),
-  featureImageController.updateFeatureImage
-);
-router.delete(
-  '/feature-images/:id',
-  adminProtect,
-  checkPermission('sliders-banners'),
-  featureImageController.deleteFeatureImage
 );
 
 // Routes for Colors

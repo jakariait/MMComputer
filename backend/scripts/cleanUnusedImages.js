@@ -7,7 +7,6 @@ import path from 'path';
 
 // Models
 import CarouselModel from '../models/CarouselModel.js';
-import FeatureImageModel from '../models/FeatureImageModel.js';
 import GeneralInfoModel from '../models/GeneralInfoModel.js';
 import ProductModel from '../models/ProductModel.js';
 import UserModel from '../models/UserModel.js';
@@ -37,9 +36,6 @@ const addImage = (img) => {
 const collectUsedImages = async () => {
   const carousels = await CarouselModel.find({}, 'imgSrc');
   carousels.forEach((item) => addImage(item.imgSrc));
-
-  const features = await FeatureImageModel.find({}, 'imgSrc');
-  features.forEach((item) => addImage(item.imgSrc));
 
   const infos = await GeneralInfoModel.find({}, 'PrimaryLogo SecondaryLogo Favicon');
   infos.forEach((item) => {

@@ -66,7 +66,7 @@ const FeatureCategory = () => {
     <section className="bg-gray-50 py-10">
       <div className="xl:container xl:mx-auto px-4">
         <div className="text-center mb-8 border-b border-gray-200 pb-4">
-          <h2 className="text-[28px] md:text-[34px] font-semibold text-gray-800 leading-tight tracking-tight">
+          <h2 className="text-[28px] md:text-[34px] font-semibold primaryTextColor leading-tight tracking-tight">
             Featured Category
           </h2>
           <p className="text-sm text-gray-500 mt-1">

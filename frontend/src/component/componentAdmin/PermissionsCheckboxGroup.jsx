@@ -1,6 +1,5 @@
 import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
 const PermissionsCheckboxGroup = ({
@@ -37,7 +36,6 @@ const PermissionsCheckboxGroup = ({
     { value: 'view_customers', label: 'View Customers' },
     { value: 'delete_customers', label: 'Delete Customers' },
     { value: 'contact_request', label: 'Contact Request' },
-    { value: 'subscribed_users', label: 'Subscribed Users' },
     { value: 'sliders-banners', label: 'Sliders Banners' },
     { value: 'about_terms-policies', label: 'About Us & Terms & Policies' },
     { value: 'faqs', label: 'FAQs' },

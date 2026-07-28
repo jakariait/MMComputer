@@ -1,22 +1,18 @@
 import { useEffect } from 'react';
 import CarouselStore from '../store/CarouselStore.js';
-import FeatureStore from '../store/FeatureStore.js';
 import useProductStore from '../store/useProductStore.js';
 import ProductCarousel from '../component/componentGeneral/ProductCarousel.jsx';
-import Feature from '../component/componentGeneral/Feature.jsx';
 import ProductByFlag from '../component/componentGeneral/ProductByFlag.jsx';
-import Headers from '@/component/componentGeneral/Headers.jsx';
 import MarqueeModern from '@/component/componentGeneral/MarqueeModern.jsx';
 import FeatureCategory from '@/component/componentGeneral/FeatureCategory.jsx';
+import TrustBadges from '@/component/componentGeneral/Trustbadges.jsx';
 
 const HomePage = () => {
   const { CarouselStoreListRequest } = CarouselStore();
-  const { FeatureStoreListRequest } = FeatureStore();
   const { fetchHomeProducts } = useProductStore();
 
   useEffect(() => {
     CarouselStoreListRequest();
-    FeatureStoreListRequest();
     fetchHomeProducts();
   }, []);
 
@@ -25,7 +21,7 @@ const HomePage = () => {
       <h1 className="sr-only">Welcome to Our Store</h1>
       <ProductCarousel />
       <MarqueeModern />
-      <Feature />
+      <TrustBadges />
       <FeatureCategory />
       <ProductByFlag />
     </>

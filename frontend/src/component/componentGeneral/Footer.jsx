@@ -30,7 +30,7 @@ const phoneFields = [
 // Small caps "label" used the way a care-tag prints a category —
 // e.g. SALES / SERVICE / HOTLINE — the recurring visual motif of this footer.
 const TagLabel = ({ children }) => (
-  <span className=" tracking-[0.18em] uppercase text-[#C6A15B]">
+  <span className=" tracking-[0.18em] uppercase tertiaryTextColor">
     {children}
   </span>
 );
@@ -38,11 +38,11 @@ const TagLabel = ({ children }) => (
 const FooterLink = ({ to, children }) => (
   <Link
     to={to}
-    className="group inline-flex items-center gap-1 text-sm text-[#D8E3D9] transition-colors hover:text-[#C6A15B]"
+    className="group inline-flex items-center gap-1 text-sm accentTextColor transition-colors hover:tertiaryTextColor"
   >
     <span className="relative">
       {children}
-      <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-[#C6A15B] transition-all duration-300 group-hover:w-full" />
+      <span className="absolute -bottom-0.5 left-0 h-px w-0 tertiaryBgColor transition-all duration-300 group-hover:w-full" />
     </span>
   </Link>
 );
@@ -95,14 +95,14 @@ const Footer = () => {
                   />
                 </Link>
                 {GeneralInfoList?.CompanyName && (
-                  <p className="text-lg font-medium text-[#C6A15B]">
+                  <p className="text-lg font-medium tertiaryTextColor">
                     {GeneralInfoList.CompanyName}
                   </p>
                 )}
                 {GeneralInfoList?.CompanyAddress && (
                   <div className="flex items-start gap-2 max-w-xs">
-                    <MapPin className="size-4 mt-0.5 shrink-0 text-[#C6A15B]" />
-                    <p className="text-sm text-[#9FB3A4]">
+                    <MapPin className="size-4 mt-0.5 shrink-0 tertiaryTextColor" />
+                    <p className="text-sm accentTextColor">
                       {GeneralInfoList.CompanyAddress}
                     </p>
                   </div>
@@ -120,9 +120,9 @@ const Footer = () => {
                     ({ label, field }) =>
                       GeneralInfoList?.[field]?.length > 0 && (
                         <div key={field} className="flex items-start gap-2">
-                          <Phone className="size-4 mt-0.5 shrink-0 text-[#C6A15B]" />
+                          <Phone className="size-4 mt-0.5 shrink-0 tertiaryTextColor" />
                           <div>
-                            <span className="block text-[11px] text-[#9FB3A4]">
+                            <span className="block text-[11px] accentTextColor">
                               {label}
                             </span>
                             <p className="text-sm text-[#D8E3D9]">
@@ -131,7 +131,7 @@ const Footer = () => {
                                   {i > 0 && <span>, </span>}
                                   <a
                                     href={`tel:${number}`}
-                                    className="hover:text-[#C6A15B] transition-colors"
+                                    className="hover:tertiaryTextColor transition-colors"
                                   >
                                     {number}
                                   </a>

@@ -60,12 +60,25 @@ const ProductByFlag = () => {
 
         return (
           <div key={flag._id} className={'mb-5'}>
-            <div className="flex items-center gap-4 my-6">
-              <div className="flex-grow h-px bg-gray-400"></div>
-              <h2 className="text-lg pl-10 pr-10 font-bold secondaryTextColor whitespace-nowrap uppercase tracking-widest">
+            <div className="my-5 text-center">
+              <p className="text-sm uppercase tracking-[0.4em] text-gray-500 mb-2">
+                Explore Our
+              </p>
+
+              <h2 className="text-2xl md:text-4xl font-bold primaryTextColor">
                 {flag.name}
               </h2>
-              <div className="flex-grow h-px bg-gray-400"></div>
+
+              <p className="mt-2 text-gray-500 max-w-3xl mx-auto">
+                Discover our carefully selected {flag.name.toLowerCase()}{' '}
+                designed for performance, reliability, and exceptional value.
+              </p>
+
+              <div className="mt-6 flex justify-center items-center gap-3">
+                <div className="w-12 h-px bg-gray-300"></div>
+                <div className="w-2 h-2 rounded-full tertiaryBgColor "></div>
+                <div className="w-12 h-px bg-gray-300"></div>
+              </div>
             </div>
 
             {/* ✅ Render once with sliced products */}
