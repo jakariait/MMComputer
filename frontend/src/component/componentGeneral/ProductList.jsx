@@ -49,7 +49,7 @@ const ProductList = ({ products, productPage }) => {
           className={
             productPage
               ? 'grid grid-cols-1 gap-3 mt-4 '
-              : 'grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4  gap-3 mt-4'
+              : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6  gap-3 mt-4'
           }
         >
           {/*Product Display Section*/}
@@ -71,7 +71,7 @@ const ProductList = ({ products, productPage }) => {
                   {product.variants?.length ? (
                     product.variants.every((v) => v.stock === 0)
                   ) : product.finalStock === 0 ? (
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded">
+                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded ">
                       <span className="bg-red-600 text-white px-2 py-1 text-xs font-bold uppercase tracking-wide rounded shadow">
                         Out of Stock
                       </span>
@@ -161,7 +161,7 @@ const ProductList = ({ products, productPage }) => {
               // Grid View
               <div
                 key={product.slug}
-                className="relative shadow-sm rounded-md pb-2"
+                className="relative shadow-sm rounded-md pb-2 flex flex-col"
               >
                 <div className="relative">
                   <Link to={`/product/${product.slug}`}>
@@ -187,7 +187,7 @@ const ProductList = ({ products, productPage }) => {
                   </div>
                 </Link>
 
-                <div className="flex md:flex-row flex-col items-center gap-2 justify-center">
+                <div className="flex md:flex-row flex-col items-center gap-2 justify-center mt-auto">
                   {/*Base Price*/}
                   {product.variants?.length ? (
                     product.variants[0].discount > 0 ? (

@@ -59,7 +59,7 @@ const ProductByFlag = () => {
         const slicedProducts = products.slice(0, 8); // Show max 8
 
         return (
-          <div key={flag._id} className={'mb-5'}>
+          <div key={flag._id} className={'xl:container  xl:mx-auto mb-5'}>
             <div className="my-5 text-center">
               <p className="text-sm uppercase tracking-[0.4em] text-gray-500 mb-2">
                 Explore Our

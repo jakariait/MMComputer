@@ -95,7 +95,7 @@ const FeatureCategory = () => {
               <Link
                 key={`${item._id || i}`}
                 to={item.link}
-                className="w-[calc(33.333%-0.667rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(16.666%-0.833rem)] xl:w-[calc(12.5%-0.875rem)] group relative bg-white rounded-md border border-gray-200 overflow-hidden transition-colors duration-200 hover:border-[var(--primaryColor)]/40"
+                className="w-[calc(33.333%-0.667rem)] md:w-[calc(12%-0.75rem)] lg:w-[calc(11.666%-0.833rem)] xl:w-[calc(8.5%-0.875rem)] group relative bg-white rounded-md border border-gray-200 overflow-hidden transition-colors duration-200 hover:border-[var(--primaryColor)]/40"
               >
                 <span className="pointer-events-none absolute top-1.5 left-1.5 w-3 h-3 border-t-2 border-l-2 border-[var(--primaryColor)] opacity-0 -translate-x-1 -translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200 z-10" />
                 <span className="pointer-events-none absolute top-1.5 right-1.5 w-3 h-3 border-t-2 border-r-2 border-[var(--primaryColor)] opacity-0 translate-x-1 -translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200 z-10" />
