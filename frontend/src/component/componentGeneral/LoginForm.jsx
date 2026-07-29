@@ -26,9 +26,7 @@ const LoginForm = () => {
         await loadCartFromBackend(token);
         navigate('/user/home');
       } catch (err) {
-        toast.error(
-          'There was a problem loading your cart. Please try again.',
-        );
+        toast.error('There was a problem loading your cart. Please try again.');
       }
     }
   };
@@ -111,7 +109,6 @@ const LoginForm = () => {
           </Link>
         </p>
       </div>
-
     </div>
   );
 };
