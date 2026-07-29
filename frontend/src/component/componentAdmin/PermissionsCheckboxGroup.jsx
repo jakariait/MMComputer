@@ -36,6 +36,7 @@ const PermissionsCheckboxGroup = ({
     { value: 'view_customers', label: 'View Customers' },
     { value: 'delete_customers', label: 'Delete Customers' },
     { value: 'contact_request', label: 'Contact Request' },
+    { value: 'feedback_complain', label: 'Feedback & Complain' },
     { value: 'sliders-banners', label: 'Sliders Banners' },
     { value: 'about_terms-policies', label: 'About Us & Terms & Policies' },
     { value: 'faqs', label: 'FAQs' },

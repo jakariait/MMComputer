@@ -31,6 +31,7 @@ import CompareProductPage from '@/pagesUser/CompareProductPage.jsx';
 import WarrantyPageUser from '@/pagesUser/WarrantyPageUser.jsx';
 import BrandsPageUser from '@/pagesUser/BrandsPageUser.jsx';
 import RepairServicePage from '@/pagesUser/RepairServicePage.jsx';
+import FeedbackComplainPage from '@/pagesUser/FeedbackComplainPage.jsx';
 const LayoutAdmin = lazy(
   () => import('./component/componentAdmin/LayoutAdmin.jsx'),
 );
@@ -127,6 +128,9 @@ const CreateAdminPage = lazy(() => import('./pagesAdmin/CreateAdminPage.jsx'));
 const EditAdminPage = lazy(() => import('./pagesAdmin/EditAdminPage.jsx'));
 const CreateBlogPage = lazy(() => import('./pagesAdmin/CreateBlogPage.jsx'));
 const BlogsListPage = lazy(() => import('./pagesAdmin/BlogsListPage.jsx'));
+const FeedbackComplainPageAdmin = lazy(
+  () => import('./pagesAdmin/FeedbackComplainPageAdmin.jsx'),
+);
 const EditBlogPage = lazy(() => import('./pagesAdmin/EditBlogPage.jsx'));
 const BlogsPage = lazy(() => import('./pagesUser/BlogsPage.jsx'));
 const BlogDetailsPage = lazy(() => import('./pagesUser/BlogDetailsPage.jsx'));
@@ -145,8 +149,12 @@ const ProductOptionsPage = lazy(
   () => import('./pagesAdmin/ProductOptionsPage.jsx'),
 );
 const WishlistPage = lazy(() => import('./pagesUser/WishlistPage.jsx'));
-const UserReviewHistoryPage = lazy(() => import('./pagesUser/UserReviewHistoryPage.jsx'));
-const UserQuestionsPage = lazy(() => import('./pagesUser/UserQuestionsPage.jsx'));
+const UserReviewHistoryPage = lazy(
+  () => import('./pagesUser/UserReviewHistoryPage.jsx'),
+);
+const UserQuestionsPage = lazy(
+  () => import('./pagesUser/UserQuestionsPage.jsx'),
+);
 
 function App() {
   const { GeneralInfoListRequest, GeneralInfoList } = GeneralInfoStore();
@@ -254,6 +262,10 @@ function App() {
             <Route path="/warranty" element={<WarrantyPageUser />} />
             <Route path="/brands" element={<BrandsPageUser />} />
             <Route path="/repair-service" element={<RepairServicePage />} />
+            <Route
+              path="/feedback-complain"
+              element={<FeedbackComplainPage />}
+            />
 
             <Route path="*" element={<NotFoundPage />} />
           </Route>
@@ -365,6 +377,10 @@ function App() {
               <Route
                 path="/admin/product-reviews"
                 element={<AdminProductReviewPage />}
+              />
+              <Route
+                path="/admin/feedback-complain"
+                element={<FeedbackComplainPageAdmin />}
               />
             </Route>
           </Route>

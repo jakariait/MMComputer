@@ -20,6 +20,7 @@ import {
   FaBlog,
   FaStar,
   FaQuestion,
+  FaCommentDots,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import useAuthAdminStore from '../../store/AuthAdminStore.js';
@@ -255,6 +256,13 @@ export const MENU_CONFIG = [
         icon: FaBlog,
         path: '/admin/blogs',
         permission: 'blogs',
+      },
+      {
+        type: 'link',
+        label: 'Feedback & Complain',
+        icon: FaCommentDots,
+        path: '/admin/feedback-complain',
+        permission: 'feedback_complain',
       },
     ],
   },

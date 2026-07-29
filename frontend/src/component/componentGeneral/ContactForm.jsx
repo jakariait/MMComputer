@@ -9,6 +9,7 @@ import {
   Send,
   CheckCircle,
   XCircle,
+  MessageSquare,
 } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
 import SocialMedia from './SocialMedia.jsx';
@@ -231,6 +232,22 @@ const ContactForm = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.15 }}
             >
+              <Link
+                to="/feedback-complain"
+                className="flex items-center gap-3 my-5 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group"
+              >
+                <div className="shrink-0 w-10 h-10 primaryBgColor rounded-lg flex items-center justify-center">
+                  <MessageSquare size={18} className="text-white" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                    Feedback & Complain
+                  </p>
+                  <p className="text-sm text-gray-800 group-hover:primaryTextColor transition-colors mt-0.5">
+                    Share your feedback or submit a complain
+                  </p>
+                </div>
+              </Link>
               <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
                 <h3 className="text-xl font-bold text-gray-900 mb-1">
                   Send us a message
