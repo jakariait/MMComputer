@@ -92,7 +92,7 @@ const ContactForm = () => {
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-white rounded-full" />
           <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-white rounded-full" />
         </div>
-        <div className="relative container mx-auto px-4 py-16 md:py-20 text-center">
+        <div className="relative container mx-auto px-4 py-16 md:py-10 text-center">
           <motion.h1
             className="text-3xl md:text-5xl font-bold text-white mb-3"
             initial={{ opacity: 0, y: -12 }}
@@ -158,15 +158,19 @@ const ContactForm = () => {
                         <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
                           {label}
                         </p>
-                        <div className="flex flex-col mt-0.5">
+                        <div className="flex flex-wrap gap-1 mt-0.5">
                           {GeneralInfoList[field].map((number, i) => (
-                            <a
-                              key={i}
-                              href={`tel:${number}`}
-                              className="text-sm text-gray-800 hover:primaryTextColor transition-colors"
-                            >
-                              {number}
-                            </a>
+                            <span key={i}>
+                              <a
+                                href={`tel:${number}`}
+                                className="text-sm text-gray-800 hover:primaryTextColor transition-colors"
+                              >
+                                {number}
+                              </a>
+                              {i < GeneralInfoList[field].length - 1 && (
+                                <span className="text-gray-400">, </span>
+                              )}
+                            </span>
                           ))}
                         </div>
                       </div>

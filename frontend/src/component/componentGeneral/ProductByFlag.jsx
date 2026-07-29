@@ -56,7 +56,7 @@ const ProductByFlag = () => {
         const encodedFlag = encodeURIComponent(flag.name); // for URL safety
         const viewAllLink = `/shop?page=1&limit=20&flags=${encodedFlag}`;
 
-        const slicedProducts = products.slice(0, 8); // Show max 8
+        const slicedProducts = products.slice(0, 12); // Show max 8
 
         return (
           <div key={flag._id} className={'xl:container  xl:mx-auto mb-5'}>
@@ -84,7 +84,7 @@ const ProductByFlag = () => {
             {/* ✅ Render once with sliced products */}
             <ProductList products={slicedProducts} />
             <div className={'flex flex-wrap justify-center mt-5'}>
-              {products.length > 8 && (
+              {products.length > 12 && (
                 <Link
                   to={viewAllLink}
                   className="primaryTextColor primaryBorderColor border-1 px-4 py-2 rounded"

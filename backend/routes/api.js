@@ -40,6 +40,7 @@ const productOptionController = require('../controllers/ProductOptionController'
 const brandController = require('../controllers/brandController');
 const reviewController = require('../controllers/productReviewController');
 const productQuestionController = require('../controllers/productQuestionController');
+const complainFeedbackController = require('../controllers/complainFeedbackController');
 
 const { handleCourierCheck, getDynamicCourierStatus } = require('../controllers/courierController');
 const cacheMiddleware = require('../middlewares/redisCacheMiddleware');
@@ -852,5 +853,32 @@ router.get(
 );
 
 router.get('/users/me/questions', userProtect, productQuestionController.getUserQuestions);
+
+// Complain & Feedback Routes
+router.post('/complain-feedback', complainFeedbackController.createComplainFeedback);
+router.get(
+  '/complain-feedback',
+  adminProtect,
+  checkPermission('contact_request'),
+  complainFeedbackController.getAllComplainFeedbacks
+);
+router.get(
+  '/complain-feedback/:id',
+  adminProtect,
+  checkPermission('contact_request'),
+  complainFeedbackController.getComplainFeedbackById
+);
+router.put(
+  '/complain-feedback/:id',
+  adminProtect,
+  checkPermission('contact_request'),
+  complainFeedbackController.updateComplainFeedback
+);
+router.delete(
+  '/complain-feedback/:id',
+  adminProtect,
+  checkPermission('contact_request'),
+  complainFeedbackController.deleteComplainFeedback
+);
 
 module.exports = router;
