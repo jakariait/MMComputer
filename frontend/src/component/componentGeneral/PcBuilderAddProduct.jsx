@@ -47,17 +47,16 @@ const PcBuilderAddProduct = ({ name, slug, redirectOnAdd = false }) => {
   }, [slug]);
 
   const toggleProduct = (product) => {
-    let added = false;
+    const alreadyInBuild = selected.some((item) => item._id === product._id);
     setSelected((prev) => {
       const exists = prev.find((item) => item._id === product._id);
       if (exists) return prev.filter((item) => item._id !== product._id);
       const filtered = prev.filter((item) => item.category !== name);
       const updated = [...filtered, { _id: product._id, name: product.name, thumbnailImage: product.thumbnailImage || product.images?.[0], finalPrice: product.finalPrice, slug: product.slug, category: name }];
       localStorage.setItem('pcBuild', JSON.stringify(updated));
-      added = true;
       return updated;
     });
-    if (redirectOnAdd && added) {
+    if (redirectOnAdd && !alreadyInBuild) {
       navigate('/pc-builder');
     }
   };
