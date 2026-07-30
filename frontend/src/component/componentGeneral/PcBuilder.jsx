@@ -20,7 +20,10 @@ import {
   X,
   Box,
   CheckCircle2,
+  ShoppingBag,
 } from 'lucide-react';
+import { toast } from 'sonner';
+import useCartStore from '../../store/useCartStore.js';
 import ImageComponent from './ImageComponent.jsx';
 
 const COMPONENT_SLOTS = [
@@ -184,6 +187,8 @@ const CornerBrackets = ({ active }) => (
 
 const PcBuilder = () => {
   const [build, setBuild] = useState([]);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const { addToCart } = useCartStore();
 
   const loadBuild = () => {
     try {
@@ -209,6 +214,27 @@ const PcBuilder = () => {
   const clearBuild = () => {
     setBuild([]);
     localStorage.setItem('pcBuild', '[]');
+  };
+
+  const handleAddAllToCart = async () => {
+    setAddingToCart(true);
+    for (const item of build) {
+      const cartProduct = {
+        id: item._id,
+        productId: item.productId || item._id,
+        name: item.name,
+        finalPrice: item.finalPrice,
+        finalDiscount: item.finalDiscount || 0,
+        thumbnailImage: item.thumbnailImage,
+        slug: item.slug,
+        freeShipping: item.freeShipping ?? true,
+      };
+      await addToCart(cartProduct, 1, null);
+    }
+    setAddingToCart(false);
+    toast.success(
+      `Added ${build.length} item${build.length > 1 ? 's' : ''} to cart`,
+    );
   };
 
   const totalPrice = build.reduce(
@@ -264,13 +290,23 @@ const PcBuilder = () => {
                 </p>
               </div>
               {totalItems > 0 && (
-                <button
-                  onClick={clearBuild}
-                  className="flex items-center gap-2 self-stretch border border-gray-200 px-4 py-3 text-sm font-medium text-gray-500 transition-colors hover:border-red-300 hover:text-red-500"
-                >
-                  <Trash2 className="size-4" />
-                  Clear
-                </button>
+                <>
+                  <button
+                    onClick={handleAddAllToCart}
+                    disabled={addingToCart}
+                    className="flex items-center gap-2 self-stretch border primaryBorderColor primaryBgColor px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--primaryColor)]/90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    <ShoppingBag className="size-4" />
+                    {addingToCart ? 'Adding…' : 'Add to Cart'}
+                  </button>
+                  <button
+                    onClick={clearBuild}
+                    className="flex items-center gap-2 self-stretch border border-gray-200 px-4 py-3 text-sm font-medium text-gray-500 transition-colors hover:border-red-300 hover:text-red-500"
+                  >
+                    <Trash2 className="size-4" />
+                    Clear
+                  </button>
+                </>
               )}
             </div>
           </div>
@@ -435,9 +471,19 @@ const PcBuilder = () => {
                   ({build.length} items)
                 </span>
               </h2>
-              <span className="text-2xl font-bold primaryTextColor">
-                ৳{formatPrice(totalPrice)}
-              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleAddAllToCart}
+                  disabled={build.length === 0 || addingToCart}
+                  className="flex items-center gap-2 border primaryBorderColor primaryBgColor px-4 py-2.5 text-base font-semibold text-white transition-colors hover:bg-[var(--primaryColor)]/90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <ShoppingBag className="size-4" />
+                  {addingToCart ? 'Adding…' : 'Add to Cart'}
+                </button>
+                <span className="text-2xl font-bold primaryTextColor">
+                  ৳{formatPrice(totalPrice)}
+                </span>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
