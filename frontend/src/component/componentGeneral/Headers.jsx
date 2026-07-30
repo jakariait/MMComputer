@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { X, ShoppingCart, Heart, User, Menu, LogOut } from 'lucide-react';
+import { X, ShoppingCart, Heart, User, Menu, LogOut, Monitor } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
 
 import GeneralInfoStore from '../../store/GeneralInfoStore';
@@ -167,6 +167,14 @@ const Headers = () => {
               <div className={'lg:hidden'}>
                 <HeaderSearch />
               </div>
+              {/* PC Builder */}
+              <Link
+                to="/pc-builder"
+                className="border border-white/30 text-white px-3 py-1.5 text-sm font-semibold rounded hover:bg-white/10 transition-colors"
+              >
+                PC Builder
+              </Link>
+
               {/* Wishlist */}
 
               <Link

@@ -10,6 +10,7 @@ const menuLinks = [
   { label: 'About', to: '/about' },
   { label: 'Blog', to: '/blog' },
   { label: 'Contact', to: '/contact-us' },
+  { label: 'PC Builder', to: '/pc-builder' },
   { label: 'Feedback & Complain', to: '/feedback-complain' },
   { label: 'Track Your Order', to: '/track-order' },
   { label: 'Brands', to: '/brands' },
