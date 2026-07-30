@@ -175,7 +175,7 @@ const CornerBrackets = ({ active }) => (
         key={i}
         aria-hidden="true"
         className={`pointer-events-none absolute ${pos} h-3 w-3 border-t-2 border-l-2 transition-colors duration-200 ${
-          active ? 'border-[var(--primaryColor)]' : 'border-gray-300'
+          active ? 'primaryBorderColor' : 'border-gray-300'
         }`}
       />
     ))}
@@ -234,10 +234,10 @@ const PcBuilder = () => {
           <CornerBrackets active={buildComplete} />
           <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <span className="text-xs font-medium uppercase tracking-[0.25em] text-[var(--primaryColor)]">
+              <span className="text-xs font-medium uppercase tracking-[0.25em] primaryTextColor">
                 Configuration Console
               </span>
-              <h1 className="mt-2 text-3xl font-bold tracking-tight text-[var(--secondaryColor)] sm:text-4xl">
+              <h1 className="mt-2 text-3xl font-bold tracking-tight secondaryTextColor sm:text-4xl">
                 PC Builder
               </h1>
               <p className="mt-2 max-w-md text-base leading-relaxed text-gray-500">
@@ -251,15 +251,15 @@ const PcBuilder = () => {
                 <p className="text-[11px] uppercase tracking-widest text-gray-400">
                   Items
                 </p>
-                <p className="mt-1 text-2xl font-bold text-[var(--secondaryColor)]">
+                <p className="mt-1 text-2xl font-bold secondaryTextColor">
                   {totalItems}
                 </p>
               </div>
               <div className="border border-[var(--primaryColor)]/30 bg-[var(--primaryColor)]/5 px-4 py-3">
-                <p className="text-[11px] uppercase tracking-widest text-[var(--primaryColor)]">
+                <p className="text-[11px] uppercase tracking-widest primaryTextColor">
                   Total
                 </p>
-                <p className="mt-1 text-2xl font-bold text-[var(--primaryColor)]">
+                <p className="mt-1 text-2xl font-bold primaryTextColor">
                   ৳{formatPrice(totalPrice)}
                 </p>
               </div>
@@ -280,7 +280,7 @@ const PcBuilder = () => {
             <div className="mb-2 flex items-center justify-between text-sm">
               <span className="uppercase tracking-widest text-gray-500">
                 Required Components&nbsp;
-                <span className="text-[var(--secondaryColor)]">
+                <span className="secondaryTextColor">
                   {filledRequired}/{requiredSlots.length}
                 </span>
               </span>
@@ -296,9 +296,7 @@ const PcBuilder = () => {
                 <div
                   key={s.name}
                   className={`flex-1 transition-colors duration-300 ${
-                    i < filledRequired
-                      ? 'bg-[var(--primaryColor)]'
-                      : 'bg-gray-200'
+                    i < filledRequired ? 'primaryBgColor' : 'bg-gray-200'
                   }`}
                 />
               ))}
@@ -312,7 +310,7 @@ const PcBuilder = () => {
           return (
             <div key={group} className="mt-10">
               <div className="mb-4 flex items-center gap-3">
-                <h2 className="text-lg font-bold uppercase tracking-wider text-[var(--secondaryColor)]">
+                <h2 className="text-lg font-bold uppercase tracking-wider secondaryTextColor">
                   {group}
                 </h2>
                 <div className="h-px flex-1 bg-gray-200" />
@@ -327,12 +325,12 @@ const PcBuilder = () => {
                       key={slot.name}
                       className={`group relative border bg-white transition-colors duration-200 ${
                         selected
-                          ? 'border-[var(--primaryColor)] shadow-sm'
+                          ? 'primaryBorderColor shadow-sm'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
                       <CornerBrackets active={!!selected} />
-                      <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:gap-5 sm:px-6 sm:py-5">
+                      <div className="flex flex-row flex-wrap items-start gap-4 p-4 sm:flex-nowrap sm:items-center sm:gap-5 sm:px-6 py-2">
                         <div
                           className={`flex size-14 shrink-0 items-center justify-center border ${
                             selected
@@ -341,13 +339,13 @@ const PcBuilder = () => {
                           }`}
                         >
                           <Icon
-                            className={`size-6 ${selected ? 'text-[var(--primaryColor)]' : 'text-gray-400'}`}
+                            className={`size-6 ${selected ? 'primaryTextColor' : 'text-gray-400'}`}
                           />
                         </div>
 
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-lg font-semibold text-[var(--secondaryColor)]">
+                            <span className="text-lg font-semibold secondaryTextColor">
                               {slot.name}
                             </span>
                             {slot.required ? (
@@ -373,7 +371,7 @@ const PcBuilder = () => {
                               </div>
                               <Link
                                 to={`/product/${selected.slug}`}
-                                className="truncate text-base text-gray-600 transition-colors hover:text-[var(--primaryColor)]"
+                                className="truncate text-base text-gray-600 transition-colors hover:primaryTextColor"
                               >
                                 {selected.name}
                               </Link>
@@ -385,16 +383,16 @@ const PcBuilder = () => {
                           )}
                         </div>
 
-                        <div className="flex shrink-0 items-center gap-3 sm:justify-end">
+                        <div className="flex w-full shrink-0 items-center gap-3 sm:w-auto sm:justify-end">
                           {selected ? (
                             <>
-                              <span className="text-xl font-bold text-[var(--primaryColor)]">
+                              <span className="text-xl font-bold primaryTextColor">
                                 ৳{formatPrice(selected.finalPrice)}
                               </span>
                               {slot.link && (
                                 <Link
                                   to={slot.link}
-                                  className="border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:border-[var(--primaryColor)] hover:text-[var(--primaryColor)]"
+                                  className="border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:border-[var(--primaryColor)] hover:primaryTextColor"
                                 >
                                   Change
                                 </Link>
@@ -410,7 +408,7 @@ const PcBuilder = () => {
                           ) : (
                             <Link
                               to={slot.link}
-                              className="flex items-center gap-2 border border-[var(--primaryColor)] bg-[var(--primaryColor)] px-4 py-2.5 text-base font-semibold text-white transition-colors hover:bg-[var(--primaryColor)]/90"
+                              className="flex items-center gap-2 border primaryBorderColor primaryBgColor px-4 py-2.5 text-base font-semibold text-white transition-colors hover:bg-[var(--primaryColor)]/90"
                             >
                               <Plus className="size-4" />
                               Choose
@@ -430,14 +428,14 @@ const PcBuilder = () => {
         {build.length > 0 && (
           <div className="mt-12 border-t border-gray-200 pt-8">
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <h2 className="flex items-center gap-2.5 text-xl font-bold text-[var(--secondaryColor)]">
-                <ShoppingCart className="size-6 text-[var(--primaryColor)]" />
+              <h2 className="flex items-center gap-2.5 text-xl font-bold secondaryTextColor">
+                <ShoppingCart className="size-6 primaryTextColor" />
                 Your Build
                 <span className="text-base font-normal text-gray-400">
                   ({build.length} items)
                 </span>
               </h2>
-              <span className="text-2xl font-bold text-[var(--primaryColor)]">
+              <span className="text-2xl font-bold primaryTextColor">
                 ৳{formatPrice(totalPrice)}
               </span>
             </div>
@@ -459,13 +457,13 @@ const PcBuilder = () => {
                   <div className="min-w-0 flex-1">
                     <Link
                       to={`/product/${item.slug}`}
-                      className="block truncate text-base font-medium text-gray-800 transition-colors hover:text-[var(--primaryColor)]"
+                      className="block truncate text-base font-medium text-gray-800 transition-colors hover:primaryTextColor"
                     >
                       {item.name}
                     </Link>
                     <p className="text-sm text-gray-400">{item.category}</p>
                   </div>
-                  <p className="shrink-0 text-base font-bold text-[var(--primaryColor)]">
+                  <p className="shrink-0 text-base font-bold primaryTextColor">
                     ৳{formatPrice(item.finalPrice)}
                   </p>
                   <button
