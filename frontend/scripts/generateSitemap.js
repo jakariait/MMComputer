@@ -31,17 +31,44 @@ const generateSitemap = async () => {
   try {
     console.log('Fetching data from API...');
 
-    const [productsRes, categoriesRes, blogsRes] = await Promise.all([
-      axios.get(`${API_URL}/getAllProducts`),
+    // Fetch all products with pagination
+    const firstPageRes = await axios.get(`${API_URL}/getAllProducts`, {
+      params: { limit: 100, page: 1 },
+    });
+    const firstPageData =
+      firstPageRes.data?.products ||
+      firstPageRes.data?.data ||
+      firstPageRes.data ||
+      [];
+    const totalProducts =
+      firstPageRes.data?.totalProducts || firstPageRes.data?.total || 0;
+    products = Array.isArray(firstPageData) ? firstPageData : [];
+
+    const totalPages = Math.ceil(totalProducts / 100);
+    if (totalPages > 1) {
+      const remainingPages = [];
+      for (let p = 2; p <= totalPages; p++) {
+        remainingPages.push(
+          axios.get(`${API_URL}/getAllProducts`, {
+            params: { limit: 100, page: p },
+          }),
+        );
+      }
+      const restResponses = await Promise.all(remainingPages);
+      for (const res of restResponses) {
+        const pageData =
+          res.data?.products || res.data?.data || res.data || [];
+        if (Array.isArray(pageData)) {
+          products.push(...pageData);
+        }
+      }
+    }
+
+    const [categoriesRes, blogsRes] = await Promise.all([
       axios.get(`${API_URL}/category`),
       axios.get(`${API_URL}/activeblog`),
     ]);
 
-    products =
-      productsRes.data?.products ||
-      productsRes.data?.data ||
-      productsRes.data ||
-      [];
     categories =
       categoriesRes.data?.categories ||
       categoriesRes.data?.data ||
