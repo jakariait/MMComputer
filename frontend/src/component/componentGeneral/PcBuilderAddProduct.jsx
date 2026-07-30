@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingCart, Trash2 } from 'lucide-react';
 import ImageComponent from './ImageComponent.jsx';
 import ProductList from './ProductList.jsx';
 
@@ -12,10 +12,18 @@ const formatPrice = (price) => {
   return price.toLocaleString();
 };
 
-const PcBuilderAddProduct = ({ name, slug, redirectOnAdd = false }) => {
+const PcBuilderAddProduct = ({
+  name,
+  slug,
+  category = '',
+  redirectOnAdd = false,
+}) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
   const [selected, setSelected] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('pcBuild') || '[]');
@@ -30,21 +38,34 @@ const PcBuilderAddProduct = ({ name, slug, redirectOnAdd = false }) => {
 
   useEffect(() => {
     if (!slug) return;
+    setPage(1);
+  }, [slug, category]);
+
+  useEffect(() => {
+    if (!slug) return;
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`${apiUrl}/getAllProducts`, {
-          params: { subcategory: slug, limit: 50 },
-        });
+        const params = { limit: 24, page };
+        if (category) {
+          params.category = category;
+        } else if (slug) {
+          params.subcategory = slug;
+        }
+        const res = await axios.get(`${apiUrl}/getAllProducts`, { params });
         setProducts(res.data.products || []);
+        setTotalPages(res.data.totalPages || 0);
+        setTotalProducts(res.data.totalProducts || 0);
       } catch {
         setProducts([]);
+        setTotalPages(0);
+        setTotalProducts(0);
       } finally {
         setLoading(false);
       }
     };
     fetchProducts();
-  }, [slug]);
+  }, [slug, category, page]);
 
   const toggleProduct = (product) => {
     const alreadyInBuild = selected.some((item) => item._id === product._id);
@@ -52,7 +73,17 @@ const PcBuilderAddProduct = ({ name, slug, redirectOnAdd = false }) => {
       const exists = prev.find((item) => item._id === product._id);
       if (exists) return prev.filter((item) => item._id !== product._id);
       const filtered = prev.filter((item) => item.category !== name);
-      const updated = [...filtered, { _id: product._id, name: product.name, thumbnailImage: product.thumbnailImage || product.images?.[0], finalPrice: product.finalPrice, slug: product.slug, category: name }];
+      const updated = [
+        ...filtered,
+        {
+          _id: product._id,
+          name: product.name,
+          thumbnailImage: product.thumbnailImage || product.images?.[0],
+          finalPrice: product.finalPrice,
+          slug: product.slug,
+          category: name,
+        },
+      ];
       localStorage.setItem('pcBuild', JSON.stringify(updated));
       return updated;
     });
@@ -63,7 +94,7 @@ const PcBuilderAddProduct = ({ name, slug, redirectOnAdd = false }) => {
 
   const isSelected = useCallback(
     (id) => selected.some((item) => item._id === id),
-    [selected]
+    [selected],
   );
 
   const removeSelected = (id) => {
@@ -110,7 +141,10 @@ const PcBuilderAddProduct = ({ name, slug, redirectOnAdd = false }) => {
         {loading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-md border border-gray-200 overflow-hidden">
+              <div
+                key={i}
+                className="bg-white rounded-md border border-gray-200 overflow-hidden"
+              >
                 <div className="bg-gray-100 h-[160px] w-full animate-pulse" />
                 <div className="p-3 space-y-2">
                   <div className="bg-gray-100 h-4 w-full animate-pulse rounded" />
@@ -126,6 +160,49 @@ const PcBuilderAddProduct = ({ name, slug, redirectOnAdd = false }) => {
             buildOverrides={{ isInBuild: isSelected, onToggle: toggleProduct }}
             showBuildButton
           />
+        )}
+
+        {totalPages > 0 && (
+          <div className="flex justify-center items-center mt-8 gap-4">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1 || loading}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors
+                ${
+                  page === 1 || loading
+                    ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+                    : 'border-gray-500 hover:bg-gray-100'
+                }`}
+              aria-label="Previous page"
+            >
+              <ChevronLeft size={18} aria-hidden="true" />
+              <span className="hidden md:block">Previous</span>
+            </button>
+
+            <div className="flex items-center gap-2 text-sm">
+              <span>
+                Page {page} of {totalPages}
+              </span>
+              <span className="hidden md:block text-gray-500">
+                • {totalProducts} Products
+              </span>
+            </div>
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page >= totalPages || loading}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors
+                ${
+                  page >= totalPages || loading
+                    ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+                    : 'border-gray-500 hover:bg-gray-100'
+                }`}
+              aria-label="Next page"
+            >
+              <span className="hidden md:block">Next</span>
+              <ChevronRight size={18} aria-hidden="true" />
+            </button>
+          </div>
         )}
 
         {selected.length > 0 && (

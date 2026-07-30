@@ -6,8 +6,16 @@ const PcBuilderCategoryPage = () => {
   const { categoryName } = useParams();
   const [searchParams] = useSearchParams();
   const slug = searchParams.get('slug') || categoryName;
+  const category = searchParams.get('category') || '';
   const isCore = searchParams.get('core') === '1';
-  return <PcBuilderAddProduct name={decodeURIComponent(categoryName)} slug={slug} redirectOnAdd={isCore} />;
+  return (
+    <PcBuilderAddProduct
+      name={decodeURIComponent(categoryName)}
+      slug={slug}
+      category={category}
+      redirectOnAdd={isCore}
+    />
+  );
 };
 
 export default PcBuilderCategoryPage;

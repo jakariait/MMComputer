@@ -101,7 +101,7 @@ const COMPONENT_SLOTS = [
     required: false,
     group: 'Peripherals & Others',
     slug: 'casing-fan-6a64c8f087d012817ce92919',
-    link: '/pc-builder/category/Casing%20Fan?slug=casing-fan-6a64c8f087d012817ce92919',
+    link: '/pc-builder/category/Casing%20Fan?slug=casing-fan-6a64c8f087d012817ce92919&core=1',
   },
   {
     name: 'Monitor',
@@ -109,7 +109,7 @@ const COMPONENT_SLOTS = [
     required: false,
     group: 'Peripherals & Others',
     slug: 'monitor',
-    link: '/pc-builder/category/Monitor?slug=monitor',
+    link: '/pc-builder/category/Monitor?category=Monitor&core=1',
   },
   {
     name: 'Keyboard',
@@ -117,7 +117,7 @@ const COMPONENT_SLOTS = [
     required: false,
     group: 'Peripherals & Others',
     slug: 'keyboard',
-    link: '/pc-builder/category/Keyboard?slug=keyboard',
+    link: '/pc-builder/category/Keyboard?slug=keyboard-19&core=1',
   },
   {
     name: 'Mouse',
@@ -125,7 +125,7 @@ const COMPONENT_SLOTS = [
     required: false,
     group: 'Peripherals & Others',
     slug: 'mouse',
-    link: '/pc-builder/category/Mouse?slug=mouse',
+    link: '/pc-builder/category/Mouse?slug=mouse-18&core=1',
   },
   {
     name: 'Speaker',
@@ -133,7 +133,7 @@ const COMPONENT_SLOTS = [
     required: false,
     group: 'Peripherals & Others',
     slug: 'speaker',
-    link: '/pc-builder/category/Speaker?slug=speaker',
+    link: '/pc-builder/category/Speaker?slug=speaker-andamp-home-theater-23&core=1',
   },
   {
     name: 'Headphone',
@@ -141,7 +141,7 @@ const COMPONENT_SLOTS = [
     required: false,
     group: 'Peripherals & Others',
     slug: 'headphone',
-    link: '/pc-builder/category/Headphone?slug=headphone',
+    link: '/pc-builder/category/Headphone?slug=headphone-20&core=1',
   },
   {
     name: 'UPS',
@@ -149,7 +149,7 @@ const COMPONENT_SLOTS = [
     required: false,
     group: 'Peripherals & Others',
     slug: 'ups',
-    link: '/pc-builder/category/UPS?slug=ups',
+    link: '/pc-builder/category/UPS?slug=ups-106&core=1',
   },
 ];
 
