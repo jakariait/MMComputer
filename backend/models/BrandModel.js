@@ -13,7 +13,11 @@ const brandSchema = new mongoose.Schema(
       unique: true,
     },
     logo: {
-      type: String, // URL or file path for brand logo
+      type: String,
+    },
+    isTopBrand: {
+      type: Boolean,
+      default: false,
     },
   },
   {

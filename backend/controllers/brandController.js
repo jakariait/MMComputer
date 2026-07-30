@@ -4,8 +4,8 @@ const path = require('path');
 
 const createBrand = async (req, res) => {
   try {
-    const { name } = req.body;
-    const brandData = { name };
+    const { name, isTopBrand } = req.body;
+    const brandData = { name, isTopBrand: isTopBrand === 'true' || isTopBrand === true };
 
     if (req.files && req.files.logo) {
       brandData.logo = req.files.logo[0].filename;
@@ -47,8 +47,8 @@ const getBrandById = async (req, res) => {
 const updateBrand = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
-    const brandData = { name };
+    const { name, isTopBrand } = req.body;
+    const brandData = { name, isTopBrand: isTopBrand === 'true' || isTopBrand === true };
 
     const existingBrand = await brandService.getBrandById(id);
     if (!existingBrand) {

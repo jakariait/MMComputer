@@ -21,6 +21,7 @@ import {
   Loader2,
   ChevronLeft,
   ChevronRight,
+  Star,
 } from 'lucide-react';
 import { SectionHeader } from '@/component/componentAdmin/SectionHeader.jsx';
 import Skeleton from 'react-loading-skeleton';
@@ -39,7 +40,7 @@ const BrandsAllInOne = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [formData, setFormData] = useState({ name: '' });
+  const [formData, setFormData] = useState({ name: '', isTopBrand: false });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [logoPreview, setLogoPreview] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
@@ -72,7 +73,7 @@ const BrandsAllInOne = () => {
   const handleOpenCreate = () => {
     setIsEdit(false);
     setEditId(null);
-    setFormData({ name: '' });
+    setFormData({ name: '', isTopBrand: false });
     setLogoPreview(null);
     setLogoFile(null);
     setLogoRemoved(false);
@@ -82,7 +83,7 @@ const BrandsAllInOne = () => {
   const handleOpenEdit = (brand) => {
     setIsEdit(true);
     setEditId(brand._id);
-    setFormData({ name: brand.name });
+    setFormData({ name: brand.name, isTopBrand: brand.isTopBrand });
     setLogoPreview(brand.logo ? `${imageBaseUrl}/${brand.logo}` : null);
     setLogoFile(null);
     setLogoRemoved(false);
@@ -98,6 +99,7 @@ const BrandsAllInOne = () => {
     try {
       const fd = new FormData();
       fd.append('name', formData.name);
+      fd.append('isTopBrand', formData.isTopBrand);
       if (logoFile) {
         fd.append('logo', logoFile);
       }
@@ -213,7 +215,13 @@ const BrandsAllInOne = () => {
                   className="group relative overflow-hidden "
                 >
                   <CardContent className="p-0">
-                    <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden ">
+                    <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden">
+                      {brand.isTopBrand && (
+                        <span className="absolute left-1.5 top-1.5 z-10 flex items-center gap-1 rounded-full bg-yellow-400 px-2 py-0.5 text-[11px] font-semibold text-yellow-900 shadow-sm">
+                          <Star className="size-3 fill-yellow-900" />
+                          Top
+                        </span>
+                      )}
                       {brand.logo ? (
                         <img
                           src={`${imageBaseUrl}/${brand.logo}`}
@@ -227,7 +235,6 @@ const BrandsAllInOne = () => {
                         </span>
                       )}
 
-                      {/* Action buttons: always visible on touch, fade-in on hover for pointer devices */}
                       <div className="absolute inset-x-0 top-0 flex justify-end gap-1 p-1.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
                         <Button
                           variant="secondary"
@@ -248,8 +255,11 @@ const BrandsAllInOne = () => {
                       </div>
                     </div>
 
-                    <p className="w-full truncate px-2 py-2 -mb-6 text-center text-sm font-medium">
-                      {brand.name}
+                    <p className="flex items-center justify-center gap-1 px-2 py-2 -mb-6 text-center text-sm font-medium">
+                      {brand.isTopBrand && (
+                        <Star className="size-3.5 shrink-0 fill-yellow-500 text-yellow-500" />
+                      )}
+                      <span className="truncate">{brand.name}</span>
                     </p>
                   </CardContent>
                 </Card>
@@ -329,6 +339,17 @@ const BrandsAllInOne = () => {
                   Brand name is required
                 </p>
               )}
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Top Brand</label>
+              <input
+                type="checkbox"
+                checked={formData.isTopBrand}
+                onChange={(e) =>
+                  setFormData({ ...formData, isTopBrand: e.target.checked })
+                }
+                className="size-4 accent-[var(--primaryColor)]"
+              />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">
