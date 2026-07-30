@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import Skeleton from 'react-loading-skeleton';
-import { Check, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ShoppingCart, Trash2 } from 'lucide-react';
 import ImageComponent from './ImageComponent.jsx';
+import ProductList from './ProductList.jsx';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -12,7 +12,8 @@ const formatPrice = (price) => {
   return price.toLocaleString();
 };
 
-const PcBuilderAddProduct = ({ category }) => {
+const PcBuilderAddProduct = ({ name, slug, redirectOnAdd = false }) => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(() => {
@@ -28,12 +29,12 @@ const PcBuilderAddProduct = ({ category }) => {
   }, [selected]);
 
   useEffect(() => {
-    if (!category) return;
+    if (!slug) return;
     const fetchProducts = async () => {
       try {
         setLoading(true);
         const res = await axios.get(`${apiUrl}/getAllProducts`, {
-          params: { category, limit: 50 },
+          params: { subcategory: slug, limit: 50 },
         });
         setProducts(res.data.products || []);
       } catch {
@@ -43,21 +44,28 @@ const PcBuilderAddProduct = ({ category }) => {
       }
     };
     fetchProducts();
-  }, [category]);
+  }, [slug]);
+
+  const toggleProduct = (product) => {
+    let added = false;
+    setSelected((prev) => {
+      const exists = prev.find((item) => item._id === product._id);
+      if (exists) return prev.filter((item) => item._id !== product._id);
+      const filtered = prev.filter((item) => item.category !== name);
+      const updated = [...filtered, { _id: product._id, name: product.name, thumbnailImage: product.thumbnailImage || product.images?.[0], finalPrice: product.finalPrice, slug: product.slug, category: name }];
+      localStorage.setItem('pcBuild', JSON.stringify(updated));
+      added = true;
+      return updated;
+    });
+    if (redirectOnAdd && added) {
+      navigate('/pc-builder');
+    }
+  };
 
   const isSelected = useCallback(
     (id) => selected.some((item) => item._id === id),
     [selected]
   );
-
-  const toggleProduct = (product) => {
-    setSelected((prev) => {
-      const exists = prev.find((item) => item._id === product._id);
-      if (exists) return prev.filter((item) => item._id !== product._id);
-      const filtered = prev.filter((item) => item.category !== category);
-      return [...filtered, { _id: product._id, name: product.name, thumbnailImage: product.thumbnailImage, finalPrice: product.finalPrice, slug: product.slug, category }];
-    });
-  };
 
   const removeSelected = (id) => {
     setSelected((prev) => prev.filter((item) => item._id !== id));
@@ -67,7 +75,7 @@ const PcBuilderAddProduct = ({ category }) => {
     setSelected([]);
   };
 
-  if (!category) {
+  if (!slug) {
     return (
       <section className="bg-gray-50 min-h-screen py-8">
         <div className="xl:container xl:mx-auto px-4 text-center py-20 text-gray-500 text-sm">
@@ -83,7 +91,7 @@ const PcBuilderAddProduct = ({ category }) => {
         <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
           <div>
             <h1 className="text-[28px] md:text-[34px] font-semibold text-gray-800 leading-tight tracking-tight">
-              {category}
+              {name}
             </h1>
             <p className="text-sm text-gray-500 mt-1">
               Select a product to add to your build.
@@ -104,68 +112,21 @@ const PcBuilderAddProduct = ({ category }) => {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
               <div key={i} className="bg-white rounded-md border border-gray-200 overflow-hidden">
-                <Skeleton className="h-[160px] w-full rounded-none" />
+                <div className="bg-gray-100 h-[160px] w-full animate-pulse" />
                 <div className="p-3 space-y-2">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-16" />
+                  <div className="bg-gray-100 h-4 w-full animate-pulse rounded" />
+                  <div className="bg-gray-100 h-4 w-16 animate-pulse rounded" />
                 </div>
               </div>
             ))}
           </div>
-        ) : products.length === 0 ? (
-          <div className="text-center py-20 text-gray-500 text-sm">
-            No products found in this category.
-          </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            {products.filter((p) => p.isActive).map((product) => {
-              const added = isSelected(product._id);
-              return (
-                <div
-                  key={product._id}
-                  className={`bg-white rounded-md border overflow-hidden transition-colors ${
-                    added ? 'border-[var(--primaryColor)] ring-1 ring-[var(--primaryColor)]' : 'border-gray-200'
-                  }`}
-                >
-                  <Link
-                    to={`/product/${product.slug}`}
-                    className="block h-[140px] overflow-hidden bg-white"
-                  >
-                    <ImageComponent
-                      imageName={product.thumbnailImage}
-                      className="w-full h-full object-contain p-3"
-                      altName={product.name}
-                      skeletonHeight={140}
-                    />
-                  </Link>
-                  <div className="p-2.5 border-t border-gray-100">
-                    <Link to={`/product/${product.slug}`}>
-                      <p className="text-xs text-gray-800 font-medium line-clamp-2 leading-snug min-h-[2em]">
-                        {product.name}
-                      </p>
-                    </Link>
-                    <p className="text-sm font-semibold text-[var(--primaryColor)] mt-1">
-                      {product.finalPrice ? `৳${formatPrice(product.finalPrice)}` : '—'}
-                    </p>
-                    <button
-                      onClick={() => toggleProduct(product)}
-                      className={`mt-2 w-full flex items-center justify-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                        added
-                          ? 'bg-green-50 text-green-600 border border-green-200'
-                          : 'bg-[var(--primaryColor)] text-white hover:opacity-90'
-                      }`}
-                    >
-                      {added ? (
-                        <><Check className="size-3.5" /> Added</>
-                      ) : (
-                        <><Plus className="size-3.5" /> Add to Build</>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <ProductList
+            products={products}
+            categoryName={name}
+            buildOverrides={{ isInBuild: isSelected, onToggle: toggleProduct }}
+            showBuildButton
+          />
         )}
 
         {selected.length > 0 && (

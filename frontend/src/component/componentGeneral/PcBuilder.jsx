@@ -23,22 +23,134 @@ import {
 import ImageComponent from './ImageComponent.jsx';
 
 const COMPONENT_SLOTS = [
-  { name: 'Processor', icon: Cpu, required: true, group: 'Core Components', link: '/shop?subcategory=processor-6a64c8f287d012817ce92934' },
-  { name: 'CPU Cooler', icon: Wind, required: true, group: 'Core Components', link: '/shop?subcategory=cpu-cooler-6a64c8f087d012817ce9291c' },
-  { name: 'Motherboard', icon: CircuitBoard, required: true, group: 'Core Components', link: '/shop?subcategory=motherboard-6a64c8f187d012817ce9292e' },
-  { name: 'RAM (Desktop)', icon: Server, required: true, group: 'Core Components', link: '/shop?subcategory=ram-%28desktop%29-6a64c8f287d012817ce92937' },
-  { name: 'Graphics Card', icon: Monitor, required: true, group: 'Core Components', link: '/shop?subcategory=graphics-card-6a64c8f187d012817ce92922' },
-  { name: 'Power Supply', icon: Zap, required: true, group: 'Core Components', link: '/shop?subcategory=power-supply-6a64c8f187d012817ce92931' },
-  { name: 'SSD', icon: HardDrive, required: true, group: 'Core Components', link: '/shop?subcategory=ssd-6a64c8f287d012817ce9293a' },
-  { name: 'Hard Disk Drive', icon: HardDrive, required: true, group: 'Core Components', link: '/shop?subcategory=hard-disk-drive-6a64c8f187d012817ce9291f' },
-  { name: 'Casing', icon: Box, required: true, group: 'Core Components', link: '/shop?subcategory=casing-6a64c8f187d012817ce92925' },
-  { name: 'Casing Fan', icon: Fan, required: false, group: 'Peripherals & Others', link: '/shop?subcategory=casing-fan-6a64c8f087d012817ce92919' },
-  { name: 'Monitor', icon: Monitor, required: false, group: 'Peripherals & Others', link: '/pc-builder/category/Monitor' },
-  { name: 'Keyboard', icon: Keyboard, required: false, group: 'Peripherals & Others', link: '/pc-builder/category/Keyboard' },
-  { name: 'Mouse', icon: Mouse, required: false, group: 'Peripherals & Others', link: '/pc-builder/category/Mouse' },
-  { name: 'Speaker', icon: Speaker, required: false, group: 'Peripherals & Others', link: '/pc-builder/category/Speaker' },
-  { name: 'Headphone', icon: Headphones, required: false, group: 'Peripherals & Others', link: '/pc-builder/category/Headphone' },
-  { name: 'UPS', icon: BatteryCharging, required: false, group: 'Peripherals & Others', link: '/pc-builder/category/UPS' },
+  {
+    name: 'Processor',
+    icon: Cpu,
+    required: true,
+    group: 'Core Components',
+    slug: 'processor-6a64c8f287d012817ce92934',
+    link: '/pc-builder/category/Processor?slug=processor-6a64c8f287d012817ce92934&core=1',
+  },
+  {
+    name: 'CPU Cooler',
+    icon: Wind,
+    required: true,
+    group: 'Core Components',
+    slug: 'cpu-cooler-6a64c8f087d012817ce9291c',
+    link: '/pc-builder/category/CPU%20Cooler?slug=cpu-cooler-6a64c8f087d012817ce9291c&core=1',
+  },
+  {
+    name: 'Motherboard',
+    icon: CircuitBoard,
+    required: true,
+    group: 'Core Components',
+    slug: 'motherboard-6a64c8f187d012817ce9292e',
+    link: '/pc-builder/category/Motherboard?slug=motherboard-6a64c8f187d012817ce9292e&core=1',
+  },
+  {
+    name: 'RAM (Desktop)',
+    icon: Server,
+    required: true,
+    group: 'Core Components',
+    slug: 'ram-%28desktop%29-6a64c8f287d012817ce92937',
+    link: '/pc-builder/category/RAM%20(Desktop)?slug=ram-%28desktop%29-6a64c8f287d012817ce92937&core=1',
+  },
+  {
+    name: 'Graphics Card',
+    icon: Monitor,
+    required: true,
+    group: 'Core Components',
+    slug: 'graphics-card-6a64c8f187d012817ce92922',
+    link: '/pc-builder/category/Graphics%20Card?slug=graphics-card-6a64c8f187d012817ce92922&core=1',
+  },
+  {
+    name: 'Power Supply',
+    icon: Zap,
+    required: true,
+    group: 'Core Components',
+    slug: 'power-supply-6a64c8f187d012817ce92931',
+    link: '/pc-builder/category/Power%20Supply?slug=power-supply-6a64c8f187d012817ce92931&core=1',
+  },
+  {
+    name: 'SSD',
+    icon: HardDrive,
+    required: true,
+    group: 'Core Components',
+    slug: 'ssd-6a64c8f287d012817ce9293a',
+    link: '/pc-builder/category/SSD?slug=ssd-6a64c8f287d012817ce9293a&core=1',
+  },
+  {
+    name: 'Hard Disk Drive',
+    icon: HardDrive,
+    required: true,
+    group: 'Core Components',
+    slug: 'hard-disk-drive-6a64c8f187d012817ce9291f',
+    link: '/pc-builder/category/Hard%20Disk%20Drive?slug=hard-disk-drive-6a64c8f187d012817ce9291f&core=1',
+  },
+  {
+    name: 'Casing',
+    icon: Box,
+    required: true,
+    group: 'Core Components',
+    slug: 'casing-6a64c8f187d012817ce92925',
+    link: '/pc-builder/category/Casing?slug=casing-6a64c8f187d012817ce92925&core=1',
+  },
+  {
+    name: 'Casing Fan',
+    icon: Fan,
+    required: false,
+    group: 'Peripherals & Others',
+    slug: 'casing-fan-6a64c8f087d012817ce92919',
+    link: '/pc-builder/category/Casing%20Fan?slug=casing-fan-6a64c8f087d012817ce92919',
+  },
+  {
+    name: 'Monitor',
+    icon: Monitor,
+    required: false,
+    group: 'Peripherals & Others',
+    slug: 'monitor',
+    link: '/pc-builder/category/Monitor?slug=monitor',
+  },
+  {
+    name: 'Keyboard',
+    icon: Keyboard,
+    required: false,
+    group: 'Peripherals & Others',
+    slug: 'keyboard',
+    link: '/pc-builder/category/Keyboard?slug=keyboard',
+  },
+  {
+    name: 'Mouse',
+    icon: Mouse,
+    required: false,
+    group: 'Peripherals & Others',
+    slug: 'mouse',
+    link: '/pc-builder/category/Mouse?slug=mouse',
+  },
+  {
+    name: 'Speaker',
+    icon: Speaker,
+    required: false,
+    group: 'Peripherals & Others',
+    slug: 'speaker',
+    link: '/pc-builder/category/Speaker?slug=speaker',
+  },
+  {
+    name: 'Headphone',
+    icon: Headphones,
+    required: false,
+    group: 'Peripherals & Others',
+    slug: 'headphone',
+    link: '/pc-builder/category/Headphone?slug=headphone',
+  },
+  {
+    name: 'UPS',
+    icon: BatteryCharging,
+    required: false,
+    group: 'Peripherals & Others',
+    slug: 'ups',
+    link: '/pc-builder/category/UPS?slug=ups',
+  },
 ];
 
 const GROUPS = ['Core Components', 'Peripherals & Others'];
@@ -78,7 +190,8 @@ const PcBuilder = () => {
   };
 
   const totalPrice = build.reduce(
-    (sum, item) => sum + (Number(item.finalPrice) || 0), 0
+    (sum, item) => sum + (Number(item.finalPrice) || 0),
+    0,
   );
 
   const getSelectedForSlot = (slotName) =>
@@ -86,7 +199,9 @@ const PcBuilder = () => {
 
   const totalItems = build.length;
   const requiredSlots = COMPONENT_SLOTS.filter((s) => s.required);
-  const filledRequired = requiredSlots.filter((s) => getSelectedForSlot(s.name)).length;
+  const filledRequired = requiredSlots.filter((s) =>
+    getSelectedForSlot(s.name),
+  ).length;
 
   return (
     <section className="bg-gray-50 min-h-screen py-8">
@@ -126,7 +241,8 @@ const PcBuilder = () => {
           <div className="mt-4">
             <div className="flex items-center gap-2 text-xs text-gray-500 mb-1.5">
               <span>
-                Required Components: {filledRequired}/{requiredSlots.length} selected
+                Required Components: {filledRequired}/{requiredSlots.length}{' '}
+                selected
               </span>
               {filledRequired === requiredSlots.length && (
                 <span className="text-green-600 font-medium">Complete</span>
@@ -209,12 +325,14 @@ const PcBuilder = () => {
                               <span className="text-sm font-semibold text-[var(--primaryColor)]">
                                 ৳{formatPrice(selected.finalPrice)}
                               </span>
-                              <Link
-                                to={slot.link}
-                                className="text-xs text-[var(--primaryColor)] hover:underline font-medium"
-                              >
-                                Change
-                              </Link>
+                              {slot.link && (
+                                <Link
+                                  to={slot.link}
+                                  className="text-xs text-[var(--primaryColor)] hover:underline font-medium"
+                                >
+                                  Change
+                                </Link>
+                              )}
                               <button
                                 onClick={() => removeItem(selected._id)}
                                 className="text-gray-400 hover:text-red-500 transition-colors p-1"

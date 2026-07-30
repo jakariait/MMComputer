@@ -14,7 +14,7 @@ const formatPrice = (price) => {
   return price.toLocaleString();
 };
 
-const ProductList = ({ products, productPage }) => {
+const ProductList = ({ products, productPage, categoryName, buildOverrides, showBuildButton = false }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [build, setBuild] = useState(() => {
     try { return JSON.parse(localStorage.getItem('pcBuild') || '[]'); }
@@ -29,12 +29,13 @@ const ProductList = ({ products, productPage }) => {
     setBuild((prev) => {
       const exists = prev.find((item) => item._id === product._id);
       if (exists) return prev.filter((item) => item._id !== product._id);
-      const category = document.title || '';
+      const category = categoryName || document.title || '';
       return [...prev, { _id: product._id, name: product.name, thumbnailImage: product.thumbnailImage || product.images?.[0], finalPrice: product.finalPrice, slug: product.slug, category }];
     });
   };
 
-  const isInBuild = (id) => build.some((item) => item._id === id);
+  const isInBuild = buildOverrides?.isInBuild || ((id) => build.some((item) => item._id === id));
+  const handleToggle = buildOverrides?.onToggle || toggleBuild;
   const handleOpen = (product) => {
     setSelectedProduct(product);
   };
@@ -141,23 +142,25 @@ const ProductList = ({ products, productPage }) => {
                           </div>
                         )}
                   </div>
-                  <button
-                    onClick={() => toggleBuild(product)}
-                    className={`shrink-0 flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
-                      isInBuild(product._id)
-                        ? 'bg-green-50 text-green-600 border border-green-200'
-                        : 'bg-[var(--primaryColor)] text-white hover:opacity-90'
-                    }`}
-                  >
-                    {isInBuild(product._id) ? (
-                      <><Check className="size-3" /> Added</>
-                    ) : (
-                      <><Plus className="size-3" /> Build</>
+                  {showBuildButton && (
+                    <button
+                      onClick={() => handleToggle(product)}
+                      className={`shrink-0 flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                         isInBuild(product._id)
+                           ? 'bg-green-50 text-green-600 border border-green-200'
+                           : 'bg-[var(--primaryColor)] text-white hover:opacity-90'
+                       }`}
+                      >
+                        {isInBuild(product._id) ? (
+                          <><Check className="size-3" /> Added</>
+                        ) : (
+                          <><Plus className="size-3" /> Build</>
+                        )}
+                      </button>
                     )}
-                  </button>
-                </div>
-                {/* Discount Percentage */}
-                <div className="absolute top-1 left-1 z-10">
+                  </div>
+                  {/* Discount Percentage */}
+                 <div className="absolute top-1 left-1 z-10">
                   {product.variants?.length > 0
                     ? product.variants[0].discount > 0 && (
                         <span className="bg-red-400 px-2 py-1 text-white text-xs">
@@ -254,21 +257,23 @@ const ProductList = ({ products, productPage }) => {
                           Tk. {formatPrice(Number(product.finalDiscount))}
                         </div>
                       )}
-                  <button
-                    onClick={() => toggleBuild(product)}
-                    className={`mt-1 mx-2 flex items-center justify-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors ${
-                      isInBuild(product._id)
-                        ? 'bg-green-50 text-green-600 border border-green-200'
-                        : 'bg-[var(--primaryColor)] text-white hover:opacity-90'
-                    }`}
-                  >
-                    {isInBuild(product._id) ? (
-                      <><Check className="size-3" /> Added</>
-                    ) : (
-                      <><Plus className="size-3" /> Build</>
-                    )}
-                  </button>
-                </div>
+                    {showBuildButton && (
+                      <button
+                        onClick={() => handleToggle(product)}
+                        className={`mt-1 mx-2 flex items-center justify-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors ${
+                           isInBuild(product._id)
+                             ? 'bg-green-50 text-green-600 border border-green-200'
+                             : 'bg-[var(--primaryColor)] text-white hover:opacity-90'
+                         }`}
+                        >
+                          {isInBuild(product._id) ? (
+                            <><Check className="size-3" /> Added</>
+                          ) : (
+                            <><Plus className="size-3" /> Build</>
+                          )}
+                        </button>
+                      )}
+                  </div>
 
                 {/* Discount Percentage */}
                 <div className="absolute top-1 z-10">
