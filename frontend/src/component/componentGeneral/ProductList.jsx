@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
 import { Link } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
+import { Check, Plus } from 'lucide-react';
 import ProductGallery from './ProductGallery.jsx';
 import ProductAddToCart from './ProductAddToCart.jsx';
 import ImageComponent from './ImageComponent.jsx';
@@ -15,6 +16,25 @@ const formatPrice = (price) => {
 
 const ProductList = ({ products, productPage }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [build, setBuild] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('pcBuild') || '[]'); }
+    catch { return []; }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('pcBuild', JSON.stringify(build));
+  }, [build]);
+
+  const toggleBuild = (product) => {
+    setBuild((prev) => {
+      const exists = prev.find((item) => item._id === product._id);
+      if (exists) return prev.filter((item) => item._id !== product._id);
+      const category = document.title || '';
+      return [...prev, { _id: product._id, name: product.name, thumbnailImage: product.thumbnailImage || product.images?.[0], finalPrice: product.finalPrice, slug: product.slug, category }];
+    });
+  };
+
+  const isInBuild = (id) => build.some((item) => item._id === id);
   const handleOpen = (product) => {
     setSelectedProduct(product);
   };
@@ -121,6 +141,20 @@ const ProductList = ({ products, productPage }) => {
                           </div>
                         )}
                   </div>
+                  <button
+                    onClick={() => toggleBuild(product)}
+                    className={`shrink-0 flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                      isInBuild(product._id)
+                        ? 'bg-green-50 text-green-600 border border-green-200'
+                        : 'bg-[var(--primaryColor)] text-white hover:opacity-90'
+                    }`}
+                  >
+                    {isInBuild(product._id) ? (
+                      <><Check className="size-3" /> Added</>
+                    ) : (
+                      <><Plus className="size-3" /> Build</>
+                    )}
+                  </button>
                 </div>
                 {/* Discount Percentage */}
                 <div className="absolute top-1 left-1 z-10">
@@ -220,6 +254,20 @@ const ProductList = ({ products, productPage }) => {
                           Tk. {formatPrice(Number(product.finalDiscount))}
                         </div>
                       )}
+                  <button
+                    onClick={() => toggleBuild(product)}
+                    className={`mt-1 mx-2 flex items-center justify-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors ${
+                      isInBuild(product._id)
+                        ? 'bg-green-50 text-green-600 border border-green-200'
+                        : 'bg-[var(--primaryColor)] text-white hover:opacity-90'
+                    }`}
+                  >
+                    {isInBuild(product._id) ? (
+                      <><Check className="size-3" /> Added</>
+                    ) : (
+                      <><Plus className="size-3" /> Build</>
+                    )}
+                  </button>
                 </div>
 
                 {/* Discount Percentage */}

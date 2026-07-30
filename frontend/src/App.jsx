@@ -32,6 +32,8 @@ import WarrantyPageUser from '@/pagesUser/WarrantyPageUser.jsx';
 import BrandsPageUser from '@/pagesUser/BrandsPageUser.jsx';
 import RepairServicePage from '@/pagesUser/RepairServicePage.jsx';
 import FeedbackComplainPage from '@/pagesUser/FeedbackComplainPage.jsx';
+import PcBuilderPage from '@/pagesUser/PcBuilderPage.jsx';
+import PcBuilderCategoryPage from '@/pagesUser/PcBuilderCategoryPage.jsx';
 const LayoutAdmin = lazy(
   () => import('./component/componentAdmin/LayoutAdmin.jsx'),
 );
@@ -262,6 +264,12 @@ function App() {
             <Route path="/warranty" element={<WarrantyPageUser />} />
             <Route path="/brands" element={<BrandsPageUser />} />
             <Route path="/repair-service" element={<RepairServicePage />} />
+            <Route path="/pc-builder" element={<PcBuilderPage />} />
+            <Route
+              path="/pc-builder/category/:categoryName"
+              element={<PcBuilderCategoryPage />}
+            />
+
             <Route
               path="/feedback-complain"
               element={<FeedbackComplainPage />}
