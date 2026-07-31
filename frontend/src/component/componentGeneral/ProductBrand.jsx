@@ -21,9 +21,7 @@ const ProductBrand = ({ product }) => {
             to={`/shop?page=1&limit=20&brand=${product.brand.name}`}
             key={product.brand._id}
           >
-            <h2 className="text-lg font-semibold text-gray-800">
-              {product.brand.name}
-            </h2>
+            <h2 className="text-lg  text-gray-800">{product.brand.name}</h2>
           </Link>
         </div>
       )}

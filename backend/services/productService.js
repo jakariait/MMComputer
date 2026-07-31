@@ -308,6 +308,8 @@ const getAllProducts = async ({
   isActive,
   search,
   brand,
+  minPrice,
+  maxPrice,
 }) => {
   try {
     // Fetch category, subcategory, childCategory, flags, and brand independently
@@ -374,6 +376,42 @@ const getAllProducts = async ({
       query.name = { $regex: search.trim(), $options: 'i' };
     }
 
+    // Add price range filter using the effective selling price
+    // (discount price when a discount exists, otherwise the base price)
+    if (minPrice || maxPrice) {
+      const effectivePriceExpr = {
+        $cond: [
+          { $gt: [{ $size: { $ifNull: ['$variants', []] } }, 0] },
+          {
+            $cond: [
+              { $gt: ['$variants.0.discount', 0] },
+              '$variants.0.discount',
+              '$variants.0.price',
+            ],
+          },
+          {
+            $cond: [
+              { $gt: ['$finalDiscount', 0] },
+              '$finalDiscount',
+              '$finalPrice',
+            ],
+          },
+        ],
+      };
+
+      const priceConditions = [];
+      if (minPrice && !isNaN(Number(minPrice))) {
+        priceConditions.push({ $gte: [effectivePriceExpr, Number(minPrice)] });
+      }
+      if (maxPrice && !isNaN(Number(maxPrice))) {
+        priceConditions.push({ $lte: [effectivePriceExpr, Number(maxPrice)] });
+      }
+
+      if (priceConditions.length > 0) {
+        query.$expr = { $and: priceConditions };
+      }
+    }
+
     // Validate sort option
     const validSortValues = [
       'price_high',
@@ -434,7 +472,7 @@ const getAllProducts = async ({
       const ids = sortedIds.map((doc) => doc._id);
       const orderedDocs = await ProductModel.find({ _id: { $in: ids } })
         .select(
-          'name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productCode freeShipping'
+          'name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productCode freeShipping keyFeatures'
         )
         .populate([
           { path: 'category', select: '-createdAt -updatedAt' },
@@ -460,7 +498,7 @@ const getAllProducts = async ({
         .skip((page - 1) * limit)
         .limit(limit)
         .select(
-          'name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productCode freeShipping'
+          'name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productCode freeShipping keyFeatures'
         )
         .populate([
           { path: 'category', select: '-createdAt -updatedAt' },

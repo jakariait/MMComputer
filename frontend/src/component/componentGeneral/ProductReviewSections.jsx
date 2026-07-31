@@ -48,9 +48,12 @@ const ProductReviewSections = ({ productId }) => {
   // Fetch reviews for this product
   const fetchReviews = async () => {
     try {
-      const res = await axios.get(`${apiBaseUrl}/reviews/product/${productId}`, {
-        params: userId ? { userId } : {},
-      });
+      const res = await axios.get(
+        `${apiBaseUrl}/reviews/product/${productId}`,
+        {
+          params: userId ? { userId } : {},
+        },
+      );
       const fetched = res.data.reviews || [];
       setReviews(fetched);
       setTotalReviews(res.data.totalReviews || 0);
@@ -127,7 +130,7 @@ const ProductReviewSections = ({ productId }) => {
 
   return (
     <div className="w-full rounded-2xl shadow-sm p-3 space-y-4">
-      <h2 className="text-xl font-semibold flex items-center secondaryTextColor gap-2">
+      <h2 className="text-xl  flex items-center secondaryTextColor gap-2">
         <Star className="w-5 h-5 text-yellow-500" />
         Product Reviews & Ratings
       </h2>
@@ -135,7 +138,7 @@ const ProductReviewSections = ({ productId }) => {
       {/* Overall Rating */}
       <div className="flex items-center gap-4">
         <div className="flex flex-col items-center">
-          <span className="text-4xl font-bold">{averageRating}</span>
+          <span className="text-4xl ">{averageRating}</span>
           <StarRating value={parseFloat(averageRating)} readOnly />
           <span className="sr-only">{averageRating} out of 5 stars</span>
           <span className="text-sm text-gray-500">
@@ -149,7 +152,8 @@ const ProductReviewSections = ({ productId }) => {
         userReviewStatus === 'approved' ? (
           <div className="border-t pt-4 flex items-center justify-between gap-4">
             <p className="text-sm text-green-600 bg-green-50 rounded-lg px-4 py-3 flex-1">
-              You have already reviewed this product. Thank you for your feedback!
+              You have already reviewed this product. Thank you for your
+              feedback!
             </p>
             <button
               onClick={startEditing}
@@ -161,7 +165,8 @@ const ProductReviewSections = ({ productId }) => {
         ) : userReviewStatus === 'pending' ? (
           <div className="border-t pt-4">
             <p className="text-sm text-amber-600 bg-amber-50 rounded-lg px-4 py-3">
-              Your review is pending approval. You'll be able to submit a new one once it's reviewed.
+              Your review is pending approval. You'll be able to submit a new
+              one once it's reviewed.
             </p>
           </div>
         ) : (
@@ -171,9 +176,14 @@ const ProductReviewSections = ({ productId }) => {
           >
             <h3 className="font-semibold flex items-center gap-2">
               {userReviewStatus === 'rejected' ? (
-                <><Pencil className="w-4 h-4" /> Your review was rejected — submit an updated one</>
+                <>
+                  <Pencil className="w-4 h-4" /> Your review was rejected —
+                  submit an updated one
+                </>
               ) : editingReview ? (
-                <><Pencil className="w-4 h-4" /> Update your review</>
+                <>
+                  <Pencil className="w-4 h-4" /> Update your review
+                </>
               ) : (
                 'Write a review'
               )}
@@ -183,10 +193,7 @@ const ProductReviewSections = ({ productId }) => {
               onChange={(_, newValue) => setRating(newValue)}
               disabled={loading}
             />
-            <label
-              htmlFor="review-comment"
-              className="sr-only"
-            >
+            <label htmlFor="review-comment" className="sr-only">
               Share your thoughts about this product
             </label>
             <textarea
@@ -208,7 +215,9 @@ const ProductReviewSections = ({ productId }) => {
               }`}
             >
               {submitted ? (
-                <><Check className="w-4 h-4" /> Submitted for approval</>
+                <>
+                  <Check className="w-4 h-4" /> Submitted for approval
+                </>
               ) : loading ? (
                 'Submitting...'
               ) : userReviewStatus === 'rejected' ? (

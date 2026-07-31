@@ -59,7 +59,7 @@ const Specification = ({ product, comparePage }) => {
                           >
                             {spec?.label}
                           </td>
-                          <td className="align-top py-3 pr-4 text-gray-900 font-medium">
+                          <td className="align-top py-3 pr-4 text-gray-900 ">
                             {spec?.value}
                           </td>
                         </tr>

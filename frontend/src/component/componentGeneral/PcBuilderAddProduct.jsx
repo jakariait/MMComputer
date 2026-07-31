@@ -151,6 +151,8 @@ const PcBuilderAddProduct = ({
               </MenuItem>
               <MenuItem value="price_high">Price: High to Low</MenuItem>
               <MenuItem value="price_low">Price: Low to High</MenuItem>
+              <MenuItem value="name_asc">Name: A to Z</MenuItem>
+              <MenuItem value="name_desc">Name: Z to A</MenuItem>
             </Select>
             {selected.length > 0 && (
               <button

@@ -175,6 +175,8 @@ const getAllProducts = async (req, res) => {
       flags,
       search,
       brand,
+      minPrice,
+      maxPrice,
     } = req.query;
 
     const productsData = await productService.getAllProducts({
@@ -189,6 +191,8 @@ const getAllProducts = async (req, res) => {
       isActive: true,
       search,
       brand,
+      minPrice,
+      maxPrice,
     });
 
     res.status(200).json({

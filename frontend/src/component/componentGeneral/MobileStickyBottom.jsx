@@ -76,7 +76,7 @@ export default function MobileStickyBottom() {
 
   return (
     <div
-      className={`fixed md:hidden  bottom-0 left-0 right-0 z-510 transition-transform duration-300 ease-in-out pointer-events-none ${
+      className={`fixed md:hidden  bottom-0 left-0 right-0 z-40 transition-transform duration-300 ease-in-out pointer-events-none ${
         visible ? 'translate-y-0' : 'translate-y-full'
       }`}
     >

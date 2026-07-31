@@ -61,7 +61,7 @@ const ProductQuestionsSection = ({ productId }) => {
 
   return (
     <div className="w-full  rounded-2xl shadow-sm p-3 space-y-4">
-      <h2 className="text-xl font-semibold flex items-center secondaryTextColor gap-2">
+      <h2 className="text-xl  flex items-center secondaryTextColor gap-2">
         <MessageCircle className="w-5 h-5 text-blue-500" />
         Product Q&A
       </h2>
@@ -143,7 +143,6 @@ const ProductQuestionsSection = ({ productId }) => {
             ))
         )}
       </div>
-
     </div>
   );
 };

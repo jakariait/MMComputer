@@ -21,6 +21,7 @@ const ProductList = ({
   categoryName,
   buildOverrides,
   showBuildButton = false,
+  showKeyFeatures = false,
 }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [build, setBuild] = useState(() => {
@@ -124,10 +125,20 @@ const ProductList = ({
                 </div>
                 <div>
                   <Link to={`/product/${product.slug}`}>
-                    <div className=" font-semibold hover:underline mb-2 ">
+                    <div className="font-medium hover:underline mb-2 ">
                       {product.name}
                     </div>
                   </Link>
+
+                  {showKeyFeatures && product.keyFeatures?.length > 0 && (
+                    <ul className="list-disc pl-5 mb-2 text-sm text-gray-600">
+                      {product.keyFeatures.map((feature, index) => (
+                        <li key={index}>
+                          {feature.key}: {feature.value}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
                   <div className="flex gap-2 items-center">
                     {/*Base Price*/}
@@ -137,7 +148,7 @@ const ProductList = ({
                           Tk. {formatPrice(Number(product.variants[0]?.price))}
                         </div>
                       ) : (
-                        <div className="font-semibold">
+                        <div className="">
                           Tk. {formatPrice(Number(product.variants[0]?.price))}
                         </div>
                       )
@@ -146,7 +157,7 @@ const ProductList = ({
                         Tk. {formatPrice(Number(product.finalPrice))}
                       </div>
                     ) : (
-                      <div className="font-semibold">
+                      <div className="">
                         Tk. {formatPrice(Number(product.finalPrice))}
                       </div>
                     )}
@@ -247,12 +258,22 @@ const ProductList = ({
                   ) : null}
                 </div>
                 <Link to={`/product/${product.slug}`}>
-                  <div className="text-center mt-2 mb-1 hover:underline">
+                  <div className="px-2  mt-2 mb-1 font-medium hover:underline">
                     {product.name}
                   </div>
                 </Link>
 
-                <div className="flex md:flex-row flex-col items-center gap-2 justify-center mt-auto">
+                {showKeyFeatures && product.keyFeatures?.length > 0 && (
+                  <ul className="list-disc  pl-5 px-2 mb-4 mx-2 text-sm text-gray-600">
+                    {product.keyFeatures.map((feature, index) => (
+                      <li key={index}>
+                        {feature.key}: {feature.value}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <div className="flex  md:flex-row flex-col items-center gap-2 justify-center mt-auto">
                   {/*Base Price*/}
                   {product.variants?.length ? (
                     product.variants[0]?.discount > 0 ? (

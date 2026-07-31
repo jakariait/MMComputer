@@ -10,6 +10,7 @@ function Drawer({
   onClose,
   anchor = 'left',
   showCloseButton = false,
+  zIndex = 'z-50',
   children,
   ...props
 }) {
@@ -26,11 +27,11 @@ function Drawer({
       onOpenChange={(v) => !v && onClose && onClose({}, 'backdropClick')}
     >
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
+        <DialogPrimitive.Overlay className={`fixed inset-0 ${zIndex} bg-black/50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0`} />
         <DialogPrimitive.Content
           data-slot="drawer"
           className={cn(
-            'fixed z-50 bg-background shadow-lg duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in',
+            `fixed ${zIndex} bg-background shadow-lg duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in`,
             anchor === 'left' &&
               'left-0 top-0 h-full w-80 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left',
             anchor === 'right' &&

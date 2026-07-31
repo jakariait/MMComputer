@@ -1,58 +1,3 @@
-// import React from 'react';
-// import { Breadcrumbs } from '@/components/ui/breadcrumbs';
-// import { Typography } from '@/components/ui/typography';
-// import { Link as RouterLink } from 'react-router-dom';
-//
-// const ProductBreadcrumbs = ({ product }) => {
-//   return (
-//     <div className={'md:p-3'}>
-//       <Breadcrumbs separator="/" aria-label="breadcrumb">
-//         <RouterLink
-//           to="/"
-//           className="text-inherit no-underline hover:underline"
-//         >
-//           Home
-//         </RouterLink>
-//
-//         {product?.category?.name && (
-//           <RouterLink
-//             to={`/shop?category=${product.category.name}`}
-//             className="text-inherit no-underline hover:underline"
-//           >
-//             {product.category.name}
-//           </RouterLink>
-//         )}
-//
-//         {product?.subCategory?.name && (
-//           <RouterLink
-//             to={`/shop?subcategory=${product.subCategory.slug}`}
-//             className="text-inherit no-underline hover:underline"
-//           >
-//             {product.subCategory.name}
-//           </RouterLink>
-//         )}
-//
-//         {product?.childCategory?.name && (
-//           <RouterLink
-//             to={`/shop?childCategory=${product.childCategory.slug}`}
-//             className="text-inherit no-underline hover:underline"
-//           >
-//             {product.childCategory.name}
-//           </RouterLink>
-//         )}
-//
-//         {product?.name && (
-//           <Typography className="text-muted-foreground">
-//             {product.name}
-//           </Typography>
-//         )}
-//       </Breadcrumbs>
-//     </div>
-//   );
-// };
-//
-// export default ProductBreadcrumbs;
-
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -73,7 +18,7 @@ export default function ProductBreadcrumbs({ product }) {
             <BreadcrumbLink asChild>
               <RouterLink
                 to="/"
-                className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                className="flex items-center gap-1.5 text-sm  text-muted-foreground hover:text-primary transition-colors"
               >
                 <Home className="h-4 w-4" />
                 <span className="hidden sm:inline">Home</span>
@@ -90,7 +35,7 @@ export default function ProductBreadcrumbs({ product }) {
                 <BreadcrumbLink asChild>
                   <RouterLink
                     to={`/shop?category=${product.category.name}`}
-                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                    className="text-sm  text-muted-foreground hover:text-primary transition-colors"
                   >
                     {product.category.name}
                   </RouterLink>
@@ -108,7 +53,7 @@ export default function ProductBreadcrumbs({ product }) {
                 <BreadcrumbLink asChild>
                   <RouterLink
                     to={`/shop?subcategory=${product.subCategory.slug}`}
-                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {product.subCategory.name}
                   </RouterLink>
@@ -126,7 +71,7 @@ export default function ProductBreadcrumbs({ product }) {
                 <BreadcrumbLink asChild>
                   <RouterLink
                     to={`/shop?childCategory=${product.childCategory.slug}`}
-                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {product.childCategory.name}
                   </RouterLink>
@@ -141,7 +86,7 @@ export default function ProductBreadcrumbs({ product }) {
                 <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50" />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-                <BreadcrumbPage className="max-w-[160px] sm:max-w-[280px] truncate rounded-full bg-muted px-3 py-1 text-sm font-semibold text-foreground">
+                <BreadcrumbPage className="max-w-[160px] sm:max-w-[280px] truncate rounded-full bg-muted px-3 py-1 text-sm  text-foreground font-medium">
                   {product.name}
                 </BreadcrumbPage>
               </BreadcrumbItem>
