@@ -233,8 +233,9 @@ const EditBlog = () => {
               </div>
 
               <div className="space-y-2">
-                <Label>Thumbnail Image</Label>
+                <Label htmlFor="blogThumbnail">Thumbnail Image</Label>
                 <input
+                  id="blogThumbnail"
                   type="file"
                   accept="image/*"
                   ref={fileInputRef}
@@ -262,27 +263,30 @@ const EditBlog = () => {
         <Card className="shadow-md border-0">
           <CardContent className="p-6 space-y-2">
             <Label>Blog Content</Label>
-            <Suspense
-              fallback={
-                <div className="py-8 text-center text-muted-foreground">
-                  Loading Editor...
-                </div>
-              }
-            >
-              <Editor
-                value={formData.longDesc}
-                onTextChange={handleEditorChange}
-                style={{ height: '660px' }}
-              />
-            </Suspense>
+            <div role="group" aria-label="Blog Content">
+              <Suspense
+                fallback={
+                  <div className="py-8 text-center text-muted-foreground">
+                    Loading Editor...
+                  </div>
+                }
+              >
+                <Editor
+                  value={formData.longDesc}
+                  onTextChange={handleEditorChange}
+                  style={{ height: '660px' }}
+                />
+              </Suspense>
+            </div>
           </CardContent>
         </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="shadow-md border-0">
             <CardContent className="p-6 space-y-2">
-              <Label>Tags</Label>
+              <Label htmlFor="editTags">Tags</Label>
               <Input
+                id="editTags"
                 placeholder="Type a tag and press Enter"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
@@ -297,6 +301,7 @@ const EditBlog = () => {
                         type="button"
                         onClick={() => handleDeleteTag(tag)}
                         className="ml-1.5 hover:text-destructive"
+                        aria-label={`Remove tag ${tag}`}
                       >
                         <X className="size-3" />
                       </button>
@@ -309,8 +314,9 @@ const EditBlog = () => {
 
           <Card className="shadow-md border-0">
             <CardContent className="p-6 space-y-2">
-              <Label>Meta Keywords</Label>
+              <Label htmlFor="editMetaKeywords">Meta Keywords</Label>
               <Input
+                id="editMetaKeywords"
                 placeholder="Type a keyword and press Enter"
                 value={keywordInput}
                 onChange={(e) => setKeywordInput(e.target.value)}
@@ -325,6 +331,7 @@ const EditBlog = () => {
                         type="button"
                         onClick={() => handleDeleteKeyword(kw)}
                         className="ml-1.5 hover:text-destructive"
+                        aria-label={`Remove keyword ${kw}`}
                       >
                         <X className="size-3" />
                       </button>
@@ -337,8 +344,9 @@ const EditBlog = () => {
 
           <Card className="shadow-md border-0">
             <CardContent className="p-6 space-y-2">
-              <Label>Meta Title</Label>
+              <Label htmlFor="editMetaTitle">Meta Title</Label>
               <Input
+                id="editMetaTitle"
                 placeholder="Meta Title"
                 value={formData.metaTitle}
                 onChange={handleInputChange('metaTitle')}
@@ -349,8 +357,9 @@ const EditBlog = () => {
 
         <Card className="shadow-md border-0">
           <CardContent className="p-6 space-y-2">
-            <Label>Meta Description</Label>
+            <Label htmlFor="editMetaDescription">Meta Description</Label>
             <Textarea
+              id="editMetaDescription"
               value={formData.metaDescription}
               onChange={handleInputChange('metaDescription')}
               rows={3}

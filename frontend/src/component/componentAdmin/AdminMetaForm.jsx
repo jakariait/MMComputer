@@ -146,6 +146,7 @@ const AdminMetaForm = () => {
           <CardContent className="space-y-4">
             <div className="flex gap-2">
               <Input
+                aria-label="New keyword"
                 value={newKeyword}
                 onChange={(e) => setNewKeyword(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -169,6 +170,7 @@ const AdminMetaForm = () => {
                       type="button"
                       onClick={() => removeKeyword(kw)}
                       className="ml-0.5 rounded-full p-0.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                      aria-label={`Remove keyword ${kw}`}
                     >
                       <X className="size-3" />
                     </button>

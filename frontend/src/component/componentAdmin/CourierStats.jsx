@@ -100,8 +100,16 @@ const CourierStats = ({ phone }) => {
       <h1 className="border-l-4 primaryBorderColor primaryTextColor mb-6 pl-2 text-lg font-semibold ">
         Courier Performance Dashboard
       </h1>
-      {loading && <p className="text-center text-blue-600">Loading data...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
+      {loading && (
+        <p role="status" className="text-center text-blue-600">
+          Loading data...
+        </p>
+      )}
+      {error && (
+        <p role="alert" className="text-center text-red-500">
+          {error}
+        </p>
+      )}
 
       {courierData && (
         <>
@@ -116,9 +124,9 @@ const CourierStats = ({ phone }) => {
 
           {/* Summary Section */}
           <div className="mt-10 bg-white  rounded-xl shadow-md p-6">
-            <h3 className="text-2xl font-semibold text-center mb-6 flex items-center justify-center gap-2">
+            <h2 className="text-2xl font-semibold text-center mb-6 flex items-center justify-center gap-2">
               <FaChartPie className="text-indigo-500" /> Overall Summary
-            </h3>
+            </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-gray-700 font-medium">
               <div className="bg-gray-100 p-4 rounded">

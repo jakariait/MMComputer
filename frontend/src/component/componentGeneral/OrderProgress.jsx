@@ -14,13 +14,37 @@ const OrderProgress = ({ status }) => {
   const getIcon = (step) => {
     switch (step) {
       case 'pending':
-        return <FaClock className="text-lg" />;
+        return (
+          <FaClock
+            className="text-lg"
+            aria-hidden="true"
+            focusable="false"
+          />
+        );
       case 'approved':
-        return <FaCheckCircle className="text-lg" />;
+        return (
+          <FaCheckCircle
+            className="text-lg"
+            aria-hidden="true"
+            focusable="false"
+          />
+        );
       case 'intransit':
-        return <FaShippingFast className="text-lg" />;
+        return (
+          <FaShippingFast
+            className="text-lg"
+            aria-hidden="true"
+            focusable="false"
+          />
+        );
       case 'delivered':
-        return <FaBox className="text-lg" />;
+        return (
+          <FaBox
+            className="text-lg"
+            aria-hidden="true"
+            focusable="false"
+          />
+        );
       default:
         return null;
     }

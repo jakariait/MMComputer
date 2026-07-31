@@ -100,6 +100,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const [purchasePrice, setPurchasePrice] = useState('');
   const [selectedFlags, setSelectedFlags] = useState([]);
   const [flagSearch, setFlagSearch] = useState('');
+  const [flagsOpen, setFlagsOpen] = useState(false);
   const [hasVariant, setHasVariant] = useState(true);
   const [variants, setVariants] = useState([
     {
@@ -339,6 +340,38 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const handleDragEnd = () => {
     setDraggedIndex(null);
     setDragSource(null);
+  };
+
+  const handleMoveImage = (index, direction, source) => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+
+    if (source === 'existing') {
+      if (targetIndex < 0 || targetIndex >= existingImages.length) return;
+      const newExistingImages = [...existingImages];
+      const [draggedItem] = newExistingImages.splice(index, 1);
+      newExistingImages.splice(targetIndex, 0, draggedItem);
+      setExistingImages(newExistingImages);
+    } else if (source === 'new') {
+      if (targetIndex < 0 || targetIndex >= imagePreviews.length) return;
+      const newSelectedImages = [...selectedImages];
+      const newPreviews = [...imagePreviews];
+      const [draggedImageItem] = newSelectedImages.splice(index, 1);
+      const [draggedPreview] = newPreviews.splice(index, 1);
+      newSelectedImages.splice(targetIndex, 0, draggedImageItem);
+      newPreviews.splice(targetIndex, 0, draggedPreview);
+      setSelectedImages(newSelectedImages);
+      setImagePreviews(newPreviews);
+    }
+  };
+
+  const handleImageKeyDown = (e, index, source) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      handleMoveImage(index, 'up', source);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      handleMoveImage(index, 'down', source);
+    }
   };
 
   const handleImageChange = (e) => {
@@ -732,7 +765,9 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     required
                   />
                   {errors.name && (
-                    <p className="text-xs text-destructive">{errors.name}</p>
+                    <p role="alert" className="text-xs text-destructive">
+                      {errors.name}
+                    </p>
                   )}
                 </div>
 
@@ -742,12 +777,14 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     {keyFeatures.map((feature, index) => (
                       <div key={index} className="flex items-center gap-2">
                         <Input
+                          aria-label={`Feature key ${index + 1}`}
                           placeholder="Key"
                           value={feature.key}
                           onChange={(e) => handleKeyFeatureChange(index, 'key', e.target.value)}
                           className="flex-1"
                         />
                         <Input
+                          aria-label={`Feature value ${index + 1}`}
                           placeholder="Value"
                           value={feature.value}
                           onChange={(e) => handleKeyFeatureChange(index, 'value', e.target.value)}
@@ -759,6 +796,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                           size="icon-xs"
                           onClick={() => handleRemoveKeyFeature(index)}
                           className="text-destructive hover:text-destructive shrink-0"
+                          aria-label={`Remove key feature ${index + 1}`}
                         >
                           <Trash2 className="size-3.5" />
                         </Button>
@@ -778,11 +816,13 @@ const ProductForm = ({ isEdit: isEditMode }) => {
 
                 <div className="space-y-2">
                   <Label>Long Description</Label>
-                  <Editor
-                    value={longDesc}
-                    onTextChange={(e) => setLongDesc(e.htmlValue)}
-                    style={{ height: '260px' }}
-                  />
+                  <div role="group" aria-label="Long Description">
+                    <Editor
+                      value={longDesc}
+                      onTextChange={(e) => setLongDesc(e.htmlValue)}
+                      style={{ height: '260px' }}
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -807,6 +847,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                         size="icon-xs"
                         onClick={() => handleRemoveSpecification(specIndex)}
                         className="text-destructive hover:text-destructive shrink-0"
+                        aria-label={`Remove specification ${specIndex + 1}`}
                       >
                         <Trash2 className="size-3.5" />
                       </Button>
@@ -832,6 +873,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                             size="icon-xs"
                             onClick={() => handleRemoveSpecLabel(specIndex, labelIndex)}
                             className="text-destructive hover:text-destructive shrink-0"
+                            aria-label={`Remove label ${labelIndex + 1}`}
                           >
                             <Trash2 className="size-3.5" />
                           </Button>
@@ -887,6 +929,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                             type="button"
                             onClick={() => handleDeleteTag(tag)}
                             className="ml-1 hover:text-destructive"
+                            aria-label={`Remove tag ${tag}`}
                           >
                             <X className="size-3" />
                           </button>
@@ -956,7 +999,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                   )}
                 </Label>
                 {errors.thumbnailImage && (
-                  <p className="text-xs text-destructive">
+                  <p role="alert" className="text-xs text-destructive">
                     {errors.thumbnailImage}
                   </p>
                 )}
@@ -1015,7 +1058,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                   <div className="space-y-2">
                     <Label>Status</Label>
                     <Select value={isActive} onValueChange={setIsActive}>
-                      <SelectTrigger>
+                      <SelectTrigger aria-label="Status">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -1079,7 +1122,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     value={selectedCategory}
                     onValueChange={handleCategoryChange}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger aria-label="Select Category">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -1091,7 +1134,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     </SelectContent>
                   </Select>
                   {errors.category && (
-                    <p className="text-xs text-destructive">
+                    <p role="alert" className="text-xs text-destructive">
                       {errors.category}
                     </p>
                   )}
@@ -1104,7 +1147,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     onValueChange={handleSubCategoryChange}
                     disabled={!selectedCategory}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger aria-label="Select Sub Category">
                       <SelectValue
                         placeholder={
                           selectedCategory
@@ -1136,7 +1179,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     onValueChange={handleChildCategoryChange}
                     disabled={!selectedSubCategory}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger aria-label="Select Child Category">
                       <SelectValue
                         placeholder={
                           selectedSubCategory
@@ -1178,6 +1221,9 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     <Button
                       variant="outline"
                       role="combobox"
+                      aria-expanded={brandOpen}
+                      aria-haspopup="listbox"
+                      aria-controls="brand-listbox"
                       className="flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs h-9 font-normal data-[placeholder]:text-muted-foreground"
                     >
                       <span
@@ -1203,7 +1249,11 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                           className="pl-8 h-9"
                         />
                       </div>
-                      <div className="max-h-48 overflow-y-auto space-y-1">
+                      <div
+                        id="brand-listbox"
+                        role="listbox"
+                        className="max-h-48 overflow-y-auto space-y-1"
+                      >
                         {brands
                           .filter(
                             (b) =>
@@ -1215,11 +1265,22 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                           .map((brand) => (
                             <div
                               key={brand._id}
+                              role="option"
+                              tabIndex={0}
+                              aria-selected={selectedBrand === brand._id}
                               className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted cursor-pointer"
                               onClick={() => {
                                 setSelectedBrand(brand._id);
                                 setBrandOpen(false);
                                 setBrandSearch('');
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  setSelectedBrand(brand._id);
+                                  setBrandOpen(false);
+                                  setBrandSearch('');
+                                }
                               }}
                             >
                               <div
@@ -1256,11 +1317,14 @@ const ProductForm = ({ isEdit: isEditMode }) => {
               </div>
               <div className="space-y-2">
                 <Label>Flags</Label>
-                <Popover>
+                <Popover open={flagsOpen} onOpenChange={setFlagsOpen}>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
                       role="combobox"
+                      aria-expanded={flagsOpen}
+                      aria-haspopup="listbox"
+                      aria-controls="flags-listbox"
                       className="flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs h-9 font-normal data-[placeholder]:text-muted-foreground"
                     >
                       <span
@@ -1286,7 +1350,11 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                           className="pl-8 h-9"
                         />
                       </div>
-                      <div className="max-h-48 overflow-y-auto space-y-1">
+                      <div
+                        id="flags-listbox"
+                        role="listbox"
+                        className="max-h-48 overflow-y-auto space-y-1"
+                      >
                         {flags
                           .filter(
                             (f) =>
@@ -1299,15 +1367,26 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                             <div
                               key={flag._id}
                               className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted cursor-pointer"
+                              tabIndex={0}
                               onClick={() => handleFlagToggle(flag._id)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  handleFlagToggle(flag._id);
+                                }
+                              }}
                             >
                               <Checkbox
+                                id={`flag-${flag._id}`}
                                 checked={selectedFlags.includes(flag._id)}
                                 onCheckedChange={() =>
                                   handleFlagToggle(flag._id)
                                 }
                               />
-                              <Label className="cursor-pointer">
+                              <Label
+                                htmlFor={`flag-${flag._id}`}
+                                className="cursor-pointer"
+                              >
                                 {flag.name}
                               </Label>
                             </div>
@@ -1390,12 +1469,16 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                         <div
                           key={`existing-${index}`}
                           draggable
+                          tabIndex={0}
                           onDragStart={(e) =>
                             handleDragStart(e, index, 'existing')
                           }
                           onDragOver={handleDragOver}
                           onDrop={(e) => handleDrop(e, index, 'existing')}
                           onDragEnd={handleDragEnd}
+                          onKeyDown={(e) =>
+                            handleImageKeyDown(e, index, 'existing')
+                          }
                           className="relative w-[150px] h-[150px] rounded-lg overflow-hidden bg-muted/50 shadow-sm cursor-move"
                           style={{
                             opacity:
@@ -1412,7 +1495,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                         >
                           <img
                             src={`${imageUrl}/${image}`}
-                            alt={`Existing ${index}`}
+                            alt={`Product image ${index + 1}`}
                             className="w-full h-full object-contain"
                           />
                           <button
@@ -1431,10 +1514,12 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                       <div
                         key={`new-${index}`}
                         draggable
+                        tabIndex={0}
                         onDragStart={(e) => handleDragStart(e, index, 'new')}
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, index, 'new')}
                         onDragEnd={handleDragEnd}
+                        onKeyDown={(e) => handleImageKeyDown(e, index, 'new')}
                         className="relative w-[150px] h-[150px] rounded-lg overflow-hidden bg-muted/50 shadow-sm cursor-move"
                         style={{
                           opacity:
@@ -1449,7 +1534,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                       >
                         <img
                           src={image}
-                          alt={`New ${index}`}
+                          alt={`Product image ${index + 1}`}
                           className="w-full h-full object-contain"
                         />
                         <button
@@ -1481,7 +1566,9 @@ const ProductForm = ({ isEdit: isEditMode }) => {
               )}
             </Label>
             {errors.images && (
-              <p className="text-xs text-destructive">{errors.images}</p>
+              <p role="alert" className="text-xs text-destructive">
+                {errors.images}
+              </p>
             )}
           </CardContent>
         </Card>
@@ -1492,8 +1579,12 @@ const ProductForm = ({ isEdit: isEditMode }) => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-col items-center gap-2">
-              <Label>Product Has Variant?</Label>
-              <Switch checked={hasVariant} onCheckedChange={handleToggle} />
+              <Label htmlFor="hasVariant">Product Has Variant?</Label>
+              <Switch
+                id="hasVariant"
+                checked={hasVariant}
+                onCheckedChange={handleToggle}
+              />
             </div>
 
             {hasVariant && (
@@ -1536,7 +1627,10 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                                       setVariants(updatedVariants);
                                     }}
                                   >
-                                    <SelectTrigger className="w-[120px]">
+                                    <SelectTrigger
+                                      aria-label={`Variant ${index + 1} option ${attrIndex + 1}`}
+                                      className="w-[120px]"
+                                    >
                                       <SelectValue placeholder="Option" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -1561,7 +1655,10 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                                     }}
                                     disabled={!attr.option}
                                   >
-                                    <SelectTrigger className="w-[120px]">
+                                    <SelectTrigger
+                                      aria-label={`Variant ${index + 1} value ${attrIndex + 1}`}
+                                      className="w-[120px]"
+                                    >
                                       <SelectValue placeholder="Value" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -1602,6 +1699,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                           <TableCell>
                             <Input
                               type="number"
+                              aria-label={`Variant ${index + 1} stock`}
                               value={variant.stock}
                               required
                               onChange={(e) => {
@@ -1618,6 +1716,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                           <TableCell>
                             <Input
                               type="number"
+                              aria-label={`Variant ${index + 1} price`}
                               value={variant.price}
                               required
                               onChange={(e) => {
@@ -1634,6 +1733,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                           <TableCell>
                             <Input
                               type="number"
+                              aria-label={`Variant ${index + 1} discount price`}
                               value={variant.discount}
                               onChange={(e) => {
                                 const value = e.target.value;
@@ -1653,6 +1753,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                               type="button"
                               onClick={() => handleRemoveVariant(index)}
                               className="text-destructive hover:text-destructive"
+                              aria-label={`Remove variant ${index + 1}`}
                             >
                               <Trash2 className="size-3.5" />
                             </Button>
@@ -1698,8 +1799,9 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Meta Keywords</Label>
+                <Label htmlFor="metaKeywords">Meta Keywords</Label>
                 <Input
+                  id="metaKeywords"
                   placeholder="Type a keyword and press Enter"
                   value={keywordInput}
                   onChange={(e) => setKeywordInput(e.target.value)}
@@ -1718,6 +1820,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                           type="button"
                           onClick={() => handleDeleteKeyword(keyword)}
                           className="ml-1 hover:text-destructive"
+                          aria-label={`Remove keyword ${keyword}`}
                         >
                           <X className="size-3" />
                         </button>

@@ -551,9 +551,9 @@ const PcBuilder = () => {
                               <button
                                 onClick={() => removeItem(selected._id)}
                                 className="border border-gray-200 p-2 text-gray-400 transition-colors hover:border-red-300 hover:text-red-500"
-                                title="Remove"
+                                aria-label={`Remove ${selected.name}`}
                               >
-                                <X className="size-5" />
+                                <X className="size-5" aria-hidden="true" />
                               </button>
                             </>
                           ) : (
@@ -630,8 +630,9 @@ const PcBuilder = () => {
                   <button
                     onClick={() => removeItem(item._id)}
                     className="shrink-0 text-gray-400 transition-colors hover:text-red-500"
+                    aria-label={`Remove ${item.name} from build`}
                   >
-                    <Trash2 className="size-5" />
+                    <Trash2 className="size-5" aria-hidden="true" />
                   </button>
                 </div>
               ))}

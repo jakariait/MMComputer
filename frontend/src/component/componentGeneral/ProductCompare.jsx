@@ -52,7 +52,7 @@ const ProductCompare = () => {
           onClick={clearCompare}
           className="flex items-center cursor-pointer gap-2 text-sm text-red-500 hover:text-red-700 transition-colors"
         >
-          <Trash2 size={18} />
+          <Trash2 size={18} aria-hidden="true" />
           Clear All
         </button>
       </div>
@@ -85,8 +85,9 @@ const ProductCompare = () => {
                   <button
                     onClick={() => removeFromCompare(product._id)}
                     className="absolute top-2 cursor-pointer right-2 text-gray-400 hover:text-red-500 transition-colors"
+                    aria-label={`Remove ${product.name} from comparison`}
                   >
-                    <X size={20} />
+                    <X size={20} aria-hidden="true" />
                   </button>
                 </div>
                 <div className="p-4">

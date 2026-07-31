@@ -53,6 +53,7 @@ const MobileMenu = ({ onClose }) => {
                       onClick={() => toggleCategory(category._id)}
                       className="text-xl"
                       aria-label={`Toggle ${category.name} subcategories`}
+                      aria-expanded={expandedCategory === category._id}
                     >
                       {expandedCategory === category._id ? (
                         <FiChevronUp />
@@ -121,6 +122,7 @@ const MobileSubMenu = ({
                   onClick={() => toggleSubCategory(sub._id)}
                   className="pl-2 text-gray-500"
                   aria-label={`Toggle ${sub.name} children`}
+                  aria-expanded={expandedSubCategory === sub._id}
                 >
                   {expandedSubCategory === sub._id ? (
                     <FiChevronUp />

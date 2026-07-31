@@ -243,7 +243,7 @@ const SendToCourierButton = ({ orderData, onSuccess }) => {
                 value={selectedCourier}
                 onValueChange={setSelectedCourier}
               >
-                <SelectTrigger>
+                <SelectTrigger aria-label="Courier">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

@@ -95,13 +95,19 @@ const ChangePassword = ({ token }) => {
         </div>
 
         {error && (
-          <div className="mx-6 mt-4 flex items-center gap-2 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <div
+            className="mx-6 mt-4 flex items-center gap-2 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive"
+            role="alert"
+          >
             <AlertCircle className="size-4 shrink-0" />
             {error}
           </div>
         )}
         {success && (
-          <div className="mx-6 mt-4 flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700 ring-1 ring-emerald-600/20">
+          <div
+            className="mx-6 mt-4 flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700 ring-1 ring-emerald-600/20"
+            role="status"
+          >
             <CheckCircle2 className="size-4 shrink-0" />
             {success}
           </div>
@@ -111,6 +117,7 @@ const ChangePassword = ({ token }) => {
           <div className="relative">
             <TextField
               label="Current Password"
+              id="currentPassword"
               name="currentPassword"
               type={showPasswords ? 'text' : 'password'}
               value={formData.currentPassword}
@@ -120,6 +127,7 @@ const ChangePassword = ({ token }) => {
           </div>
           <TextField
             label="New Password"
+            id="newPassword"
             name="newPassword"
             type={showPasswords ? 'text' : 'password'}
             value={formData.newPassword}
@@ -128,6 +136,7 @@ const ChangePassword = ({ token }) => {
           />
           <TextField
             label="Confirm New Password"
+            id="confirmNewPassword"
             name="confirmNewPassword"
             type={showPasswords ? 'text' : 'password'}
             value={formData.confirmNewPassword}

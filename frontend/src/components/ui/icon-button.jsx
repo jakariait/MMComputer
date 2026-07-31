@@ -13,6 +13,7 @@ function IconButton({
   return (
     <button
       data-slot="icon-button"
+      type="button"
       disabled={disabled}
       className={cn(
         'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors',

@@ -33,14 +33,19 @@ const UserLayout = () => {
           <UserMenu />
         </div>
         {/*User Menu Icon*/}
-        <div className="lg:hidden fixed left-0 top-1/2 -translate-y-1/2 z-50 secondaryBgColor accentTextColor p-3 rounded-r-lg cursor-pointer">
-          <FaUser
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={'text-2xl'}
-          />
-        </div>
+        <button
+          type="button"
+          className="lg:hidden fixed left-0 top-1/2 -translate-y-1/2 z-50 secondaryBgColor accentTextColor p-3 rounded-r-lg cursor-pointer"
+          aria-label="Open user menu"
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <FaUser className={'text-2xl'} aria-hidden="true" />
+        </button>
         {/* Mobile Menu Overlay for User Menu */}
         <div
+          inert={!isMenuOpen}
+          aria-hidden={!isMenuOpen}
           className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-300 ${
             isMenuOpen
               ? 'opacity-100 pointer-events-auto'
@@ -57,6 +62,9 @@ const UserLayout = () => {
           <div
             ref={menuRef}
             className="relative bg-white w-64 h-full shadow-lg transform transition-transform duration-400 ease-in-out"
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') setIsMenuOpen(false);
+            }}
             style={{
               transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
             }}
@@ -66,18 +74,19 @@ const UserLayout = () => {
                 'absolute z-50 right-5 top-5 bg-white p-2 rounded-full'
               }
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Close user menu"
             >
-              <MdClose className={'w-4 h-4'} />
+              <MdClose className={'w-4 h-4'} aria-hidden="true" />
             </button>
             <UserMenu />
           </div>
         </div>
         {/*Children Component Append Here*/}
-        <main className="w-full">
+        <div className="w-full">
           <Suspense fallback={<UserLoadingFallback />}>
             <Outlet />
           </Suspense>
-        </main>
+        </div>
       </div>
     </Layout>
   );

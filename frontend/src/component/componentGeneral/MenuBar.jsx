@@ -117,7 +117,12 @@ const MenuBar = () => {
             })
           ) : (
             <MenubarMenu>
-              <MenubarTrigger className="uppercase text-sm font-semibold tracking-wide px-3 py-2" />
+              <MenubarTrigger
+                disabled
+                className="uppercase text-sm font-semibold tracking-wide px-3 py-2"
+              >
+                No categories
+              </MenubarTrigger>
             </MenubarMenu>
           )}
         </Menubar>

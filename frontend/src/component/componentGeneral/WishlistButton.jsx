@@ -99,6 +99,8 @@ const WishlistButton = ({ product, size = 24, className = '' }) => {
             size={48}
             className="mx-auto mb-4 text-red-500"
             fill="currentColor"
+            aria-hidden="true"
+            focusable="false"
           />
           <h2 className="text-xl font-bold mb-2">Save to Wishlist</h2>
           <p className="text-gray-600 mb-2">Login to Save Your Favorites</p>
@@ -114,12 +116,13 @@ const WishlistButton = ({ product, size = 24, className = '' }) => {
           </button>
           <p className="text-sm text-gray-600">
             New here?{' '}
-            <span
+            <button
+              type="button"
               onClick={handleRegister}
               className="text-blue-600 cursor-pointer hover:underline"
             >
               Create an account
-            </span>
+            </button>
           </p>
         </DialogContent>
       </Dialog>

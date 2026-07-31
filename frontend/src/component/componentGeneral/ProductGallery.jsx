@@ -90,24 +90,27 @@ const ProductGallery = ({ images, discount, zoom = true, productName }) => {
         {zoom ? (
           <LightGallery speed={500} plugins={plugins}>
             {imageUrls.map((url, index) => (
-              <a
-                key={index}
-                href={url}
-                className={activeIndex === index ? 'block' : 'hidden'}
-              >
-                <ImageComponent
-                  imageName={images[index]}
-                  altName={productName}
-                  className="w-full aspect-square object-cover"
-                  skeletonHeight={'400px'}
-                />
-                <button
-                  className="absolute md:bottom-4 bottom-1 left-1 p-3 md:left-3 bg-white rounded-full cursor-pointer"
-                  aria-label={'full screen'}
+              <div key={index} className="relative">
+                <a
+                  href={url}
+                  className={activeIndex === index ? 'block' : 'hidden'}
                 >
-                  <BsArrowsFullscreen />
+                  <ImageComponent
+                    imageName={images[index]}
+                    altName={productName}
+                    className="w-full aspect-square object-cover"
+                    skeletonHeight={'400px'}
+                  />
+                </a>
+                <button
+                  type="button"
+                  className="absolute md:bottom-4 bottom-1 left-1 p-3 md:left-3 bg-white rounded-full cursor-pointer"
+                  aria-label="Open full screen"
+                  onClick={() => lightGalleryRef.current?.openGallery(index)}
+                >
+                  <BsArrowsFullscreen aria-hidden="true" focusable="false" />
                 </button>
-              </a>
+              </div>
             ))}
           </LightGallery>
         ) : (
@@ -136,7 +139,8 @@ const ProductGallery = ({ images, discount, zoom = true, productName }) => {
           <div className="p-1 md:p-2 flex items-center justify-center-safe gap-1 overflow-x-auto w-full scrollbar-hide">
             <div className="flex gap-1 md:gap-4">
               {imageUrls.map((imgUrl, index) => (
-                <div
+                <button
+                  type="button"
                   key={index}
                   ref={(el) => (thumbnailRefs.current[index] = el)}
                   className={`cursor-pointer overflow-hidden transition-all duration-200 border-1 shrink-0 w-10 h-10 md:w-30 md:h-30 ${
@@ -145,6 +149,8 @@ const ProductGallery = ({ images, discount, zoom = true, productName }) => {
                       : 'border-transparent opacity-80'
                   }`}
                   onClick={() => setActiveIndex(index)}
+                  aria-label={`View image ${index + 1}`}
+                  aria-current={activeIndex === index ? 'true' : undefined}
                 >
                   <ImageComponent
                     imageName={images[index]}
@@ -152,7 +158,7 @@ const ProductGallery = ({ images, discount, zoom = true, productName }) => {
                     className="w-full aspect-square object-cover"
                     skeletonHeight={'200px'}
                   />
-                </div>
+                </button>
               ))}
             </div>
           </div>

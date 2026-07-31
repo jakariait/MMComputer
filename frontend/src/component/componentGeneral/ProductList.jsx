@@ -216,8 +216,9 @@ const ProductList = ({
                   <button
                     onClick={() => handleOpen(product)}
                     className="p-2 cursor-pointer"
+                    aria-label={`Quick view ${product.name}`}
                   >
-                    <FaEye />
+                    <FaEye aria-hidden="true" focusable="false" />
                   </button>
                 </div>
               </div>
@@ -336,8 +337,9 @@ const ProductList = ({
                   <button
                     onClick={() => handleOpen(product)} // Pass the product to set the state
                     className="p-2 cursor-pointer"
+                    aria-label={`Quick view ${product.name}`}
                   >
-                    <FaEye />
+                    <FaEye aria-hidden="true" focusable="false" />
                   </button>
                 </div>
               </div>

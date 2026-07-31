@@ -15,10 +15,11 @@ function Avatar({ className, ...props }) {
   );
 }
 
-function AvatarImage({ className, ...props }) {
+function AvatarImage({ className, alt = '', ...props }) {
   return (
     <img
       data-slot="avatar-image"
+      alt={alt}
       className={cn('aspect-square size-full object-cover', className)}
       {...props}
     />

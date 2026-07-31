@@ -29,7 +29,10 @@ const BlogDetails = () => {
 
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto p-6 text-center text-red-600">
+      <div
+        role="alert"
+        className="max-w-4xl mx-auto p-6 text-center text-red-600"
+      >
         {error}
       </div>
     );
@@ -37,7 +40,10 @@ const BlogDetails = () => {
 
   if (!blog) {
     return (
-      <div className="max-w-4xl mx-auto p-6 text-center text-gray-600">
+      <div
+        role="status"
+        className="max-w-4xl mx-auto p-6 text-center text-gray-600"
+      >
         Loading...
       </div>
     );
@@ -70,7 +76,7 @@ const BlogDetails = () => {
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(blog.longDesc) }}
         />
         <div className="flex flex-col gap-2 mt-4 col-span-2">
-          <h1 className="text-lg font-semibold">Tags:</h1>
+          <h2 className="text-lg font-semibold">Tags:</h2>
           {blog.searchTags?.map((tag, index) => (
             <span
               key={index}

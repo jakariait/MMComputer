@@ -39,14 +39,18 @@ export default function ResetPassword() {
     <div className="max-w-md mx-auto mt-20 p-6 bg-white shadow rounded">
       <h2 className="text-xl font-bold mb-4">Reset Password</h2>
       <form onSubmit={handleReset} className="space-y-4">
+        <label className="sr-only" htmlFor="reset-email">Email</label>
         <input
+          id="reset-email"
           type="email"
           placeholder="Email"
           value={email}
           readOnly
           className="w-full p-2 bg-gray-100 focus:outline-none rounded"
         />
+        <label className="sr-only" htmlFor="reset-otp">Enter OTP</label>
         <input
+          id="reset-otp"
           type="text"
           placeholder="Enter OTP"
           value={otp}
@@ -54,7 +58,9 @@ export default function ResetPassword() {
           className="w-full p-2 bg-gray-100 focus:outline-none rounded"
           required
         />
+        <label className="sr-only" htmlFor="reset-password">New Password</label>
         <input
+          id="reset-password"
           type="password"
           placeholder="New Password"
           value={newPassword}

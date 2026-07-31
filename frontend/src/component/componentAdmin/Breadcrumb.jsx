@@ -77,8 +77,11 @@ const Breadcrumb = () => {
             ref={hamburgerRef}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="lg:hidden p-1.5 -ml-1 rounded-md hover:bg-muted transition-colors"
+            aria-label="Open navigation menu"
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
           >
-            <Menu className="size-5" />
+            <Menu className="size-5" aria-hidden="true" />
           </button>
 
           <div className="min-w-0">
@@ -117,6 +120,9 @@ const Breadcrumb = () => {
               ref={buttonRef}
               onClick={() => setIsDropdownOpen((prev) => !prev)}
               className="flex items-center gap-2 p-1 rounded-md hover:bg-muted transition-colors"
+              aria-label="Account menu"
+              aria-expanded={isDropdownOpen}
+              aria-haspopup="menu"
             >
               <Avatar className="size-8">
                 <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">
@@ -170,10 +176,17 @@ const Breadcrumb = () => {
       >
         <div
           className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          role="button"
+          tabIndex={-1}
+          aria-label="Close menu"
           onClick={() => setIsMenuOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsMenuOpen(false);
+          }}
         />
         <div
           ref={menuRef}
+          id="mobile-menu"
           className={`relative h-full w-64 bg-white shadow-xl transition-transform duration-300 ${
             isMenuOpen ? 'translate-x-0' : '-translate-x-full'
           }`}

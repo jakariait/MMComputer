@@ -70,7 +70,11 @@ const Brands = ({ topBrandsOnly = false }) => {
 
         {!topBrandsOnly && (
           <div className="mb-6">
+            <label htmlFor="brand-search" className="sr-only">
+              Search brands
+            </label>
             <input
+              id="brand-search"
               type="text"
               placeholder="Search brands..."
               value={searchTerm}
@@ -124,7 +128,7 @@ const Brands = ({ topBrandsOnly = false }) => {
                     <ImageComponent
                       imageName={brand.logo}
                       className={`w-full h-full object-contain ${topBrandsOnly ? '' : 'p-5'} grayscale-[15%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-300`}
-                      altName={brand.name}
+                      altName={topBrandsOnly ? brand.name : ''}
                       skeletonHeight={topBrandsOnly ? 80 : 160}
                     />
                   </div>

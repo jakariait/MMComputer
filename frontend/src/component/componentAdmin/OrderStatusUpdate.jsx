@@ -123,8 +123,9 @@ const OrderStatusUpdate = ({ orderId, onUpdate }) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label>Admin Note:</Label>
+        <Label htmlFor="adminNote">Admin Note:</Label>
         <Textarea
+          id="adminNote"
           value={adminNote}
           onChange={(e) => setAdminNote(e.target.value)}
           placeholder="Admin note (visible to admins only)"
@@ -134,8 +135,9 @@ const OrderStatusUpdate = ({ orderId, onUpdate }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
-          <Label>Advance Amount:</Label>
+          <Label htmlFor="advanceAmount">Advance Amount:</Label>
           <Input
+            id="advanceAmount"
             type="number"
             min={0}
             value={advanceAmount}
@@ -143,8 +145,9 @@ const OrderStatusUpdate = ({ orderId, onUpdate }) => {
           />
         </div>
         <div className="space-y-2">
-          <Label>Special Discount:</Label>
+          <Label htmlFor="specialDiscount">Special Discount:</Label>
           <Input
+            id="specialDiscount"
             type="number"
             min={0}
             value={specialDiscount}
@@ -154,7 +157,7 @@ const OrderStatusUpdate = ({ orderId, onUpdate }) => {
         <div className="space-y-2">
           <Label className="text-destructive">Order Status:</Label>
           <Select value={orderStatus} onValueChange={setOrderStatus}>
-            <SelectTrigger>
+            <SelectTrigger aria-label="Order status">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

@@ -92,6 +92,8 @@ const SortableFlag = ({ flag, onUpdate, onDelete }) => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <div
+                  role="button"
+                  aria-label={`Reorder ${flag.name}`}
                   {...attributes}
                   {...listeners}
                   className="cursor-grab touch-none text-muted-foreground hover:text-foreground transition-colors"
@@ -99,6 +101,7 @@ const SortableFlag = ({ flag, onUpdate, onDelete }) => {
                   <GripVertical className="size-4" />
                 </div>
                 <Input
+                  aria-label={`Rename flag ${flag.name}`}
                   value={updateFlagName}
                   onChange={(e) => setUpdateFlagName(e.target.value)}
                   placeholder="Flag name"
@@ -137,6 +140,8 @@ const SortableFlag = ({ flag, onUpdate, onDelete }) => {
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
                 <div
+                  role="button"
+                  aria-label={`Reorder ${flag.name}`}
                   {...attributes}
                   {...listeners}
                   className="cursor-grab touch-none text-muted-foreground hover:text-foreground transition-colors shrink-0"
@@ -158,6 +163,7 @@ const SortableFlag = ({ flag, onUpdate, onDelete }) => {
                   variant="ghost"
                   size="icon-xs"
                   onClick={handleStartEdit}
+                  aria-label={`Edit flag ${flag.name}`}
                 >
                   <Pencil className="size-3.5" />
                 </Button>
@@ -166,6 +172,7 @@ const SortableFlag = ({ flag, onUpdate, onDelete }) => {
                   size="icon-xs"
                   onClick={() => setDeleteDialogOpen(true)}
                   className="text-destructive hover:text-destructive"
+                  aria-label={`Delete flag ${flag.name}`}
                 >
                   <Trash2 className="size-3.5" />
                 </Button>
@@ -287,6 +294,7 @@ const FlagsComponent = () => {
         <CardContent>
           <div className="flex items-center gap-3">
             <Input
+              aria-label="New flag name"
               value={newFlagName}
               onChange={(e) => setNewFlagName(e.target.value)}
               placeholder="Enter flag name"
@@ -348,7 +356,9 @@ const FlagsComponent = () => {
           ) : (
             <>
               {error && (
-                <p className="text-sm text-destructive mb-4">Error: {error}</p>
+                <p role="alert" className="text-sm text-destructive mb-4">
+                  Error: {error}
+                </p>
               )}
 
               <DndContext

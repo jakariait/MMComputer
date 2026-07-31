@@ -39,14 +39,17 @@ const LayoutAdmin = () => {
     <div className="min-h-screen bg-muted/30">
       <Toaster position="top-right" />
 
-      <div className="primaryBgColor accentTextColor hidden lg:block fixed left-0 top-0 h-screen w-65 z-30 border-r border-white/10 overflow-y-auto">
+      <nav
+        aria-label="Admin sidebar"
+        className="primaryBgColor accentTextColor hidden lg:block fixed left-0 top-0 h-screen w-65 z-30 border-r border-white/10 overflow-y-auto"
+      >
         <div className="p-4 border-b border-white/10">
           <h2 className="text-lg font-bold tracking-tight">Admin Panel</h2>
         </div>
         <Suspense fallback={<SidebarFallback />}>
           <SidebarMenu />
         </Suspense>
-      </div>
+      </nav>
 
       <div className="lg:ml-65 flex flex-col min-h-screen">
         <Suspense fallback={<BreadcrumbFallback />}>

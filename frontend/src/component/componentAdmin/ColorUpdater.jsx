@@ -96,6 +96,7 @@ const ColorUpdater = () => {
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <input
+                      id={name}
                       type="color"
                       name={name}
                       value={localColors[name] || DEFAULT_COLORS[name]}
@@ -111,6 +112,7 @@ const ColorUpdater = () => {
                     />
                   </div>
                   <Input
+                    id={`${name}Text`}
                     name={name}
                     value={localColors[name] || ''}
                     onChange={handleChange}

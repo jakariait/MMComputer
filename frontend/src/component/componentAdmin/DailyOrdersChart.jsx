@@ -49,7 +49,11 @@ const DailyOrdersChart = () => {
       <h3 className="text-center font-semibold mb-2">
         Daily Orders (Last 30 Days)
       </h3>
-      <div style={{ height: 200 }}>
+      <div
+        style={{ height: 200 }}
+        role="img"
+        aria-label="Daily order counts for the last 30 days"
+      >
         <ResponsiveLine
           data={chartData}
           margin={{ top: 20, right: 80, bottom: 60, left: 50 }}

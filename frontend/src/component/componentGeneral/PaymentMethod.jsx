@@ -27,7 +27,8 @@ const PaymentMethod = ({ selectedMethod, setSelectedMethod }) => {
         Payment Method
       </h1>
 
-      <div className="flex flex-col gap-2">
+      <fieldset className="flex flex-col gap-2">
+        <legend className="sr-only">Payment Method</legend>
         {/* Cash on Delivery option */}
         <label className="border border-gray-300 rounded-lg px-4 py-2 cursor-pointer transition duration-200">
           <div className="flex items-center gap-3">
@@ -59,7 +60,7 @@ const PaymentMethod = ({ selectedMethod, setSelectedMethod }) => {
             </div>
           </label>
         )}
-      </div>
+      </fieldset>
     </div>
   );
 };

@@ -49,7 +49,11 @@ const MonthlyOrderStatusGroupedChart = () => {
       <h3 className="text-center font-semibold mb-2">
         Monthly Order Status (Last 12 Months)
       </h3>
-      <div className="h-[300px]">
+      <div
+        className="h-[300px]"
+        role="img"
+        aria-label="Monthly delivered, cancelled and returned order counts for the last 12 months"
+      >
         <ResponsiveBar
           data={chartData}
           keys={['Success', 'Failed', 'Returned']}

@@ -50,7 +50,11 @@ const CourierSummery = ({ phone }) => {
         </div>
       )}
 
-      {error && <p className="text-destructive text-xs mt-1">{error}</p>}
+      {error && (
+        <p role="alert" className="text-destructive text-xs mt-1">
+          {error}
+        </p>
+      )}
 
       {courierData && (
         <div className="grid grid-cols-2 gap-x-2 gap-y-1 w-44 text-xs mt-2">

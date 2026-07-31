@@ -104,7 +104,10 @@ const ThankYou = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div
+        role="status"
+        className="flex items-center justify-center min-h-screen bg-gray-50"
+      >
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading order details...</p>
@@ -137,7 +140,11 @@ const ThankYou = () => {
           <div className="flex justify-center mb-6">
             <div className="relative">
               <div className="absolute inset-0 bg-green-100 rounded-full blur opacity-75"></div>
-              <PackageCheck className="relative text-green-600" size={80} />
+              <PackageCheck
+                className="relative text-green-600"
+                size={80}
+                aria-hidden="true"
+              />
             </div>
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
@@ -163,7 +170,11 @@ const ThankYou = () => {
                     #{order?.orderNo}
                   </p>
                 </div>
-                <Calendar className="text-gray-400" size={32} />
+                <Calendar
+                  className="text-gray-400"
+                  size={32}
+                  aria-hidden="true"
+                />
               </div>
               <p className="text-sm text-gray-500 mt-4">
                 Order placed on{' '}
@@ -195,7 +206,11 @@ const ThankYou = () => {
                 {/* Email */}
                 <div>
                   <p className="text-gray-600 text-sm font-medium flex items-center">
-                    <Mail size={16} className="mr-2 text-blue-600" />
+                    <Mail
+                      size={16}
+                      className="mr-2 text-blue-600"
+                      aria-hidden="true"
+                    />
                     Email Address
                   </p>
                   <p className="text-gray-900 font-semibold mt-2 break-all">
@@ -206,7 +221,11 @@ const ThankYou = () => {
                 {/* Phone */}
                 <div>
                   <p className="text-gray-600 text-sm font-medium flex items-center">
-                    <Phone size={16} className="mr-2 text-blue-600" />
+                    <Phone
+                      size={16}
+                      className="mr-2 text-blue-600"
+                      aria-hidden="true"
+                    />
                     Phone Number
                   </p>
                   <p className="text-gray-900 font-semibold mt-2">
@@ -226,6 +245,7 @@ const ThankYou = () => {
                 <MapPin
                   className="text-blue-600 flex-shrink-0 mt-1"
                   size={20}
+                  aria-hidden="true"
                 />
                 <div>
                   <p className="text-gray-900 font-semibold">
@@ -254,7 +274,11 @@ const ThankYou = () => {
             {/* Shipping Method */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                <Truck size={20} className="mr-2 text-blue-600" />
+                <Truck
+                  size={20}
+                  className="mr-2 text-blue-600"
+                  aria-hidden="true"
+                />
                 Delivery Details
               </h2>
               <div className="space-y-4">
@@ -276,7 +300,11 @@ const ThankYou = () => {
             {/* Order Summary */}
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-6">
               <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
-                <Package size={20} className="mr-2 text-blue-600" />
+                <Package
+                  size={20}
+                  className="mr-2 text-blue-600"
+                  aria-hidden="true"
+                />
                 Order Summary
               </h2>
 
@@ -378,7 +406,11 @@ const ThankYou = () => {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                      <Package size={32} className="text-gray-400" />
+                      <Package
+                        size={32}
+                        className="text-gray-400"
+                        aria-hidden="true"
+                      />
                     </div>
                   )}
                 </div>
@@ -446,7 +478,7 @@ const ThankYou = () => {
             to="/track-order"
             className="flex items-center justify-center gap-2 primaryBgColor accentTextColor px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition"
           >
-            <Truck size={20} />
+            <Truck size={20} aria-hidden="true" />
             Track My Order
           </Link>
           <Link
@@ -454,7 +486,7 @@ const ThankYou = () => {
             className="flex items-center justify-center gap-2 border-2 border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition"
           >
             Back to Home
-            <ArrowRight size={20} />
+            <ArrowRight size={20} aria-hidden="true" />
           </Link>
         </div>
 

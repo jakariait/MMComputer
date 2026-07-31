@@ -11,12 +11,7 @@ const DeliveryMethod = ({ freeDelivery, formattedTotalAmount }) => {
         <label className=" border border-gray-300 rounded-lg px-4 py-2 cursor-pointer transition duration-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <input
-                type="radio"
-                className="primaryAccentColor w-5 h-5"
-                checked
-                readOnly
-              />
+              <span aria-hidden="true" className="text-green-600">●</span>
               <span>
                 Home Delivery{' '}
                 {freeDelivery > 0 && (

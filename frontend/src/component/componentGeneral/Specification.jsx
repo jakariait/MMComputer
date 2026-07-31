@@ -23,10 +23,12 @@ const Specification = ({ product, comparePage }) => {
         {specifications.map((specGroup, index) => {
           const isCollapsed = !!collapsed[index];
           return (
-            <div key={index}>
+            <div key={index} id={`spec-group-${index}`}>
               <button
                 type="button"
                 onClick={() => toggleGroup(index)}
+                aria-expanded={!isCollapsed}
+                aria-controls={`spec-group-${index}`}
                 className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
               >
                 <span className="text-[13px] font-semibold uppercase tracking-wide secondaryTextColor">
@@ -36,6 +38,7 @@ const Specification = ({ product, comparePage }) => {
                   className={`w-4 h-4 text-gray-400 transition-transform ${
                     isCollapsed ? '-rotate-90' : ''
                   }`}
+                  aria-hidden="true"
                 />
               </button>
 

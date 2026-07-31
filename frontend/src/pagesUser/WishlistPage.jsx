@@ -154,7 +154,7 @@ const WishlistPage = () => {
           <h1 className="wishlist-title">My Wishlist</h1>
           {!showLoading && !isEmpty && (
             <div className="wishlist-count">
-              <Heart size={11} className={'text-red-500'} />
+              <Heart size={11} className={'text-red-500'} aria-hidden="true" />
               {displayWishlist.length}{' '}
               {displayWishlist.length === 1 ? 'item' : 'items'} saved
             </div>
@@ -184,14 +184,14 @@ const WishlistPage = () => {
                     <ImageComponent
                       imageName={product.thumbnailImage}
                       className="w-full aspect-square object-cover"
-                      altName={product.name}
+                      altName=""
                       skeletonHeight={250}
                     />
                   </Link>
                   <Link to={`/product/${product.slug}`}>
-                    <div className="text-center mt-2 mb-1 hover:underline truncate">
+                    <h3 className="text-center mt-2 mb-1 hover:underline truncate">
                       {product.name}
-                    </div>
+                    </h3>
                   </Link>
 
                   <div className="flex gap-2 justify-center">

@@ -71,6 +71,7 @@ const UserMenu = () => {
                   className={
                     'w-24 h-24 rounded-full object-cover border-white border-4'
                   }
+                  altName={`${user?.fullName || 'User'}'s profile picture`}
                 />
               ) : (
                 <span className="accentTextColor text-xl font-semibold w-24 h-24 rounded-full border-4 border-white flex items-center justify-center text-center">

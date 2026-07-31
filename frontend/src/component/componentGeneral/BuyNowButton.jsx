@@ -169,18 +169,22 @@ const BuyNowButton = ({ product, isAddToCart = false }) => {
             <h2 className="text-lg">Quantity</h2>
             <div className="rounded flex items-center justify-between">
               <button
+                type="button"
                 className="primaryBgColor accentTextColor px-2 py-2 rounded-l cursor-pointer"
                 onClick={() => handleQuantityChange('decrease')}
+                aria-label="Decrease quantity"
               >
-                <FiMinus />
+                <FiMinus aria-hidden="true" />
               </button>
               <span className="px-3 py-1 bg-gray-200">{quantity}</span>
               <button
+                type="button"
                 className="primaryBgColor accentTextColor px-2 py-2 rounded-r cursor-pointer"
                 onClick={() => handleQuantityChange('increase')}
                 disabled={quantity >= MAX_QUANTITY}
+                aria-label="Increase quantity"
               >
-                <FaPlus />
+                <FaPlus aria-hidden="true" />
               </button>
             </div>
           </div>

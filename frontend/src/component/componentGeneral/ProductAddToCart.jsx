@@ -832,19 +832,22 @@ const ProductAddToCart = ({ product }) => {
             {/* Quantity Stepper */}
             <div className="flex items-center rounded-lg border border-gray-300 dark:border-gray-700 overflow-hidden shrink-0">
               <button
+                type="button"
                 className="flex items-center justify-center w-9 h-9 md:w-10 md:h-10
                  text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800
                  active:scale-95 transition-all duration-150 cursor-pointer
                  disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                 onClick={() => handleQuantityChange('decrease')}
                 disabled={isOutOfStock}
+                aria-label="Decrease quantity"
               >
-                <FiMinus size={14} />
+                <FiMinus size={14} aria-hidden="true" focusable="false" />
               </button>
               <span className="w-10 md:w-12 text-center text-sm font-semibold text-gray-900 dark:text-gray-100 select-none">
                 {quantity}
               </span>
               <button
+                type="button"
                 className="flex items-center justify-center w-9 h-9 md:w-10 md:h-10
                  text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800
                  active:scale-95 transition-all duration-150 cursor-pointer
@@ -854,8 +857,9 @@ const ProductAddToCart = ({ product }) => {
                   isOutOfStock ||
                   quantity >= MAX_QUANTITY
                 }
+                aria-label="Increase quantity"
               >
-                <FaPlus size={12} />
+                <FaPlus size={12} aria-hidden="true" focusable="false" />
               </button>
             </div>
 

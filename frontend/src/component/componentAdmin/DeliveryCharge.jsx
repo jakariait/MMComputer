@@ -152,6 +152,7 @@ const DeliveryCharge = () => {
                           variant="ghost"
                           size="icon-xs"
                           onClick={() => handleEditOpen(method)}
+                          aria-label={`Edit ${method.name}`}
                         >
                           <Pencil className="size-3.5" />
                         </Button>
@@ -160,6 +161,7 @@ const DeliveryCharge = () => {
                           size="icon-xs"
                           onClick={() => handleDeleteOpen(method)}
                           className="text-destructive hover:text-destructive"
+                          aria-label={`Delete ${method.name}`}
                         >
                           <Trash2 className="size-3.5" />
                         </Button>

@@ -107,7 +107,7 @@ const FeatureCategory = () => {
                     <ImageComponent
                       imageName={item.image}
                       className="w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-300 p-5"
-                      altName={item.name}
+                      altName=""
                       skeletonHeight={160}
                     />
                   </div>

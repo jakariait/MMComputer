@@ -171,6 +171,7 @@ const CustomerListFromOrder = () => {
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
+            aria-label="Search customers by name, phone, email or address"
             placeholder="Search by name, phone, email or address..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -195,7 +196,10 @@ const CustomerListFromOrder = () => {
                 setPage(1);
               }}
             >
-              <SelectTrigger className="w-16 h-8 bg-background">
+              <SelectTrigger
+                aria-label="Entries per page"
+                className="w-16 h-8 bg-background"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -318,6 +322,7 @@ const CustomerListFromOrder = () => {
               size="sm"
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
+              aria-label="Previous page"
             >
               <ChevronLeft className="size-4" />
             </Button>
@@ -326,6 +331,7 @@ const CustomerListFromOrder = () => {
               size="sm"
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
+              aria-label="Next page"
             >
               <ChevronRight className="size-4" />
             </Button>

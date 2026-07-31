@@ -71,8 +71,12 @@ const HeaderSearch = ({ fullSize }) => {
             <Search className="w-5 h-5 text-black" />
           </button>
 
+          <label htmlFor="site-search" className="sr-only">
+            Search products
+          </label>
           <input
             ref={inputRef}
+            id="site-search"
             type="text"
             placeholder="Search products..."
             value={searchInput}
@@ -108,8 +112,12 @@ const HeaderSearch = ({ fullSize }) => {
           {isOpen && (
             <div className="fixed top-13  inset-x-0 flex items-center gap-2 px-4 py-3 rounded-none border-b border-gray-300 bg-white shadow-lg z-50">
               <Search className="w-5 h-5 text-gray-400 flex-shrink-0" />
+              <label htmlFor="mobile-site-search" className="sr-only">
+                Search products
+              </label>
               <input
                 ref={inputRef}
+                id="mobile-site-search"
                 type="text"
                 placeholder="Search products..."
                 value={searchInput}

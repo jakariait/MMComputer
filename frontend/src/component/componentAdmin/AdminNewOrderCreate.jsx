@@ -474,7 +474,7 @@ const AdminNewOrderCreate = () => {
                     value={isGuest ? 'guest' : 'registered'}
                     onValueChange={(value) => setIsGuest(value === 'guest')}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger aria-label="Customer Type">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -489,8 +489,9 @@ const AdminNewOrderCreate = () => {
                 {isGuest ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div className="space-y-1.5 sm:space-y-2">
-                      <Label>Full Name</Label>
+                      <Label htmlFor="guestFullName">Full Name</Label>
                       <Input
+                        id="guestFullName"
                         value={guestInfo.fullName}
                         onChange={(e) =>
                           setGuestInfo({
@@ -503,14 +504,15 @@ const AdminNewOrderCreate = () => {
                         }
                       />
                       {formErrors.fullName && (
-                        <p className="text-xs text-destructive">
+                        <p role="alert" className="text-xs text-destructive">
                           Full Name is required
                         </p>
                       )}
                     </div>
                     <div className="space-y-1.5 sm:space-y-2">
-                      <Label>Mobile Number</Label>
+                      <Label htmlFor="guestMobile">Mobile Number</Label>
                       <Input
+                        id="guestMobile"
                         value={guestInfo.mobileNo}
                         onChange={(e) =>
                           setGuestInfo({
@@ -523,14 +525,15 @@ const AdminNewOrderCreate = () => {
                         }
                       />
                       {formErrors.mobileNo && (
-                        <p className="text-xs text-destructive">
+                        <p role="alert" className="text-xs text-destructive">
                           Mobile Number is required
                         </p>
                       )}
                     </div>
                     <div className="space-y-1.5 sm:space-y-2">
-                      <Label>Email</Label>
+                      <Label htmlFor="guestEmail">Email</Label>
                       <Input
+                        id="guestEmail"
                         type="email"
                         value={guestInfo.email}
                         onChange={(e) =>
@@ -542,8 +545,9 @@ const AdminNewOrderCreate = () => {
                       />
                     </div>
                     <div className="space-y-1.5 sm:space-y-2">
-                      <Label>Address</Label>
+                      <Label htmlFor="guestAddress">Address</Label>
                       <Input
+                        id="guestAddress"
                         value={guestInfo.address}
                         onChange={(e) =>
                           setGuestInfo({
@@ -556,7 +560,7 @@ const AdminNewOrderCreate = () => {
                         }
                       />
                       {formErrors.address && (
-                        <p className="text-xs text-destructive">
+                        <p role="alert" className="text-xs text-destructive">
                           Address is required
                         </p>
                       )}
@@ -569,6 +573,7 @@ const AdminNewOrderCreate = () => {
                       <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                         <Input
+                          aria-label="Search customers"
                           placeholder="Search customers..."
                           value={customerSearch}
                           onChange={(e) => setCustomerSearch(e.target.value)}
@@ -615,8 +620,9 @@ const AdminNewOrderCreate = () => {
                           </p>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div className="space-y-1.5 sm:space-y-2">
-                              <Label>Full Name</Label>
+                              <Label htmlFor="regFullName">Full Name</Label>
                               <Input
+                                id="regFullName"
                                 value={guestInfo.fullName}
                                 onChange={(e) =>
                                   setGuestInfo({
@@ -631,14 +637,18 @@ const AdminNewOrderCreate = () => {
                                 }
                               />
                               {formErrors.fullName && (
-                                <p className="text-xs text-destructive">
+                                <p
+                                  role="alert"
+                                  className="text-xs text-destructive"
+                                >
                                   Full Name is required
                                 </p>
                               )}
                             </div>
                             <div className="space-y-1.5 sm:space-y-2">
-                              <Label>Mobile Number</Label>
+                              <Label htmlFor="regMobile">Mobile Number</Label>
                               <Input
+                                id="regMobile"
                                 value={guestInfo.mobileNo}
                                 onChange={(e) =>
                                   setGuestInfo({
@@ -653,14 +663,18 @@ const AdminNewOrderCreate = () => {
                                 }
                               />
                               {formErrors.mobileNo && (
-                                <p className="text-xs text-destructive">
+                                <p
+                                  role="alert"
+                                  className="text-xs text-destructive"
+                                >
                                   Mobile Number is required
                                 </p>
                               )}
                             </div>
                             <div className="space-y-1.5 sm:space-y-2">
-                              <Label>Email</Label>
+                              <Label htmlFor="regEmail">Email</Label>
                               <Input
+                                id="regEmail"
                                 type="email"
                                 value={guestInfo.email}
                                 onChange={(e) =>
@@ -672,8 +686,9 @@ const AdminNewOrderCreate = () => {
                               />
                             </div>
                             <div className="space-y-1.5 sm:space-y-2">
-                              <Label>Address</Label>
+                              <Label htmlFor="regAddress">Address</Label>
                               <Input
+                                id="regAddress"
                                 value={guestInfo.address}
                                 onChange={(e) =>
                                   setGuestInfo({
@@ -686,7 +701,10 @@ const AdminNewOrderCreate = () => {
                                 }
                               />
                               {formErrors.address && (
-                                <p className="text-xs text-destructive">
+                                <p
+                                  role="alert"
+                                  className="text-xs text-destructive"
+                                >
                                   Address is required
                                 </p>
                               )}
@@ -707,6 +725,7 @@ const AdminNewOrderCreate = () => {
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                   <Input
+                    aria-label="Search products"
                     placeholder="Search products..."
                     value={productSearch}
                     onChange={(e) => {
@@ -832,7 +851,7 @@ const AdminNewOrderCreate = () => {
                               setSelectedVariant(variant);
                             }}
                           >
-                            <SelectTrigger>
+                            <SelectTrigger aria-label="Variant">
                               <SelectValue placeholder="Select variant" />
                             </SelectTrigger>
                             <SelectContent>
@@ -852,8 +871,11 @@ const AdminNewOrderCreate = () => {
                         </div>
                       )}
                     <div className="w-24 space-y-1.5">
-                      <Label className="text-xs">Qty</Label>
+                      <Label htmlFor="orderQuantity" className="text-xs">
+                        Qty
+                      </Label>
                       <Input
+                        id="orderQuantity"
                         type="number"
                         value={quantity}
                         onChange={(e) => setQuantity(e.target.value)}
@@ -906,6 +928,7 @@ const AdminNewOrderCreate = () => {
                                   size="icon-xs"
                                   onClick={() => handleRemoveItem(index)}
                                   className="text-destructive hover:text-destructive"
+                                  aria-label={`Remove ${item.productName} from order`}
                                 >
                                   <Trash2 className="size-3.5" />
                                 </Button>
@@ -943,6 +966,7 @@ const AdminNewOrderCreate = () => {
                         }}
                       >
                         <SelectTrigger
+                          aria-label="Shipping Option"
                           className={
                             formErrors.selectedShipping
                               ? 'border-destructive'
@@ -961,7 +985,7 @@ const AdminNewOrderCreate = () => {
                       </Select>
                     )}
                     {formErrors.selectedShipping && (
-                      <p className="text-xs text-destructive">
+                      <p role="alert" className="text-xs text-destructive">
                         Shipping Option is required
                       </p>
                     )}
@@ -973,7 +997,7 @@ const AdminNewOrderCreate = () => {
                       value={paymentMethod}
                       onValueChange={setPaymentMethod}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger aria-label="Payment Method">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -990,7 +1014,7 @@ const AdminNewOrderCreate = () => {
                       value={paymentStatus}
                       onValueChange={setPaymentStatus}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger aria-label="Payment Status">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -1001,8 +1025,11 @@ const AdminNewOrderCreate = () => {
                   </div>
 
                   <div className="space-y-1.5 sm:space-y-2">
-                    <Label>Special Discount (৳)</Label>
+                    <Label htmlFor="orderSpecialDiscount">
+                      Special Discount (৳)
+                    </Label>
                     <Input
+                      id="orderSpecialDiscount"
                       type="number"
                       value={specialDiscount}
                       onChange={(e) =>

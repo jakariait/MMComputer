@@ -239,8 +239,9 @@ const PcBuilderAddProduct = ({
                   <button
                     onClick={() => removeSelected(item._id)}
                     className="text-gray-400 hover:text-red-500 transition-colors"
+                    aria-label={`Remove ${item.name} from build`}
                   >
-                    <Trash2 className="size-4" />
+                    <Trash2 className="size-4" aria-hidden="true" />
                   </button>
                 </div>
               ))}

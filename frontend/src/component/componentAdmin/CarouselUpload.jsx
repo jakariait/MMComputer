@@ -145,6 +145,7 @@ const CarouselUpload = () => {
                         <button
                           onClick={() => setDeleteTarget(image._id)}
                           className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-full shadow transition"
+                          aria-label={`Delete ${SLOTS.find((s) => s.key === slot.key).label} image`}
                         >
                           <Trash2 size={16} />
                         </button>

@@ -53,16 +53,22 @@ const MarqueeModern = () => {
       `}</style>
 
       <div className="relative overflow-hidden bg-gray-100 ">
+        <span className="sr-only">{messages.join('. ')}</span>
         <div className="flex xl:container xl:mx-auto items-center gap-3 pl-4 pr-2 py-2.5">
           <div className="overflow-hidden flex-1">
-            <div className="em-track flex gap-10 whitespace-nowrap w-max">
+            <div
+              className="em-track flex gap-10 whitespace-nowrap w-max"
+              aria-hidden="true"
+            >
               {[...messages, ...messages].map((msg, index) => (
                 <span
                   key={index}
                   className="flex items-center primaryTextColor gap-10 font-mono text-xs sm:text-sm tracking-wide "
                 >
                   <span>{msg}</span>
-                  <span className="text-amber-400/70 select-none">&#9670;</span>
+                  <span className="text-amber-400/70 select-none" aria-hidden="true">
+                    &#9670;
+                  </span>
                 </span>
               ))}
             </div>

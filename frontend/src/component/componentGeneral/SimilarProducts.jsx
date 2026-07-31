@@ -41,11 +41,11 @@ const SimilarProducts = ({ categoryId, productId }) => {
   return (
     <div>
       <div className={'px-2 py-4 shadow-lg rounded-lg'}>
-        <h1
+        <h2
           className={'text-2xl bg-gray-100 py-2 text-center secondaryTextColor'}
         >
           Related Products
-        </h1>
+        </h2>
         <ProductList products={similarProducts} productPage={true} />
       </div>
     </div>

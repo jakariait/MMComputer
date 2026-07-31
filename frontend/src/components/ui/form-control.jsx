@@ -17,11 +17,12 @@ function FormControl({
       className={cn(
         'flex flex-col gap-1.5',
         fullWidth && 'w-full',
-        disabled && 'opacity-50 pointer-events-none',
+        disabled && 'opacity-50',
         margin === 'dense' && 'mb-1',
         margin === 'normal' && 'mb-4',
         className,
       )}
+      aria-disabled={disabled || undefined}
       {...props}
     >
       {children}

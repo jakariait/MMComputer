@@ -13,9 +13,9 @@ const OrderReview = ({
 }) => {
   return (
     <div>
-      <h1 className="border-l-4 primaryBorderColor primaryTextColor mb-6 pl-2 text-lg font-semibold">
+      <h2 className="border-l-4 primaryBorderColor primaryTextColor mb-6 pl-2 text-lg font-semibold">
         Order Review
-      </h1>
+      </h2>
       <div className="grid gap-4">
         {cart.map((item, index) => (
           <div
@@ -24,10 +24,12 @@ const OrderReview = ({
           >
             <div className="flex items-center justify-baseline gap-2">
               <button
+                type="button"
                 onClick={() => removeFromCart(item.productId, item.variant)}
+                aria-label={`Remove ${item.name} from order`}
                 className="text-red-500 text-lg cursor-pointer"
               >
-                <FaTrash />
+                <FaTrash aria-hidden="true" />
               </button>
               <Link to={`/product/${item.slug}`}>
                 <ImageComponent
@@ -63,6 +65,7 @@ const OrderReview = ({
               <div className="flex items-center gap-2 justify-between">
                 <div className="flex items-center">
                   <button
+                    type="button"
                     className="primaryBgColor accentTextColor px-2 py-2 rounded-l cursor-pointer"
                     onClick={() =>
                       updateQuantity(
@@ -71,14 +74,16 @@ const OrderReview = ({
                         item.quantity - 1,
                       )
                     }
+                    aria-label={`Decrease quantity of ${item.name}`}
                     disabled={item.quantity <= 1}
                   >
-                    <FiMinus />
+                    <FiMinus aria-hidden="true" />
                   </button>
                   <span className={'px-3 py-1 bg-gray-200'}>
                     {item.quantity}
                   </span>
                   <button
+                    type="button"
                     className="primaryBgColor accentTextColor px-2 py-2 rounded-r cursor-pointer"
                     onClick={() =>
                       updateQuantity(
@@ -87,9 +92,10 @@ const OrderReview = ({
                         item.quantity + 1,
                       )
                     }
+                    aria-label={`Increase quantity of ${item.name}`}
                     disabled={item.quantity >= 5}
                   >
-                    <FaPlus />
+                    <FaPlus aria-hidden="true" />
                   </button>
                 </div>
               </div>

@@ -90,6 +90,7 @@ const MarqueeAdmin = () => {
             {messages.map((msg, index) => (
               <div key={index} className="flex items-center gap-2">
                 <Input
+                  aria-label={`Message ${index + 1}`}
                   value={msg}
                   onChange={(e) => handleInputChange(index, e.target.value)}
                   placeholder={`Message ${index + 1}`}
@@ -102,6 +103,7 @@ const MarqueeAdmin = () => {
                   onClick={() => removeMessage(index)}
                   className="text-destructive hover:text-destructive shrink-0"
                   disabled={messages.length === 1}
+                  aria-label={`Remove message ${index + 1}`}
                 >
                   <X className="size-4" />
                 </Button>

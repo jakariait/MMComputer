@@ -22,11 +22,11 @@ const RecentlyViewedProducts = ({ currentProductId }) => {
 
   return (
     <div className={'px-2 py-4  rounded-lg'}>
-      <h1
+      <h2
         className={'text-2xl bg-gray-100 py-2  text-center secondaryTextColor'}
       >
         Recently Viewed
-      </h1>
+      </h2>
 
       <ProductList products={recentProducts} productPage={true} />
     </div>

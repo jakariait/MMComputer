@@ -67,10 +67,10 @@ const PermissionsCheckboxGroup = ({
   };
 
   return (
-    <div className="space-y-4 pt-2">
-      <h2 className="text-lg font-semibold tracking-tight">
+    <fieldset className="space-y-4 pt-2">
+      <legend className="text-lg font-semibold tracking-tight">
         Admin Permissions
-      </h2>
+      </legend>
 
       <div className="flex items-center justify-center gap-4">
         <Button variant="outline" size="sm" onClick={selectAll}>
@@ -103,7 +103,7 @@ const PermissionsCheckboxGroup = ({
           </label>
         ))}
       </div>
-    </div>
+    </fieldset>
   );
 };
 

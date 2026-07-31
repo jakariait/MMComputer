@@ -155,7 +155,8 @@ const AddBlog = () => {
 
                 <div className="space-y-2">
                   <Label>Blog Content</Label>
-                  <Suspense
+                  <div role="group" aria-label="Blog Content">
+                    <Suspense
                     fallback={
                       <div className="py-8 text-center text-muted-foreground">
                         Loading Editor...
@@ -167,7 +168,8 @@ const AddBlog = () => {
                       onTextChange={(e) => setLongDesc(e.htmlValue)}
                       style={{ height: '260px' }}
                     />
-                  </Suspense>
+                    </Suspense>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -175,8 +177,9 @@ const AddBlog = () => {
             <Card className="shadow-md border-0">
               <CardContent className="p-6 space-y-4">
                 <div className="space-y-2">
-                  <Label>Tags</Label>
+                  <Label htmlFor="blogTags">Tags</Label>
                   <Input
+                    id="blogTags"
                     placeholder="Type a tag and press Enter"
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
@@ -191,6 +194,7 @@ const AddBlog = () => {
                             type="button"
                             onClick={() => handleDeleteTag(tag)}
                             className="ml-1.5 hover:text-destructive"
+                            aria-label={`Remove tag ${tag}`}
                           >
                             <X className="size-3" />
                           </button>
@@ -282,8 +286,9 @@ const AddBlog = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Meta Keywords</Label>
+                <Label htmlFor="blogMetaKeywords">Meta Keywords</Label>
                 <Input
+                  id="blogMetaKeywords"
                   placeholder="Type a keyword and press Enter"
                   value={keywordInput}
                   onChange={(e) => setKeywordInput(e.target.value)}
@@ -298,6 +303,7 @@ const AddBlog = () => {
                           type="button"
                           onClick={() => handleDeleteKeyword(keyword)}
                           className="ml-1.5 hover:text-destructive"
+                          aria-label={`Remove keyword ${keyword}`}
                         >
                           <X className="size-3" />
                         </button>

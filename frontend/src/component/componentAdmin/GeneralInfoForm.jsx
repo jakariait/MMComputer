@@ -183,6 +183,7 @@ export default function GeneralInfoForm() {
         {fields.map((value, index) => (
           <div key={index} className="flex items-center gap-2">
             <Input
+              aria-label={`${label} ${index + 1}`}
               value={value}
               onChange={(e) =>
                 handleArrayChange(index, fieldName, e.target.value)
@@ -195,6 +196,7 @@ export default function GeneralInfoForm() {
                 variant="destructive"
                 size="icon"
                 onClick={() => removeArrayField(index, fieldName)}
+                aria-label={`Remove ${label} entry ${index + 1}`}
               >
                 <Trash2 className="size-4" />
               </Button>

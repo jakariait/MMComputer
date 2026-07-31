@@ -52,26 +52,33 @@ const AdminLogin = () => {
         <h2 className="text-center text-2xl font-semibold text-gray-700">
           {GeneralInfoList?.CompanyName}
         </h2>
-        <h2 className="mb-4 text-center text-2xl font-semibold text-gray-700">
+        <h1 className="mb-4 text-center text-2xl font-semibold text-gray-700">
           Admin Panel
-        </h2>
+        </h1>
         <h2 className="text-gray-700">Welcome Back!</h2>
         <h2 className="mb-4 text-gray-700">
           Enter your email address and password to access admin panel.
         </h2>
 
         {error && (
-          <p className="mb-4 rounded-md bg-red-200 p-2 text-sm text-red-700">
+          <p
+            role="alert"
+            className="mb-4 rounded-md bg-red-200 p-2 text-sm text-red-700"
+          >
             {error}
           </p>
         )}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="loginEmail"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
+              id="loginEmail"
               type="email"
               className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
               placeholder="Email Address"
@@ -82,10 +89,14 @@ const AdminLogin = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="loginPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
+              id="loginPassword"
               type="password"
               className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
               placeholder="Password"

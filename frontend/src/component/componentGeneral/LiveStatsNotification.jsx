@@ -18,8 +18,11 @@ const LiveStatsNotification = () => {
   return (
     <div>
       <div className="flex items-center space-x-2">
-        <Eye className="w-6 h-6 primaryTextColor animate-bounce" />
-        <p className="text-md">
+        <Eye
+          className="w-6 h-6 primaryTextColor animate-bounce"
+          aria-hidden="true"
+        />
+        <p className="text-md" role="status" aria-live="polite">
           {viewers} people are viewing this page right now
         </p>
       </div>

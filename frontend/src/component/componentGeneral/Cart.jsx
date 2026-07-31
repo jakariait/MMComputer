@@ -34,13 +34,12 @@ const Cart = ({ onCloseCartMenu }) => {
             <img src={emptyCart} alt="Empty Cart" className="w-48 h-auto" />
             <p>There are no more items in your cart!</p>
 
-            <Link to={`/shop`}>
-              <button
-                className="primaryBgColor accentTextColor px-6 py-2 rounded mt-4 cursor-pointer"
-                onClick={onCloseCartMenu}
-              >
-                Continue Shopping
-              </button>
+            <Link
+              to={`/shop`}
+              className="primaryBgColor accentTextColor px-6 py-2 rounded mt-4 cursor-pointer inline-block"
+              onClick={onCloseCartMenu}
+            >
+              Continue Shopping
             </Link>
           </div>
         </div>
@@ -95,6 +94,7 @@ const Cart = ({ onCloseCartMenu }) => {
                     <div className="flex items-center">
                       {/*Decrease Button*/}
                       <button
+                        type="button"
                         className="primaryBgColor accentTextColor px-2 py-2 rounded-l cursor-pointer"
                         onClick={() =>
                           updateQuantity(
@@ -103,15 +103,17 @@ const Cart = ({ onCloseCartMenu }) => {
                             item.quantity - 1,
                           )
                         }
+                        aria-label={`Decrease quantity of ${item.name}`}
                         disabled={item.quantity <= 1}
                       >
-                        <FiMinus />
+                        <FiMinus aria-hidden="true" />
                       </button>
                       <span className={'px-3 py-1 bg-gray-200'}>
                         {item.quantity}
                       </span>
                       {/*Increase Button*/}
                       <button
+                        type="button"
                         className="primaryBgColor accentTextColor px-2 py-2 rounded-r cursor-pointer"
                         onClick={() =>
                           updateQuantity(
@@ -120,20 +122,23 @@ const Cart = ({ onCloseCartMenu }) => {
                             item.quantity + 1,
                           )
                         }
+                        aria-label={`Increase quantity of ${item.name}`}
                         disabled={item.quantity >= 5}
                       >
-                        <FaPlus />
+                        <FaPlus aria-hidden="true" />
                       </button>
                     </div>
                     {/*Delete Button*/}
                     <div>
                       <button
+                        type="button"
                         onClick={() =>
                           removeFromCart(item.productId, item.variant)
                         } // <-- FIXED
+                        aria-label={`Remove ${item.name} from cart`}
                         className="text-red-500 text-lg cursor-pointer"
                       >
-                        <FaTrash />
+                        <FaTrash aria-hidden="true" />
                       </button>
                     </div>
                   </div>

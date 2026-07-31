@@ -11,6 +11,7 @@ function Accordion({
   ...props
 }) {
   const [open, setOpen] = React.useState(expanded ?? defaultExpanded ?? false);
+  const id = React.useId();
 
   React.useEffect(() => {
     if (expanded !== undefined) setOpen(expanded);
@@ -59,7 +60,9 @@ function Accordion({
 
       <button
         type="button"
+        id={`${id}-trigger`}
         aria-expanded={open}
+        aria-controls={`${id}-panel`}
         onClick={handleToggle}
         className={cn(
           'flex w-full items-center gap-3.5 px-5 py-4 text-left',
@@ -121,7 +124,11 @@ function Accordion({
       >
         <div className="overflow-hidden">
           <div
+            id={`${id}-panel`}
             data-slot="accordion-content"
+            role="region"
+            aria-labelledby={`${id}-trigger`}
+            aria-hidden={!open}
             className={cn(
               'border-t border-border/50 px-5 pb-5 pt-3.5 text-sm leading-relaxed text-inherit/70',
               icon && 'ml-[52px]',

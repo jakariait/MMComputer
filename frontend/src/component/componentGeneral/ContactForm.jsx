@@ -257,10 +257,15 @@ const ContactForm = () => {
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Full Name <span className="text-red-500">*</span>
+                    <label
+                      htmlFor="contact-fullName"
+                      className="block text-sm font-medium text-gray-700 mb-1.5"
+                    >
+                      Full Name{' '}
+                      <span className="text-red-500" aria-hidden="true">*</span>
                     </label>
                     <input
+                      id="contact-fullName"
                       type="text"
                       name="fullName"
                       value={formData.fullName}
@@ -273,10 +278,15 @@ const ContactForm = () => {
 
                   <div className="grid sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                        Phone Number <span className="text-red-500">*</span>
+                      <label
+                        htmlFor="contact-phone"
+                        className="block text-sm font-medium text-gray-700 mb-1.5"
+                      >
+                        Phone Number{' '}
+                        <span className="text-red-500" aria-hidden="true">*</span>
                       </label>
                       <input
+                        id="contact-phone"
                         type="tel"
                         name="phoneNumber"
                         value={formData.phoneNumber}
@@ -287,10 +297,14 @@ const ContactForm = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      <label
+                        htmlFor="contact-email"
+                        className="block text-sm font-medium text-gray-700 mb-1.5"
+                      >
                         Email Address
                       </label>
                       <input
+                        id="contact-email"
                         type="email"
                         name="emailAddress"
                         value={formData.emailAddress}
@@ -302,10 +316,15 @@ const ContactForm = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Message <span className="text-red-500">*</span>
+                    <label
+                      htmlFor="contact-message"
+                      className="block text-sm font-medium text-gray-700 mb-1.5"
+                    >
+                      Message{' '}
+                      <span className="text-red-500" aria-hidden="true">*</span>
                     </label>
                     <textarea
+                      id="contact-message"
                       rows="5"
                       name="message"
                       value={formData.message}
@@ -385,6 +404,8 @@ const ContactForm = () => {
           <motion.div
             initial={{ opacity: 0, x: 80 }}
             animate={{ opacity: 1, x: 0 }}
+            role={status === 'error' ? 'alert' : 'status'}
+            aria-live="assertive"
             className={`flex items-center gap-3 px-5 py-3 rounded-xl shadow-lg text-sm font-medium border ${
               status === 'success'
                 ? 'bg-green-50 text-green-700 border-green-200'

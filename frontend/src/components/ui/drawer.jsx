@@ -45,7 +45,10 @@ function Drawer({
         >
           {children}
           {showCloseButton && (
-            <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100">
+            <DialogPrimitive.Close
+              aria-label="Close"
+              className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100"
+            >
               <X className="size-4" />
             </DialogPrimitive.Close>
           )}

@@ -324,7 +324,14 @@ const Product = () => {
                     size={20}
                     className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                   />
+                  <label
+                    htmlFor="mobile-product-search"
+                    className="sr-only"
+                  >
+                    Search products
+                  </label>
                   <input
+                    id="mobile-product-search"
                     placeholder="Search products..."
                     value={searchInput}
                     onChange={handleSearchChange}
@@ -485,15 +492,25 @@ const Product = () => {
                     icon: ArrowDownNarrowWide,
                   },
                 ].map(({ value, label, icon: Icon }) => (
-                  <div
+                  <button
+                    type="button"
                     key={value}
-                    className="flex items-center cursor-pointer p-2 rounded hover:bg-gray-100"
+                    className="flex items-center cursor-pointer p-2 rounded hover:bg-gray-100 w-full text-left"
                     onClick={() => handleSortChange(value)}
+                    aria-pressed={currentFilters.sort === value}
                   >
                     {currentFilters.sort === value ? (
-                      <Circle className="mr-3 text-primary" size={20} />
+                      <Circle
+                        className="mr-3 text-primary"
+                        size={20}
+                        aria-hidden="true"
+                      />
                     ) : (
-                      <Icon className="mr-3 text-secondary" size={20} />
+                      <Icon
+                        className="mr-3 text-secondary"
+                        size={20}
+                        aria-hidden="true"
+                      />
                     )}
                     <Typography
                       className={
@@ -504,7 +521,7 @@ const Product = () => {
                     >
                       {label}
                     </Typography>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

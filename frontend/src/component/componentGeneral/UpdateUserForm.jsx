@@ -181,13 +181,19 @@ const UpdateUserForm = ({ token }) => {
       </div>
 
       {error && (
-        <div className="mx-6 mt-4 flex items-center gap-2 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <div
+          className="mx-6 mt-4 flex items-center gap-2 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive"
+          role="alert"
+        >
           <AlertCircle className="size-4 shrink-0" />
           {error}
         </div>
       )}
       {success && (
-        <div className="mx-6 mt-4 flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700 ring-1 ring-emerald-600/20">
+        <div
+          className="mx-6 mt-4 flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700 ring-1 ring-emerald-600/20"
+          role="status"
+        >
           <CheckCircle2 className="size-4 shrink-0" />
           {success}
         </div>
@@ -221,7 +227,16 @@ const UpdateUserForm = ({ token }) => {
               onChange={handleFileChange}
               className="hidden"
             />
-            <label htmlFor="user-image-upload">
+            <label
+              htmlFor="user-image-upload"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  document.getElementById('user-image-upload')?.click();
+                }
+              }}
+            >
               <Button
                 variant="outline"
                 size="sm"
@@ -245,6 +260,7 @@ const UpdateUserForm = ({ token }) => {
 
         <TextField
           label="Full Name"
+          id="profile-fullName"
           name="fullName"
           value={formData.fullName}
           onChange={handleChange}
@@ -252,6 +268,7 @@ const UpdateUserForm = ({ token }) => {
         />
         <TextField
           label="Email"
+          id="profile-email"
           name="email"
           type="email"
           value={formData.email}
@@ -260,12 +277,14 @@ const UpdateUserForm = ({ token }) => {
         />
         <TextField
           label="Address"
+          id="profile-address"
           name="address"
           value={formData.address}
           onChange={handleChange}
         />
         <TextField
           label="Phone"
+          id="profile-phone"
           name="phone"
           value={formData.phone}
           onChange={handleChange}

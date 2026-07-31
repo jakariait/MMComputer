@@ -91,7 +91,7 @@ const OrderStatusSelector = ({ orderId, refetchOrders }) => {
   return (
     <div className="flex items-center gap-3">
       <Select value={orderStatus} onValueChange={setOrderStatus}>
-        <SelectTrigger className="min-w-[150px]">
+        <SelectTrigger aria-label="Order status" className="min-w-[150px]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

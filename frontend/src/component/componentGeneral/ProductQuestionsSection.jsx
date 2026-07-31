@@ -77,7 +77,11 @@ const ProductQuestionsSection = ({ productId }) => {
           onSubmit={handleSubmit}
           className="flex flex-col sm:flex-row gap-3"
         >
+          <label htmlFor="ask-question" className="sr-only">
+            Ask a question about this product
+          </label>
           <input
+            id="ask-question"
             type="text"
             placeholder="Ask a question about this product..."
             className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none"
@@ -123,7 +127,10 @@ const ProductQuestionsSection = ({ productId }) => {
                   Q: {q.question}
                 </p>
                 <p className="text-green-700 flex items-start gap-2">
-                  <MessageSquareReply className="w-4 h-4 mt-1 text-green-600" />
+                  <MessageSquareReply
+                    className="w-4 h-4 mt-1 text-green-600"
+                    aria-hidden="true"
+                  />
                   <span>
                     <span className="font-semibold">A:</span> {q.answer}
                   </span>

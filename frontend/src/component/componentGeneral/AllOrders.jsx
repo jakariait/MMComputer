@@ -81,13 +81,19 @@ const AllOrders = () => {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-32">
+        <div
+          role="status"
+          className="flex items-center justify-center py-32"
+        >
           <CircularProgress className="text-muted-foreground/40" size={28} />
         </div>
       ) : orders.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-32 rounded-xl border border-dashed border-muted-foreground/20">
           <div className="mb-5 flex size-14 items-center justify-center rounded-full bg-muted/50">
-            <ShoppingBag className="size-6 text-muted-foreground/50" />
+            <ShoppingBag
+              className="size-6 text-muted-foreground/50"
+              aria-hidden="true"
+            />
           </div>
           <p className="text-base font-medium mb-1">No orders yet</p>
           <p className="text-sm text-muted-foreground/70 mb-6 text-center max-w-xs">
@@ -171,7 +177,10 @@ const AllOrders = () => {
                             navigate(`/user/orders/${order.orderNo}`)
                           }
                         >
-                          <Eye className="size-3.5 mr-1.5" />
+                          <Eye
+                            className="size-3.5 mr-1.5"
+                            aria-hidden="true"
+                          />
                           Details
                         </Button>
                       </td>
@@ -192,15 +201,17 @@ const AllOrders = () => {
                   variant="outline"
                   size="sm"
                   disabled={page === 0}
+                  aria-label="Previous page"
                   onClick={() => setPage(page - 1)}
                   className="size-8 p-0"
                 >
-                  <ChevronLeft className="size-3.5" />
+                  <ChevronLeft className="size-3.5" aria-hidden="true" />
                 </Button>
                 {Array.from({ length: totalPages }, (_, i) => (
                   <button
                     key={i}
                     onClick={() => setPage(i)}
+                    aria-current={i === page ? 'page' : undefined}
                     className={`size-8 rounded-md text-xs font-medium transition-colors ${
                       i === page
                         ? 'bg-primary text-primary-foreground shadow-xs'
@@ -214,10 +225,11 @@ const AllOrders = () => {
                   variant="outline"
                   size="sm"
                   disabled={page >= totalPages - 1}
+                  aria-label="Next page"
                   onClick={() => setPage(page + 1)}
                   className="size-8 p-0"
                 >
-                  <ChevronRight className="size-3.5" />
+                  <ChevronRight className="size-3.5" aria-hidden="true" />
                 </Button>
               </div>
             </div>

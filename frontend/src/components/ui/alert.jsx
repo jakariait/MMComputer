@@ -42,13 +42,15 @@ function Alert({
         variant === 'filled' && 'bg-foreground text-background',
         className,
       )}
-      role="alert"
+      role={severity === 'error' ? 'alert' : 'status'}
       {...props}
     >
       <Icon className="mt-0.5 size-4 shrink-0" />
       <div className="flex-1">{children}</div>
       {onClose && (
         <button
+          type="button"
+          aria-label="Close alert"
           onClick={(e) => onClose(e)}
           className="shrink-0 rounded-sm opacity-70 hover:opacity-100"
         >

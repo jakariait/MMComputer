@@ -148,20 +148,23 @@ const Headers = () => {
 
   return (
     <>
-      <div className="sticky top-0 z-40">
+      <header className="sticky top-0 z-40">
         {/* Header Main */}
         <div className=" md:px-3 primaryBgColor">
           <div className="py-1 px-3 flex gap-6 items-center justify-between xl:container xl:mx-auto">
-            <div
+            <button
               ref={hamburgerRef}
+              type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-2xl cursor-pointer lg:hidden"
-              role="button"
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
             >
-              <Menu className="md:w-8 md:h-8 cursor-pointer text-white" />
-            </div>
+              <Menu
+                className="md:w-8 md:h-8 cursor-pointer text-white"
+                aria-hidden="true"
+              />
+            </button>
 
             <Link to="/">
               <ImageComponent
@@ -204,11 +207,11 @@ const Headers = () => {
               </Link>
 
               {/* Cart */}
-              <div
+              <button
                 ref={cartButtonRef}
+                type="button"
                 onClick={toggleCart}
                 className="relative hidden md:block"
-                role="button"
                 aria-label="Shopping cart"
                 aria-expanded={isCartOpen}
               >
@@ -226,7 +229,7 @@ const Headers = () => {
                     {totalQuantity}
                   </span>
                 )}
-              </div>
+              </button>
 
               {/* User / Dropdown */}
               {user ? (
@@ -260,17 +263,16 @@ const Headers = () => {
                       className="absolute z-50 top-full right-0 mt-3 bg-white shadow-xl rounded-lg p-3 min-w-[180px] animate-fadeIn"
                     >
                       <div className="flex flex-col items-center gap-2">
-                        <button className="primaryBgColor px-4 py-2 rounded-lg w-full accentTextColor cursor-pointer hover:opacity-90 transition-opacity">
-                          <Link
-                            to="/user/home"
-                            className={'flex items-center justify-center gap-2'}
-                          >
-                            <User
-                              className="md:w-8 md:h-8 cursor-pointer text-white"
-                              aria-hidden="true"
-                            />
-                          </Link>
-                        </button>
+                        <Link
+                          to="/user/home"
+                          className="primaryBgColor px-4 py-2 rounded-lg w-full accentTextColor cursor-pointer hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                          aria-label="Go to my dashboard"
+                        >
+                          <User
+                            className="md:w-8 md:h-8 cursor-pointer text-white"
+                            aria-hidden="true"
+                          />
+                        </Link>
                         <button
                           onClick={handleLogout}
                           className="bg-red-500 w-full text-white px-4 py-2 cursor-pointer rounded-lg flex items-center justify-center gap-2 hover:bg-red-600 transition-colors"
@@ -301,6 +303,8 @@ const Headers = () => {
 
         {/* Mobile Menu */}
         <div
+          inert={!isMenuOpen}
+          aria-hidden={!isMenuOpen}
           className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-300 ${
             isMenuOpen
               ? 'opacity-100 pointer-events-auto'
@@ -314,6 +318,9 @@ const Headers = () => {
           <div
             ref={menuRef}
             className="relative bg-white w-64 h-full shadow-lg transform transition-transform"
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') setIsMenuOpen(false);
+            }}
             style={{
               transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
             }}
@@ -365,6 +372,8 @@ const Headers = () => {
 
         {/* Cart Menu */}
         <div
+          inert={!isCartOpen}
+          aria-hidden={!isCartOpen}
           className={`fixed inset-0 z-50 transition-opacity duration-300 ${
             isCartOpen
               ? 'opacity-100 pointer-events-auto'
@@ -378,16 +387,19 @@ const Headers = () => {
           <div
             ref={cartMenuRef}
             className="fixed top-0 right-0 h-full w-[350px] bg-white shadow-lg transition-transform duration-300 ease-in-out"
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') closeCart();
+            }}
             style={{
               transform: isCartOpen ? 'translateX(0)' : 'translateX(100%)',
             }}
           >
             <div className="p-4 h-full flex flex-col">
               <div className="flex items-center justify-between text-lg mb-4">
-                <h1>Your Cart</h1>
-                <h1>
+                <h2>Your Cart</h2>
+                <h2>
                   {totalQuantity} {totalQuantity <= 1 ? 'item' : 'items'}
-                </h1>
+                </h2>
                 <button
                   onClick={closeCart}
                   className={'cursor-pointer'}
@@ -404,7 +416,7 @@ const Headers = () => {
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* MenuBar (Desktop) */}
       <div className="hidden lg:block">

@@ -30,7 +30,7 @@ const UserReviewHistoryPage = () => {
 
   if (loading)
     return (
-      <div className="flex items-center justify-center h-48">
+      <div role="status" className="flex items-center justify-center h-48">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
       </div>
     );
@@ -41,7 +41,7 @@ const UserReviewHistoryPage = () => {
 
       {reviews.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-          <MessageSquare className="w-12 h-12 mb-3" />
+          <MessageSquare className="w-12 h-12 mb-3" aria-hidden="true" />
           <p className="text-sm">You haven't reviewed any products yet.</p>
         </div>
       ) : (
@@ -58,6 +58,7 @@ const UserReviewHistoryPage = () => {
                 <ImageComponent
                   imageName={review.productId?.thumbnailImage}
                   className="w-full h-full object-cover"
+                  altName={review.productId?.name}
                   skeletonHeight={80}
                 />
               </Link>
@@ -70,10 +71,14 @@ const UserReviewHistoryPage = () => {
                   {review.productId?.name || 'Product'}
                 </Link>
 
-                <div className="flex items-center gap-1 mt-1">
+                <div
+                  className="flex items-center gap-1 mt-1"
+                  aria-label={`Rating: ${review.rating} out of 5`}
+                >
                   {[1, 2, 3, 4, 5].map((s) => (
                     <Star
                       key={s}
+                      aria-hidden="true"
                       className={`w-4 h-4 ${s <= review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-200'}`}
                     />
                   ))}

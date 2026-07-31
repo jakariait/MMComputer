@@ -32,9 +32,10 @@ function TablePagination({
           variant="outline"
           size="sm"
           disabled={page === 0}
+          aria-label="Previous page"
           onClick={() => onPageChange(null, page - 1)}
         >
-          <ChevronLeft className="size-4" />
+          <ChevronLeft className="size-4" aria-hidden="true" />
         </Button>
         <span className="text-sm">
           {page + 1} / {totalPages}
@@ -43,9 +44,10 @@ function TablePagination({
           variant="outline"
           size="sm"
           disabled={page >= totalPages - 1}
+          aria-label="Next page"
           onClick={() => onPageChange(null, page + 1)}
         >
-          <ChevronRight className="size-4" />
+          <ChevronRight className="size-4" aria-hidden="true" />
         </Button>
       </div>
     </Comp>

@@ -358,6 +358,8 @@ function MenuAccordion({ item, countValue, expanded, onChange }) {
     <div>
       <button
         onClick={onChange}
+        aria-expanded={expanded}
+        aria-controls={`section-${item.label}`}
         className="flex items-center gap-2 w-full px-2 py-1.5 rounded-md hover:bg-white/5 transition-colors text-left"
       >
         {Icon && <Icon />}
@@ -367,6 +369,8 @@ function MenuAccordion({ item, countValue, expanded, onChange }) {
         />
       </button>
       <div
+        id={`section-${item.label}`}
+        hidden={!expanded}
         className={`overflow-hidden transition-all duration-200 ${
           expanded ? 'max-h-96' : 'max-h-0'
         }`}
@@ -522,17 +526,16 @@ export default function SidebarMenu() {
             </React.Fragment>
           );
         })}
+        <li>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-red-500 hover:bg-white/5 transition-colors mt-4"
+          >
+            <FaSignOutAlt />
+            <span>Logout</span>
+          </button>
+        </li>
       </ul>
-
-      <li>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-red-500 hover:bg-white/5 transition-colors mt-4"
-        >
-          <FaSignOutAlt />
-          <span>Logout</span>
-        </button>
-      </li>
     </div>
   );
 }

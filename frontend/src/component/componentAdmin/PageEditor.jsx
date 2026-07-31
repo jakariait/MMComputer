@@ -57,20 +57,22 @@ const PageEditor = ({ title, endpoint }) => {
 
       <Card className="shadow-md border-0">
         <CardContent>
-          <Suspense
-            fallback={
-              <div className="py-8 text-center text-muted-foreground">
-                Loading Editor...
-              </div>
-            }
-          >
-            <Editor
-              value={content}
-              onTextChange={(e) => setContent(e.htmlValue)}
-              style={{ height: '600px' }}
-              readOnly={loading}
-            />
-          </Suspense>
+          <div role="group" aria-label={`Edit ${title}`}>
+            <Suspense
+              fallback={
+                <div className="py-8 text-center text-muted-foreground">
+                  Loading Editor...
+                </div>
+              }
+            >
+              <Editor
+                value={content}
+                onTextChange={(e) => setContent(e.htmlValue)}
+                style={{ height: '600px' }}
+                readOnly={loading}
+              />
+            </Suspense>
+          </div>
         </CardContent>
       </Card>
 

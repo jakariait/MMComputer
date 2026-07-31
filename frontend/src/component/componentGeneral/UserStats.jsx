@@ -69,12 +69,16 @@ const UserStats = () => {
     {
       value: totalOrders,
       label: 'Total order placed',
-      icon: <FaShoppingBag className="text-3xl text-blue-500" />,
+      icon: (
+        <FaShoppingBag className="text-3xl text-blue-500" aria-hidden="true" />
+      ),
     },
     {
       value: runningOrders,
       label: 'Running orders',
-      icon: <FaBox className="text-3xl text-yellow-500" />,
+      icon: (
+        <FaBox className="text-3xl text-yellow-500" aria-hidden="true" />
+      ),
     },
     {
       value:
@@ -83,12 +87,19 @@ const UserStats = () => {
           0,
         ) || 0,
       label: 'Items in cart',
-      icon: <FaShoppingCart className="text-3xl text-green-500" />,
+      icon: (
+        <FaShoppingCart className="text-3xl text-green-500" aria-hidden="true" />
+      ),
     },
     {
       value: deliveredAmount,
       label: 'Amount spent on delivered orders',
-      icon: <FaMoneyBillWave className="text-3xl text-blue-600" />,
+      icon: (
+        <FaMoneyBillWave
+          className="text-3xl text-blue-600"
+          aria-hidden="true"
+        />
+      ),
     },
   ];
 

@@ -15,9 +15,13 @@ const StarRating = ({ value, readOnly, onChange, disabled, size = 'md' }) => {
           disabled={disabled || readOnly}
           onClick={() => onChange?.(null, star)}
           className={readOnly ? '' : 'cursor-pointer'}
+          aria-label={`${star} star${star === 1 ? '' : 's'}`}
+          aria-pressed={star <= value}
         >
           <Star
             className={`${sizeClass} ${star <= value ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`}
+            aria-hidden="true"
+            focusable="false"
           />
         </button>
       ))}
@@ -133,6 +137,7 @@ const ProductReviewSections = ({ productId }) => {
         <div className="flex flex-col items-center">
           <span className="text-4xl font-bold">{averageRating}</span>
           <StarRating value={parseFloat(averageRating)} readOnly />
+          <span className="sr-only">{averageRating} out of 5 stars</span>
           <span className="text-sm text-gray-500">
             ({totalReviews} reviews)
           </span>
@@ -178,7 +183,14 @@ const ProductReviewSections = ({ productId }) => {
               onChange={(_, newValue) => setRating(newValue)}
               disabled={loading}
             />
+            <label
+              htmlFor="review-comment"
+              className="sr-only"
+            >
+              Share your thoughts about this product
+            </label>
             <textarea
+              id="review-comment"
               placeholder="Share your thoughts about this product..."
               className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none"
               rows="3"
@@ -231,6 +243,7 @@ const ProductReviewSections = ({ productId }) => {
             >
               <div className="flex items-center gap-2 mb-2">
                 <StarRating value={review.rating} readOnly size="small" />
+                <span className="sr-only">{review.rating} out of 5 stars</span>
                 <span className="font-semibold">
                   {review.userId?.fullName || 'Anonymous'}
                 </span>

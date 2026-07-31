@@ -112,7 +112,10 @@ const RegisterForm = () => {
 
         {/* Registration Error Message */}
         {registrationError && (
-          <div className="bg-red-100 text-red-600 px-4 py-2 mb-4 rounded">
+          <div
+            className="bg-red-100 text-red-600 px-4 py-2 mb-4 rounded"
+            role="alert"
+          >
             {registrationError}
           </div>
         )}
@@ -121,8 +124,10 @@ const RegisterForm = () => {
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
           {/* Full Name */}
           <div className="flex items-center bg-white rounded-md shadow-sm px-4 py-4">
-            <FaUser className="primaryTextColor mr-5 text-2xl" />
+            <FaUser className="primaryTextColor mr-5 text-2xl" aria-hidden="true" />
+            <label htmlFor="reg-fullName" className="sr-only">Full Name</label>
             <input
+              id="reg-fullName"
               type="text"
               name="fullName"
               value={formData.fullName}
@@ -135,8 +140,10 @@ const RegisterForm = () => {
 
           {/* Email */}
           <div className="flex items-center bg-white rounded-md shadow-sm px-4 py-4">
-            <FaEnvelope className="primaryTextColor mr-5 text-2xl" />
+            <FaEnvelope className="primaryTextColor mr-5 text-2xl" aria-hidden="true" />
+            <label htmlFor="reg-email" className="sr-only">Email</label>
             <input
+              id="reg-email"
               type="email"
               name="email"
               value={formData.email}
@@ -149,8 +156,10 @@ const RegisterForm = () => {
 
           {/* Phone */}
           <div className="flex items-center bg-white rounded-md shadow-sm px-4 py-4">
-            <FaPhone className="primaryTextColor mr-5 text-2xl" />
+            <FaPhone className="primaryTextColor mr-5 text-2xl" aria-hidden="true" />
+            <label htmlFor="reg-phone" className="sr-only">Phone Number</label>
             <input
+              id="reg-phone"
               type="tel"
               name="phone"
               value={formData.phone}
@@ -163,8 +172,10 @@ const RegisterForm = () => {
 
           {/* Address */}
           <div className="flex items-center bg-white rounded-md shadow-sm px-4 py-4">
-            <FaHome className="primaryTextColor mr-5 text-2xl" />
+            <FaHome className="primaryTextColor mr-5 text-2xl" aria-hidden="true" />
+            <label htmlFor="reg-address" className="sr-only">Address</label>
             <input
+              id="reg-address"
               type="text"
               name="address"
               value={formData.address}
@@ -177,8 +188,10 @@ const RegisterForm = () => {
 
           {/* Password */}
           <div className="flex items-center bg-white rounded-md shadow-sm px-4 py-4 relative">
-            <FaLock className="primaryTextColor mr-5 text-2xl" />
+            <FaLock className="primaryTextColor mr-5 text-2xl" aria-hidden="true" />
+            <label htmlFor="reg-password" className="sr-only">Password</label>
             <input
+              id="reg-password"
               type={showPassword ? 'text' : 'password'}
               name="password"
               value={formData.password}
@@ -189,18 +202,23 @@ const RegisterForm = () => {
               } placeholder:text-sm`}
               required
             />
-            <div
+            <button
+              type="button"
               onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              aria-pressed={showPassword}
               className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </div>
+              {showPassword ? <FaEyeSlash aria-hidden="true" /> : <FaEye aria-hidden="true" />}
+            </button>
           </div>
 
           {/* Confirm Password */}
           <div className="flex items-center bg-white rounded-md shadow-sm px-4 py-4">
-            <FaLock className="primaryTextColor mr-5 text-2xl" />
+            <FaLock className="primaryTextColor mr-5 text-2xl" aria-hidden="true" />
+            <label htmlFor="reg-confirmPassword" className="sr-only">Confirm Password</label>
             <input
+              id="reg-confirmPassword"
               type={showPassword ? 'text' : 'password'}
               name="confirmPassword"
               value={formData.confirmPassword}
@@ -226,10 +244,11 @@ const RegisterForm = () => {
         {/* Sign In Redirect */}
         <p className="text-sm mt-6 text-gray-600">
           Already have an account?{' '}
-          <Link to="/login">
-            <button className="primaryTextColor font-medium hover:underline cursor-pointer">
-              Sign in
-            </button>
+          <Link
+            to="/login"
+            className="primaryTextColor font-medium hover:underline cursor-pointer"
+          >
+            Sign in
           </Link>
         </p>
       </div>

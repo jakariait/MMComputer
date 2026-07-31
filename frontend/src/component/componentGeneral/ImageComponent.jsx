@@ -51,7 +51,7 @@ const ImageComponent = ({
       {imageSrc && (
         <img
           src={imageSrc}
-          alt={altName}
+          alt={altName ?? ''}
           className={['block', className].filter(Boolean).join(' ')}
           width={width}
           height={height}

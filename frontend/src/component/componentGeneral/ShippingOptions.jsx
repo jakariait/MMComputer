@@ -66,52 +66,58 @@ const ShippingOptions = ({ onShippingChange }) => {
 
   return (
     <div className={'flex flex-col gap-4'}>
-      <h1 className="border-l-4 primaryBorderColor primaryTextColor pl-2 text-lg font-semibold">
+      <h2 className="border-l-4 primaryBorderColor primaryTextColor pl-2 text-lg font-semibold">
         Select Shipping Option
-      </h1>
+      </h2>
 
       {loading ? (
         <div className="text-gray-500">Loading shipping options...</div>
       ) : message && shipping.length === 0 ? (
         <div className="text-red-500">{message}</div>
-      ) : hasFreeShippingProduct ? (
-        <div className="w-full border border-green-500 bg-green-50 rounded-lg px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <input
-                type="radio"
-                name="shipping"
-                checked={true}
-                readOnly
-                className="primaryAccentColor w-5 h-5"
-              />
-              <span className="font-medium text-green-700">Free Shipping</span>
-            </div>
-            <span className="font-medium text-green-700">Tk. 0</span>
-          </div>
-        </div>
       ) : (
-        shipping.map((option, index) => (
-          <label
-            key={index}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 cursor-pointer transition duration-200"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <input
-                  type="radio"
-                  name="shipping"
-                  value={option.value}
-                  checked={selectedShipping === option.value}
-                  onChange={() => handleChange(option)}
-                  className="primaryAccentColor w-5 h-5"
-                />
-                {option.name}
+        <fieldset className="flex flex-col gap-4">
+          <legend className="sr-only">Shipping Option</legend>
+          {hasFreeShippingProduct ? (
+            <div className="w-full border border-green-500 bg-green-50 rounded-lg px-4 py-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="radio"
+                    name="shipping"
+                    aria-label="Free Shipping"
+                    checked={true}
+                    readOnly
+                    className="primaryAccentColor w-5 h-5"
+                  />
+                  <span className="font-medium text-green-700">Free Shipping</span>
+                </div>
+                <span className="font-medium text-green-700">Tk. 0</span>
               </div>
-              <div>Tk. {option.value}</div>
             </div>
-          </label>
-        ))
+          ) : (
+            shipping.map((option, index) => (
+              <label
+                key={index}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 cursor-pointer transition duration-200"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="shipping"
+                      value={option.value}
+                      checked={selectedShipping === option.value}
+                      onChange={() => handleChange(option)}
+                      className="primaryAccentColor w-5 h-5"
+                    />
+                    {option.name}
+                  </div>
+                  <div>Tk. {option.value}</div>
+                </div>
+              </label>
+            ))
+          )}
+        </fieldset>
       )}
     </div>
   );

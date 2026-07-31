@@ -91,7 +91,8 @@ const ProductByFlag = () => {
                   className="primaryTextColor primaryBorderColor border-1 px-4 py-2 rounded"
                 >
                   <div className="flex gap-6 justify-center items-center">
-                    View All <FaArrowRight />
+                    View All{' '}
+                    <FaArrowRight aria-hidden="true" focusable="false" />
                   </div>
                 </Link>
               )}

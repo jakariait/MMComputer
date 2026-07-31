@@ -177,6 +177,27 @@ const ProductDetailsGadget = () => {
   const handleTabClick = (tab) => {
     setActiveTab(tab.id);
     handleScroll(tab.ref);
+    document.getElementById(`panel-${tab.id}`)?.focus();
+  };
+
+  const handleTabKeyDown = (e, tab) => {
+    const currentIndex = tabs.findIndex((t) => t.id === tab.id);
+    let nextIndex;
+    if (e.key === 'ArrowRight') {
+      nextIndex = (currentIndex + 1) % tabs.length;
+    } else if (e.key === 'ArrowLeft') {
+      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    } else if (e.key === 'Home') {
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      nextIndex = tabs.length - 1;
+    } else {
+      return;
+    }
+    e.preventDefault();
+    const nextTab = tabs[nextIndex];
+    handleTabClick(nextTab);
+    document.getElementById(`tab-${nextTab.id}`)?.focus();
   };
 
   // If product is loading, show a loading screen
@@ -250,6 +271,7 @@ const ProductDetailsGadget = () => {
               <ProductGallery
                 images={product.images}
                 discount={discountPercentage}
+                productName={product.name}
               />
             </div>
             <div className="flex flex-col gap-3 md:col-span-4 lg:col-span-4 pt-4 md:pt-0 ">
@@ -258,7 +280,7 @@ const ProductDetailsGadget = () => {
               <div className={'flex gap-2 justify-between'}>
                 {/*Social Share Buttons*/}
                 <div className="flex  items-center gap-2">
-                  <h1>Social Share:</h1>
+                  <h2>Social Share:</h2>
                   <div className="flex gap-1">
                     <FacebookShareButton url={url} quote={title}>
                       <FacebookIcon size={28} round />
@@ -290,11 +312,20 @@ const ProductDetailsGadget = () => {
           )}
 
           <div className="sticky top-0 z-20 bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800 shadow mt-10">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-2 px-2 py-2 max-w-6xl mx-auto">
+            <div
+              role="tablist"
+              aria-label="Product details"
+              className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-2 px-2 py-2 max-w-6xl mx-auto"
+            >
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
+                  id={`tab-${tab.id}`}
+                  role="tab"
                   onClick={() => handleTabClick(tab)}
+                  onKeyDown={(e) => handleTabKeyDown(e, tab)}
+                  aria-selected={activeTab === tab.id}
+                  aria-controls={`panel-${tab.id}`}
                   className={`relative px-4 py-2.5 rounded-lg text-sm md:text-base font-semibold 
                       transition-all duration-200 cursor-pointer
                       ${
@@ -311,13 +342,24 @@ const ProductDetailsGadget = () => {
 
           <div className={'md:grid gap-4 grid-cols-5 '}>
             <div className={'col-span-3 flex flex-col gap-4'}>
-              <div ref={specRef} className="scroll-mt-[140px]">
+              <div
+                ref={specRef}
+                id="panel-spec"
+                role="tabpanel"
+                aria-labelledby="tab-spec"
+                tabIndex={-1}
+                className="scroll-mt-[140px]"
+              >
                 <Specification product={product} />
               </div>
 
               {product.longDesc && (
                 <div
                   ref={descRef}
+                  id="panel-desc"
+                  role="tabpanel"
+                  aria-labelledby="tab-desc"
+                  tabIndex={-1}
                   className={
                     'shadow-sm overflow-hidden rounded-lg scroll-mt-[140px]'
                   }
@@ -336,11 +378,25 @@ const ProductDetailsGadget = () => {
                 </div>
               )}
 
-              <div ref={questionRef} className="scroll-mt-[140px]">
+              <div
+                ref={questionRef}
+                id="panel-question"
+                role="tabpanel"
+                aria-labelledby="tab-question"
+                tabIndex={-1}
+                className="scroll-mt-[140px]"
+              >
                 <ProductQuestionsSection productId={product._id} />
               </div>
 
-              <div ref={reviewRef} className="scroll-mt-[140px]">
+              <div
+                ref={reviewRef}
+                id="panel-review"
+                role="tabpanel"
+                aria-labelledby="tab-review"
+                tabIndex={-1}
+                className="scroll-mt-[140px]"
+              >
                 <ProductReviewSections productId={product._id} />
               </div>
             </div>

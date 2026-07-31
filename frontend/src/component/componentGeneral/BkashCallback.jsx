@@ -121,7 +121,15 @@ const BkashCallback = () => {
     executeBkash();
   }, [clearCart, navigate]);
 
-  return null;
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex items-center justify-center min-h-screen"
+    >
+      <p>Processing your payment, please wait...</p>
+    </div>
+  );
 };
 
 export default BkashCallback;

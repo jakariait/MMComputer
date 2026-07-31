@@ -2,10 +2,11 @@ import React, { useEffect, useState, useCallback } from 'react';
 import CarouselStore from '../../store/CarouselStore.js';
 import Skeleton from 'react-loading-skeleton';
 import ImageComponent from './ImageComponent.jsx';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 
 const SlotCarousel = ({ images, aspectRatio, altName }) => {
   const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
   const count = Array.isArray(images) ? images.length : 0;
 
   const prev = useCallback(() => {
@@ -19,10 +20,10 @@ const SlotCarousel = ({ images, aspectRatio, altName }) => {
   }, [count]);
 
   useEffect(() => {
-    if (count <= 1) return;
+    if (count <= 1 || paused) return;
     const interval = setInterval(next, 5000);
     return () => clearInterval(interval);
-  }, [count, next]);
+  }, [count, next, paused]);
 
   if (count === 0) return null;
 
@@ -36,6 +37,7 @@ const SlotCarousel = ({ images, aspectRatio, altName }) => {
       {images.map((img, i) => (
         <div
           key={img?._id ?? i}
+          aria-hidden={i !== index}
           className={`absolute inset-0 transition-opacity duration-700 ${
             i === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
           }`}
@@ -52,21 +54,26 @@ const SlotCarousel = ({ images, aspectRatio, altName }) => {
         <>
           <button
             onClick={prev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white text-gray-800 p-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+            aria-label="Previous slide"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white text-gray-800 p-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={18} aria-hidden="true" />
           </button>
           <button
             onClick={next}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white text-gray-800 p-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+            aria-label="Next slide"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white text-gray-800 p-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={18} aria-hidden="true" />
           </button>
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
             {images.map((_, i) => (
               <button
                 key={i}
+                type="button"
                 onClick={() => setIndex(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                aria-current={i === index ? 'true' : undefined}
                 className={`w-2 h-2 rounded-full transition-all ${
                   i === index
                     ? 'bg-gray-800 w-4'
@@ -74,6 +81,19 @@ const SlotCarousel = ({ images, aspectRatio, altName }) => {
                 }`}
               />
             ))}
+            <button
+              type="button"
+              onClick={() => setPaused((p) => !p)}
+              aria-label={paused ? 'Play slideshow' : 'Pause slideshow'}
+              aria-pressed={paused}
+              className="flex items-center justify-center w-2 h-2 rounded-full bg-gray-800/70 hover:bg-gray-800 text-white"
+            >
+              {paused ? (
+                <Play size={10} aria-hidden="true" />
+              ) : (
+                <Pause size={10} aria-hidden="true" />
+              )}
+            </button>
           </div>
         </>
       )}

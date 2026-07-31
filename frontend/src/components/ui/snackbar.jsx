@@ -51,12 +51,15 @@ function Snackbar({
             : 'left-1/2 -translate-x-1/2',
         className,
       )}
+      role={variant === 'error' ? 'alert' : 'status'}
       {...props}
     >
       {Icon && <Icon className="size-4 shrink-0" />}
       {children || <span>{message}</span>}
       {onClose && (
         <button
+          type="button"
+          aria-label="Close notification"
           onClick={(e) => onClose(e, 'clickaway')}
           className="ml-auto shrink-0 rounded-sm opacity-70 hover:opacity-100"
         >

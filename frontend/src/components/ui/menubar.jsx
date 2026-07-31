@@ -211,6 +211,7 @@ function MenubarSubTrigger({ className, inset, children, ...props }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         className="ml-auto size-4"
+        aria-hidden="true"
       >
         <path d="m9 18 6-6-6-6" />
       </svg>

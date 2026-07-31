@@ -42,16 +42,17 @@ const AddressForm = ({ user, onAddressChange }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="border-l-4 primaryBorderColor primaryTextColor pl-2 text-lg font-semibold">
+      <h2 className="border-l-4 primaryBorderColor primaryTextColor pl-2 text-lg font-semibold">
         Address
-      </h1>
+      </h2>
 
       {/* Full Name */}
       <div className="flex flex-col gap-2">
-        <h2 className="font-medium">
-          Full Name <span className="text-red-600">*</span>
-        </h2>
+        <label htmlFor="fullName" className="font-medium">
+          Full Name <span className="text-red-600" aria-hidden="true">*</span>
+        </label>
         <input
+          id="fullName"
           name="fullName"
           type="text"
           placeholder="ex Mr./Mrs/Miss"
@@ -64,11 +65,12 @@ const AddressForm = ({ user, onAddressChange }) => {
 
       {/* Phone */}
       <div className="flex flex-col gap-2">
-        <h2>
-          Mobile Number <span className="text-red-600">*</span>
-        </h2>
+        <label htmlFor="mobileNumber" className="font-medium">
+          Mobile Number <span className="text-red-600" aria-hidden="true">*</span>
+        </label>
 
         <input
+          id="mobileNumber"
           name="phone"
           type="tel"
           placeholder="ex 01234567890"
@@ -82,10 +84,11 @@ const AddressForm = ({ user, onAddressChange }) => {
 
       {/* Address */}
       <div className="flex flex-col gap-2">
-        <h2>
-          Address <span className="text-red-600">*</span>
-        </h2>
+        <label htmlFor="address" className="font-medium">
+          Address <span className="text-red-600" aria-hidden="true">*</span>
+        </label>
         <input
+          id="address"
           name="address"
           type="text"
           placeholder="ex House no. / Building / Street / Area"
@@ -98,10 +101,11 @@ const AddressForm = ({ user, onAddressChange }) => {
 
       {/* Email */}
       <div className="flex flex-col gap-2">
-        <h2>
+        <label htmlFor="email" className="font-medium">
           Email <span className="text-sm">(Optional)</span>
-        </h2>
+        </label>
         <input
+          id="email"
           name="email"
           type="email"
           placeholder="ex example@email.com"

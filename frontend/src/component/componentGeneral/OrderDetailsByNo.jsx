@@ -122,7 +122,10 @@ const OrderDetailsByNo = () => {
 
   if (loading)
     return (
-      <div className="flex items-center justify-center min-h-[50vh]">
+      <div
+        role="status"
+        className="flex items-center justify-center min-h-[50vh]"
+      >
         <CircularProgress />
       </div>
     );
@@ -241,7 +244,7 @@ const OrderDetailsByNo = () => {
 
       <div className="mt-6 p-1 flex justify-between flex-wrap gap-6">
         <div>
-          <h1 className="font-semibold mb-1">Billing Address:</h1>
+          <h2 className="font-semibold mb-1">Billing Address:</h2>
           <div>
             <p>{order.shippingInfo?.fullName}</p>
             <p>{order.shippingInfo?.address}</p>

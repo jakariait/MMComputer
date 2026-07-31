@@ -85,12 +85,8 @@ export default function MobileStickyBottom() {
           const isActive = active === item.id;
           const Icon = item.icon;
           const content = (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.id)}
+            <div
               className={`relative cursor-pointer flex flex-col items-center gap-[3px] bg-transparent outline-none px-3 pb-1 rounded-2xl active:scale-90 transition-transform duration-150 pointer-events-auto ${
-                item.id === 'cart' ? 'cart-toggle-btn' : ''
-              } ${
                 item.id === 'pc-builder'
                   ? 'border border-gray-100 border-dashed rounded-lg'
                   : 'border-none'
@@ -135,26 +131,56 @@ export default function MobileStickyBottom() {
                   isActive ? 'scale-100' : 'scale-0'
                 }`}
               />
-            </button>
+            </div>
           );
 
           if (item.id === 'cart') {
             return (
-              <div key={item.id} onClick={handleCartClick} className="contents">
+              <button
+                key={item.id}
+                type="button"
+                onClick={handleCartClick}
+                className="contents cart-toggle-btn"
+                aria-label={item.label}
+              >
                 {content}
-              </div>
+              </button>
+            );
+          }
+
+          if (item.onClick) {
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={item.onClick}
+                className="contents"
+                aria-label={item.label}
+              >
+                {content}
+              </button>
             );
           }
 
           if (item.path) {
             return (
-              <Link key={item.id} to={item.path} className="contents">
+              <Link
+                key={item.id}
+                to={item.path}
+                className="contents"
+                aria-label={item.label}
+                onClick={() => handleNavClick(item.id)}
+              >
                 {content}
               </Link>
             );
           }
 
-          return content;
+          return (
+            <div key={item.id} className="contents">
+              {content}
+            </div>
+          );
         })}
       </div>
     </div>

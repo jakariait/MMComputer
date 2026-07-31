@@ -86,6 +86,7 @@ const MostSoldProductsPieChart = () => {
               variant={timeframe === value ? 'default' : 'outline'}
               size="sm"
               onClick={() => setTimeframe(value)}
+              aria-pressed={timeframe === value}
             >
               {label}
             </Button>
@@ -93,7 +94,13 @@ const MostSoldProductsPieChart = () => {
         </div>
       </div>
 
-      <div className="relative h-[300px] w-full">
+      <div
+        className="relative h-[300px] w-full"
+        role="img"
+        aria-label={`Best selling products. ${productSales
+          .map((d) => `${d.label}: ${d.value}`)
+          .join(', ')}`}
+      >
         <ResponsivePie
           data={productSales}
           margin={{ top: 10, right: 40, bottom: 10, left: 40 }}

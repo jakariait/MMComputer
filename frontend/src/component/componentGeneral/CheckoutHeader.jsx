@@ -23,15 +23,17 @@ const CheckoutHeader = ({ user }) => {
           <div className="flex flex-col md:flex-row justify-between items-center w-full gap-2 bg-yellow-100 p-3 rounded-lg">
             <div>Have an account? Please Login or Register</div>
             <div className="flex gap-6">
-              <Link to="/login">
-                <button className="primaryBgColor accentTextColor px-6 rounded-lg py-2 cursor-pointer">
-                  Login
-                </button>
+              <Link
+                to="/login"
+                className="primaryBgColor accentTextColor px-6 rounded-lg py-2 cursor-pointer inline-block"
+              >
+                Login
               </Link>
-              <Link to="/register">
-                <button className="primaryBgColor accentTextColor px-6 rounded-lg py-2 cursor-pointer">
-                  Register
-                </button>
+              <Link
+                to="/register"
+                className="primaryBgColor accentTextColor px-6 rounded-lg py-2 cursor-pointer inline-block"
+              >
+                Register
               </Link>
             </div>
           </div>

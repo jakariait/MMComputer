@@ -49,7 +49,11 @@ const MonthlyRevenueChart = () => {
       <h3 className="text-center font-semibold mb-2">
         Monthly Revenue (Last 12 Months)
       </h3>
-      <div className="h-[200px]">
+      <div
+        className="h-[200px]"
+        role="img"
+        aria-label="Monthly revenue for the last 12 months"
+      >
         <ResponsiveLine
           data={monthlyRevenue}
           margin={{ top: 20, right: 80, bottom: 50, left: 60 }}

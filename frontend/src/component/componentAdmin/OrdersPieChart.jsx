@@ -84,6 +84,7 @@ const OrdersPieChart = () => {
               variant={timeframe === value ? 'default' : 'outline'}
               size="sm"
               onClick={() => setTimeframe(value)}
+              aria-pressed={timeframe === value}
             >
               {label}
             </Button>
@@ -91,7 +92,13 @@ const OrdersPieChart = () => {
         </div>
       </div>
 
-      <div className="relative h-[300px] w-full">
+      <div
+        className="relative h-[300px] w-full"
+        role="img"
+        aria-label={`Order status breakdown. ${pieData
+          .map((d) => `${d.label}: ${d.value}`)
+          .join(', ')}`}
+      >
         <ResponsivePie
           data={pieData}
           margin={{ top: 10, right: 40, bottom: 10, left: 40 }}

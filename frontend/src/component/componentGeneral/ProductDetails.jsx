@@ -194,7 +194,7 @@ const ProductDetails = () => {
 
               {/*Social Share Buttons*/}
               <div className="flex items-center gap-2">
-                <h1>Social Share:</h1>
+                <h2>Social Share:</h2>
                 <LazySocialShareButtons url={url} title={title} />
               </div>
               {/*Product Code*/}

@@ -100,15 +100,19 @@ const CouponSection = ({
     <div className="rounded-md shadow overflow-hidden bg-white">
       <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
         <AccordionSummary expandIcon={expanded ? <Remove /> : <Add />}>
-          <h1 className="border-l-4 primaryBorderColor primaryTextColor pl-2">
+          <h2 className="border-l-4 primaryBorderColor primaryTextColor pl-2">
             Have a coupon or gift voucher?
-          </h1>
+          </h2>
         </AccordionSummary>
 
         <AccordionDetails>
           <div className="flex flex-col items-center space-x-3">
             <div className={'flex gap-2 accentBgColor w-full p-3 rounded-md'}>
+              <label htmlFor="couponCode" className="sr-only">
+                Enter your coupon code
+              </label>
               <input
+                id="couponCode"
                 type="text"
                 placeholder="Enter your coupon code"
                 value={coupon}
@@ -116,6 +120,7 @@ const CouponSection = ({
                 className="flex-grow outline-none px-2 py-2 md:px-4 md:py-2 rounded-md bg-white"
               />
               <button
+                type="button"
                 onClick={handleApplyCoupon}
                 className="primaryBgColor accentTextColor px-2 py-2 md:px-6 md:py-2 rounded-md cursor-pointer shadow-md"
               >
@@ -125,7 +130,10 @@ const CouponSection = ({
 
             {/* Applied coupon success message */}
             {appliedCoupon && (
-              <div className="flex items-center space-x-2 bg-green-100 w-full p-3 rounded-md mt-3">
+              <div
+                className="flex items-center space-x-2 bg-green-100 w-full p-3 rounded-md mt-3"
+                role="status"
+              >
                 <CheckCircle sx={{ color: '#5cb85c' }} />
                 <span className="text-green-600 text-sm">
                   Coupon <strong>{appliedCoupon.code}</strong> applied! You
@@ -140,7 +148,10 @@ const CouponSection = ({
 
             {/* Error message */}
             {couponError && (
-              <div className="flex items-center space-x-2 bg-red-100 w-full p-3 rounded-md mt-3">
+              <div
+                className="flex items-center space-x-2 bg-red-100 w-full p-3 rounded-md mt-3"
+                role="alert"
+              >
                 <ErrorOutline sx={{ color: '#d9534f' }} />
                 <span className="text-red-500 text-sm">{couponError}</span>
               </div>
