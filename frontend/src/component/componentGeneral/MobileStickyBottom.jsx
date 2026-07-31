@@ -8,7 +8,7 @@ import {
   Monitor,
 } from 'lucide-react';
 import useCartStore from '../../store/useCartStore';
-import useUIStore from '../../store/useUIStore';
+import useUIStore from '../../store/useUiStore.js';
 import useWishlistStore from '../../store/useWishlistStore';
 
 const navItems = [
