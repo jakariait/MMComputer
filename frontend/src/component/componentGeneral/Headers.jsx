@@ -1,12 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { X, ShoppingCart, Heart, User, Menu, LogOut, Monitor } from 'lucide-react';
+import {
+  X,
+  ShoppingCart,
+  Heart,
+  User,
+  Menu,
+  LogOut,
+  Monitor,
+} from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
 
 import GeneralInfoStore from '../../store/GeneralInfoStore';
 import useCartStore from '../../store/useCartStore';
 import useAuthUserStore from '../../store/AuthUserStore';
 import useWishlistStore from '../../store/useWishlistStore';
+import useUiStore from '../../store/useUiStore';
 
 import ImageComponent from './ImageComponent';
 import MenuBar from './MenuBar';
@@ -21,10 +30,10 @@ const Headers = () => {
   const { cart } = useCartStore();
   const { user, logout } = useAuthUserStore();
   const { wishlist } = useWishlistStore();
+  const { isCartOpen, openCart, closeCart, toggleCart } = useUiStore();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCartMenuOpen, setIsCartMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
   const menuRef = useRef(null);
@@ -66,12 +75,13 @@ const Headers = () => {
 
       // Close cart menu
       if (
+        !event.target.closest?.('.cart-toggle-btn') &&
         cartMenuRef.current &&
         !cartMenuRef.current.contains(event.target) &&
         cartButtonRef.current &&
         !cartButtonRef.current.contains(event.target)
       ) {
-        setIsCartMenuOpen(false);
+        closeCart();
       }
 
       // Close user dropdown
@@ -85,14 +95,14 @@ const Headers = () => {
       }
     };
 
-    if (isMenuOpen || isCartMenuOpen || isDropdownOpen) {
+    if (isMenuOpen || isCartOpen || isDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMenuOpen, isCartMenuOpen, isDropdownOpen]);
+  }, [isMenuOpen, isCartOpen, isDropdownOpen, closeCart]);
 
   useEffect(() => {
     const currentCartCount = cart.reduce(
@@ -103,10 +113,10 @@ const Headers = () => {
       currentCartCount > prevCartCount.current &&
       !window.location.pathname.includes('/checkout')
     ) {
-      setIsCartMenuOpen(true);
+      openCart();
     }
     prevCartCount.current = currentCartCount;
-  }, [cart]);
+  }, [cart, openCart]);
 
   const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -170,7 +180,7 @@ const Headers = () => {
               {/* PC Builder */}
               <Link
                 to="/pc-builder"
-                className="border border-white/30 text-white px-3 py-1.5 text-sm font-semibold rounded hover:bg-white/10 transition-colors"
+                className="hidden md:block border border-white/30 text-white px-3 py-1.5 text-sm font-semibold rounded hover:bg-white/10 transition-colors"
               >
                 PC Builder
               </Link>
@@ -179,7 +189,7 @@ const Headers = () => {
 
               <Link
                 to="/user/wishlist"
-                className="relative flex flex-col justify-center items-center"
+                className="hidden  relative md:flex flex-col justify-center items-center"
                 aria-label="Wishlist"
               >
                 <Heart className="md:w-8 md:h-8 cursor-pointer text-white" />
@@ -193,11 +203,11 @@ const Headers = () => {
               {/* Cart */}
               <div
                 ref={cartButtonRef}
-                onClick={() => setIsCartMenuOpen(!isCartMenuOpen)}
-                className="relative"
+                onClick={toggleCart}
+                className="relative hidden md:block"
                 role="button"
                 aria-label="Shopping cart"
-                aria-expanded={isCartMenuOpen}
+                aria-expanded={isCartOpen}
               >
                 <div className={'flex flex-col justify-center items-center'}>
                   {/* Shopping Cart Icon */}
@@ -353,23 +363,20 @@ const Headers = () => {
         {/* Cart Menu */}
         <div
           className={`fixed inset-0 z-50 ß transition-opacity duration-300 ${
-            isCartMenuOpen
+            isCartOpen
               ? 'opacity-100 pointer-events-auto'
               : 'opacity-0 pointer-events-none'
           }`}
         >
           {/* Background Overlay */}
-          <div
-            className="absolute inset-0 bg-opacity-50"
-            onClick={() => setIsCartMenuOpen(false)}
-          />
+          <div className="absolute inset-0 bg-opacity-50" onClick={closeCart} />
 
           {/* Slide-In Cart from Right */}
           <div
             ref={cartMenuRef}
             className="fixed top-0 right-0 h-full w-[350px] bg-white shadow-lg transition-transform duration-300 ease-in-out"
             style={{
-              transform: isCartMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+              transform: isCartOpen ? 'translateX(0)' : 'translateX(100%)',
             }}
           >
             <div className="p-4 h-full flex flex-col">
@@ -379,7 +386,7 @@ const Headers = () => {
                   {totalQuantity} {totalQuantity <= 1 ? 'item' : 'items'}
                 </h1>
                 <button
-                  onClick={() => setIsCartMenuOpen(false)}
+                  onClick={closeCart}
                   className={'cursor-pointer'}
                   aria-label="Close cart"
                 >
@@ -389,7 +396,7 @@ const Headers = () => {
 
               {/* Cart Items Scrollable Section */}
               <div className="flex-1 overflow-y-auto space-y-2">
-                <Cart onCloseCartMenu={() => setIsCartMenuOpen(false)} />
+                <Cart onCloseCartMenu={closeCart} />
               </div>
             </div>
           </div>
