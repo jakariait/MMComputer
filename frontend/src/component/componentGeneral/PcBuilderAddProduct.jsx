@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ShoppingCart, Trash2 } from 'lucide-react';
+import { Select } from '@/components/ui/legacy-select';
+import { MenuItem } from '@/components/ui/menu-item';
 import ImageComponent from './ImageComponent.jsx';
 import ProductList from './ProductList.jsx';
 
@@ -22,6 +24,7 @@ const PcBuilderAddProduct = ({
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [sort, setSort] = useState('');
   const [totalPages, setTotalPages] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
   const [selected, setSelected] = useState(() => {
@@ -39,6 +42,7 @@ const PcBuilderAddProduct = ({
   useEffect(() => {
     if (!slug) return;
     setPage(1);
+    setSort('');
   }, [slug, category]);
 
   useEffect(() => {
@@ -47,6 +51,9 @@ const PcBuilderAddProduct = ({
       try {
         setLoading(true);
         const params = { limit: 24, page };
+        if (sort) {
+          params.sort = sort;
+        }
         if (category) {
           params.category = category;
         } else if (slug) {
@@ -65,7 +72,7 @@ const PcBuilderAddProduct = ({
       }
     };
     fetchProducts();
-  }, [slug, category, page]);
+  }, [slug, category, page, sort]);
 
   const toggleProduct = (product) => {
     const alreadyInBuild = selected.some((item) => item._id === product._id);
@@ -105,6 +112,11 @@ const PcBuilderAddProduct = ({
     setSelected([]);
   };
 
+  const handleSortChange = (e) => {
+    setSort(e.target.value);
+    setPage(1);
+  };
+
   if (!slug) {
     return (
       <section className="bg-gray-50 min-h-screen py-8">
@@ -127,15 +139,29 @@ const PcBuilderAddProduct = ({
               Select a product to add to your build.
             </p>
           </div>
-          {selected.length > 0 && (
-            <button
-              onClick={clearBuild}
-              className="flex items-center gap-1 text-sm text-red-500 hover:text-red-600"
+          <div className="flex items-center gap-3">
+            <Select
+              value={sort}
+              onChange={handleSortChange}
+              className="w-44"
+              aria-label="Sort products"
             >
-              <Trash2 className="size-4" />
-              Clear Build ({selected.length})
-            </button>
-          )}
+              <MenuItem value="">
+                <em>Sort by</em>
+              </MenuItem>
+              <MenuItem value="price_high">Price: High to Low</MenuItem>
+              <MenuItem value="price_low">Price: Low to High</MenuItem>
+            </Select>
+            {selected.length > 0 && (
+              <button
+                onClick={clearBuild}
+                className="flex items-center gap-1 text-sm text-red-500 hover:text-red-600 shrink-0"
+              >
+                <Trash2 className="size-4" />
+                Clear Build ({selected.length})
+              </button>
+            )}
+          </div>
         </div>
 
         {loading ? (

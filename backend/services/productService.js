@@ -392,31 +392,83 @@ const getAllProducts = async ({
       };
     }
 
-    // Define sorting options
-    let sortOption = { createdAt: -1 }; // default newest first
-    if (sort === 'price_high') sortOption = { finalDiscount: -1 };
-    if (sort === 'price_low') sortOption = { finalDiscount: 1 };
-    if (sort === 'name_asc') sortOption = { name: 1 };
-    if (sort === 'name_desc') sortOption = { name: -1 };
-    if (sort === 'oldest') sortOption = { createdAt: 1 };
-
     // Count total documents matching the query
     const totalProducts = await ProductModel.countDocuments(query);
 
-    // Fetch products with filters, sorting, and pagination
-    const products = await ProductModel.find(query)
-      .sort(sortOption)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .select(
-        'name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productCode freeShipping'
-      )
-      .populate([
-        { path: 'category', select: '-createdAt -updatedAt' },
-        { path: 'flags', select: '-createdAt -updatedAt' },
-        { path: 'brand', select: '-createdAt -updatedAt' },
-        { path: 'variants.attributes.option', select: '-createdAt -updatedAt' },
+    let products;
+    if (sort === 'price_high' || sort === 'price_low') {
+      // Price sort must use the effective selling price (finalDiscount when a
+      // discount exists, otherwise finalPrice), since finalDiscount is 0 for
+      // non-discounted products.
+      const sortedIds = await ProductModel.aggregate([
+        { $match: query },
+        {
+          $addFields: {
+            price_sort: {
+              $cond: [
+                { $gt: [{ $size: { $ifNull: ['$variants', []] } }, 0] },
+                {
+                  $cond: [
+                    { $gt: ['$variants.0.discount', 0] },
+                    '$variants.0.discount',
+                    '$variants.0.price',
+                  ],
+                },
+                {
+                  $cond: [
+                    { $gt: ['$finalDiscount', 0] },
+                    '$finalDiscount',
+                    '$finalPrice',
+                  ],
+                },
+              ],
+            },
+          },
+        },
+        { $sort: { price_sort: sort === 'price_high' ? -1 : 1 } },
+        { $skip: (page - 1) * limit },
+        { $limit: limit },
+        { $project: { _id: 1 } },
       ]);
+
+      const ids = sortedIds.map((doc) => doc._id);
+      const orderedDocs = await ProductModel.find({ _id: { $in: ids } })
+        .select(
+          'name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productCode freeShipping'
+        )
+        .populate([
+          { path: 'category', select: '-createdAt -updatedAt' },
+          { path: 'flags', select: '-createdAt -updatedAt' },
+          { path: 'brand', select: '-createdAt -updatedAt' },
+          { path: 'variants.attributes.option', select: '-createdAt -updatedAt' },
+        ]);
+
+      const idOrder = new Map(ids.map((id, index) => [String(id), index]));
+      products = orderedDocs.sort(
+        (a, b) => idOrder.get(String(a._id)) - idOrder.get(String(b._id)),
+      );
+    } else {
+      // Define sorting options
+      const sortOption = { createdAt: -1 }; // default newest first
+      if (sort === 'name_asc') sortOption.name = 1;
+      if (sort === 'name_desc') sortOption.name = -1;
+      if (sort === 'oldest') sortOption.createdAt = 1;
+
+      // Fetch products with filters, sorting, and pagination
+      products = await ProductModel.find(query)
+        .sort(sortOption)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .select(
+          'name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productCode freeShipping'
+        )
+        .populate([
+          { path: 'category', select: '-createdAt -updatedAt' },
+          { path: 'flags', select: '-createdAt -updatedAt' },
+          { path: 'brand', select: '-createdAt -updatedAt' },
+          { path: 'variants.attributes.option', select: '-createdAt -updatedAt' },
+        ]);
+    }
 
     return {
       products,
