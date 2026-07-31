@@ -77,12 +77,15 @@ const TrackOrder = () => {
     }
   };
 
-  const formatPrice = (price) =>
-    new Intl.NumberFormat('en-BD', {
+  const formatPrice = (price) => {
+    const n = Number(price);
+    if (isNaN(n)) return '';
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'BDT',
       minimumFractionDigits: 2,
-    }).format(price);
+    }).format(n);
+  };
 
   return (
     <div className="py-16 px-4 sm:px-6 lg:px-8">
@@ -233,11 +236,13 @@ const TrackOrder = () => {
                     Order Date
                   </p>
                   <p className="text-lg font-semibold text-gray-900 mt-1.5">
-                    {new Date(order.createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
+                    {order.createdAt
+                      ? new Date(order.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })
+                      : ''}
                   </p>
                 </div>
               </div>

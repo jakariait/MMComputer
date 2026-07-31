@@ -42,55 +42,58 @@ const CourierStats = ({ phone }) => {
     fetchCourierStats();
   }, [phone]);
 
-  const StatCard = ({ name, data }) => (
-    <div className="bg-white rounded shadow p-5 hover:shadow-md transition duration-300 ">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-xl font-semibold capitalize text-gray-800 flex items-center gap-2">
-          <FaTruck className="text-blue-500" />
-          {name}
-        </h3>
-        <span
-          className={`text-sm font-semibold px-2 py-1 rounded-full ${
-            data.success_ratio >= 80
-              ? 'bg-green-100 text-green-700'
-              : data.success_ratio >= 50
-                ? 'bg-yellow-100 text-yellow-700'
-                : 'bg-red-100 text-red-700'
-          }`}
-        >
-          {data.success_ratio}% Success
-        </span>
-      </div>
-
-      <div className="space-y-1 text-sm text-gray-700">
-        <p className="flex items-center gap-2">
-          <FaBoxOpen className="text-gray-500" />
-          <span>Total Parcel:</span> {data.total_parcel}
-        </p>
-        <p className="flex items-center gap-2 text-green-600">
-          <FaCheckCircle /> Success: {data.success_parcel}
-        </p>
-        <p className="flex items-center gap-2 text-red-500">
-          <FaTimesCircle /> Cancelled: {data.cancelled_parcel}
-        </p>
-      </div>
-
-      <div className="mt-4">
-        <div className="w-full bg-gray-200 rounded h-2">
-          <div
-            className={`h-2 rounded-full ${
-              data.success_ratio >= 80
-                ? 'bg-green-500'
-                : data.success_ratio >= 50
-                  ? 'bg-yellow-400'
-                  : 'bg-red-400'
+  const StatCard = ({ name, data }) => {
+    const successRatio = data?.success_ratio ?? 0;
+    return (
+      <div className="bg-white rounded shadow p-5 hover:shadow-md transition duration-300 ">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-xl font-semibold capitalize text-gray-800 flex items-center gap-2">
+            <FaTruck className="text-blue-500" />
+            {name}
+          </h3>
+          <span
+            className={`text-sm font-semibold px-2 py-1 rounded-full ${
+              successRatio >= 80
+                ? 'bg-green-100 text-green-700'
+                : successRatio >= 50
+                  ? 'bg-yellow-100 text-yellow-700'
+                  : 'bg-red-100 text-red-700'
             }`}
-            style={{ width: `${data.success_ratio}%` }}
-          ></div>
+          >
+            {successRatio}% Success
+          </span>
+        </div>
+
+        <div className="space-y-1 text-sm text-gray-700">
+          <p className="flex items-center gap-2">
+            <FaBoxOpen className="text-gray-500" />
+            <span>Total Parcel:</span> {data?.total_parcel ?? 0}
+          </p>
+          <p className="flex items-center gap-2 text-green-600">
+            <FaCheckCircle /> Success: {data?.success_parcel ?? 0}
+          </p>
+          <p className="flex items-center gap-2 text-red-500">
+            <FaTimesCircle /> Cancelled: {data?.cancelled_parcel ?? 0}
+          </p>
+        </div>
+
+        <div className="mt-4">
+          <div className="w-full bg-gray-200 rounded h-2">
+            <div
+              className={`h-2 rounded-full ${
+                successRatio >= 80
+                  ? 'bg-green-500'
+                  : successRatio >= 50
+                    ? 'bg-yellow-400'
+                    : 'bg-red-400'
+              }`}
+              style={{ width: `${successRatio}%` }}
+            ></div>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="p-4 rounded-lg shadow bg-white">
@@ -103,8 +106,9 @@ const CourierStats = ({ phone }) => {
       {courierData && (
         <>
           <div className="grid md:grid-cols-2 gap-6">
-            {Object.entries(courierData)
+            {Object.entries(courierData || {})
               .filter(([key]) => key !== 'summary')
+              .filter(([, value]) => value && typeof value === 'object')
               .map(([key, value]) => (
                 <StatCard key={key} name={key} data={value} />
               ))}
@@ -120,25 +124,25 @@ const CourierStats = ({ phone }) => {
               <div className="bg-gray-100 p-4 rounded">
                 <p>Total Parcel</p>
                 <p className="text-xl font-bold">
-                  {courierData.summary.total_parcel}
+                  {courierData?.summary?.total_parcel ?? 0}
                 </p>
               </div>
               <div className="bg-green-100 p-4 rounded">
                 <p>Success Parcel</p>
                 <p className="text-xl font-bold text-green-700">
-                  {courierData.summary.success_parcel}
+                  {courierData?.summary?.success_parcel ?? 0}
                 </p>
               </div>
               <div className="bg-red-100 p-4 rounded">
                 <p>Cancelled Parcel</p>
                 <p className="text-xl font-bold text-red-600">
-                  {courierData.summary.cancelled_parcel}
+                  {courierData?.summary?.cancelled_parcel ?? 0}
                 </p>
               </div>
               <div className="bg-indigo-100 p-4 rounded">
                 <p>Success Ratio</p>
                 <p className="text-xl font-bold text-indigo-700">
-                  {courierData.summary.success_ratio}%
+                  {courierData?.summary?.success_ratio ?? 0}%
                 </p>
               </div>
             </div>
@@ -146,7 +150,9 @@ const CourierStats = ({ phone }) => {
             <div className="w-full bg-gray-200 rounded-full h-3 mt-6 mx-auto max-w-3xl">
               <div
                 className="h-3 rounded-full bg-indigo-500"
-                style={{ width: `${courierData.summary.success_ratio}%` }}
+                style={{
+                  width: `${courierData?.summary?.success_ratio ?? 0}%`,
+                }}
               ></div>
             </div>
           </div>

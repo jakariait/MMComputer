@@ -8,8 +8,9 @@ import BuyNowButton from '../component/componentGeneral/BuyNowButton.jsx';
 import { Heart } from 'lucide-react';
 
 const formatPrice = (price) => {
-  if (isNaN(price)) return price;
-  return price.toLocaleString();
+  const n = Number(price);
+  if (isNaN(n)) return price;
+  return n.toLocaleString();
 };
 
 const calculateDiscountPercentage = (
@@ -131,13 +132,13 @@ const WishlistPage = () => {
     }
   }, [user]);
 
-  const displayWishlist = wishlist.filter(
+  const displayWishlist = (wishlist || []).filter(
     (item) =>
       item.product &&
       (item.product.finalPrice || item.product.finalPrice === 0),
   );
 
-  const showLoading = loading && wishlist.length === 0;
+  const showLoading = loading && (wishlist || []).length === 0;
   const isEmpty = displayWishlist.length === 0;
 
   return (

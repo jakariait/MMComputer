@@ -31,10 +31,12 @@ const MetaProvider = () => {
 
   // Track pageview on route change
   useEffect(() => {
-    ReactGA.send({
-      hitType: 'pageview',
-      page: location.pathname + location.search,
-    });
+    if (typeof window.ga === 'function') {
+      ReactGA.send({
+        hitType: 'pageview',
+        page: location.pathname + location.search,
+      });
+    }
   }, [location]);
 
   useEffect(() => {

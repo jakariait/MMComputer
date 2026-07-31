@@ -153,11 +153,13 @@ const OrderDetailsByNo = () => {
             </p>
             <p>
               <strong>Order Date:</strong>{' '}
-              {new Date(order.createdAt).toLocaleDateString(undefined, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
+              {order.createdAt
+                ? new Date(order.createdAt).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })
+                : ''}
             </p>
             <p>
               <strong>Status:</strong>{' '}

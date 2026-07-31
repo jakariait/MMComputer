@@ -33,6 +33,7 @@ const MobileMenu = ({ onClose }) => {
         <ul className="space-y-2">
           {/* Categories */}
           {categories?.map((category) => {
+            if (!category) return null;
             const hasSubs = subCategories?.some(
               (sub) => sub?.category?._id === category._id,
             );

@@ -34,13 +34,17 @@ const CarouselUpload = () => {
   const { token } = useAuthAdminStore();
 
   const getImagesForSlot = (slotKey) =>
-    images.filter((img) => img.position === slotKey);
+    (images || []).filter((img) => img.position === slotKey);
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
         const response = await axios.get(`${apiUrl}/getallcarousel`);
-        setImages(response.data);
+        setImages(
+          Array.isArray(response.data)
+            ? response.data
+            : response.data?.images || [],
+        );
       } catch (error) {
         console.error('Error fetching images', error);
       }

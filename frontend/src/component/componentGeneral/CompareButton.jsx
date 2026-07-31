@@ -3,7 +3,10 @@ import useCompareStore from '../../store/useCompareStore.js';
 
 const CompareButton = ({ product }) => {
   const { compareList, addToCompare, removeFromCompare } = useCompareStore();
-  const inCompare = compareList.some((p) => p._id === product._id);
+  const inCompare =
+    product &&
+    Array.isArray(compareList) &&
+    compareList.some((p) => p?._id === product._id);
 
   return (
     <button

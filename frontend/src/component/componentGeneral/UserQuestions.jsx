@@ -74,11 +74,13 @@ const UserQuestions = () => {
                     {q.status}
                   </span>
                   <span className="text-xs text-gray-400">
-                    {new Date(q.createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
+                    {q.createdAt
+                      ? new Date(q.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })
+                      : ''}
                   </span>
                 </div>
                 {q.productId?.slug && (

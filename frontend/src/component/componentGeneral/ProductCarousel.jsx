@@ -6,22 +6,25 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const SlotCarousel = ({ images, aspectRatio, altName }) => {
   const [index, setIndex] = useState(0);
+  const count = Array.isArray(images) ? images.length : 0;
 
   const prev = useCallback(() => {
-    setIndex((i) => (i - 1 + images.length) % images.length);
-  }, [images.length]);
+    if (count === 0) return;
+    setIndex((i) => (i - 1 + count) % count);
+  }, [count]);
 
   const next = useCallback(() => {
-    setIndex((i) => (i + 1) % images.length);
-  }, [images.length]);
+    if (count === 0) return;
+    setIndex((i) => (i + 1) % count);
+  }, [count]);
 
   useEffect(() => {
-    if (images.length <= 1) return;
+    if (count <= 1) return;
     const interval = setInterval(next, 5000);
     return () => clearInterval(interval);
-  }, [images.length, next]);
+  }, [count, next]);
 
-  if (images.length === 0) return null;
+  if (count === 0) return null;
 
   return (
     <div
@@ -32,7 +35,7 @@ const SlotCarousel = ({ images, aspectRatio, altName }) => {
     >
       {images.map((img, i) => (
         <div
-          key={img._id}
+          key={img?._id ?? i}
           className={`absolute inset-0 transition-opacity duration-700 ${
             i === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
           }`}

@@ -78,10 +78,16 @@ const BkashCallback = () => {
         );
 
         if (execRes.data && execRes.data.paymentID) {
-          const orderPayload = JSON.parse(
+          const rawPayload =
             sessionStorage.getItem('bkash_order_payload') ||
-              localStorage.getItem('bkash_order_payload'),
-          );
+            localStorage.getItem('bkash_order_payload');
+          if (!rawPayload) return;
+          let orderPayload;
+          try {
+            orderPayload = JSON.parse(rawPayload);
+          } catch {
+            return;
+          }
           if (!orderPayload) return;
           sessionStorage.removeItem('bkash_order_payload');
 

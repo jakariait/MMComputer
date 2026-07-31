@@ -5,7 +5,7 @@ import useCompareStore from '../../store/useCompareStore.js';
 const CompareFloatingButton = () => {
   const { compareList } = useCompareStore();
 
-  if (compareList.length === 0) return null;
+  if (!Array.isArray(compareList) || compareList.length === 0) return null;
 
   return (
     <Link

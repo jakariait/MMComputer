@@ -27,8 +27,6 @@ const PublicContentViewer = ({ title, endpoint }) => {
     fetchContent();
   }, [apiUrl, endpoint]);
 
-  console.log(content);
-
   if (loading)
     return (
       <div className="xl:container xl:mx-auto p-4 pt-10">

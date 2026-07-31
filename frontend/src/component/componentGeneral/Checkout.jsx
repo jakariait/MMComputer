@@ -75,9 +75,12 @@ const Checkout = () => {
         const res = await axios.get(`${apiUrl}/getFreeDeliveryAmount`);
         if (res.data?.success) {
           setFreeDelivery(res.data?.data?.value);
+        } else {
+          setFreeDelivery(0);
         }
       } catch (err) {
         console.error('Failed to fetch free delivery amount', err);
+        setFreeDelivery(0);
       }
     };
 
@@ -85,17 +88,25 @@ const Checkout = () => {
   }, []);
 
   // Price Calculations
-  const totalAmount = cart.reduce((total, item) => {
+  const cartItems = cart || [];
+  const totalAmount = cartItems.reduce((total, item) => {
     const price =
       item.discountPrice > 0 ? item.discountPrice : item.originalPrice;
-    return total + price * item.quantity;
+    return total + (price || 0) * (item.quantity || 0);
   }, 0);
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalItems = cartItems.reduce(
+    (sum, item) => sum + (item.quantity || 0),
+    0,
+  );
 
-  const formattedTotalAmount = (amount) => Number(amount).toLocaleString();
+  const formattedTotalAmount = (amount) => {
+    const n = Number(amount);
+    if (isNaN(n)) return '';
+    return n.toLocaleString();
+  };
 
-  const hasFreeShippingProduct = cart.some((item) => item.freeShipping);
+  const hasFreeShippingProduct = cartItems.some((item) => item.freeShipping);
 
   const actualShippingCost =
     hasFreeShippingProduct || (freeDelivery > 1 && totalAmount >= freeDelivery)
@@ -105,10 +116,10 @@ const Checkout = () => {
   let discount = appliedCoupon?.discountAmount || 0;
 
   // Calculate total amount after reward points and coupon discount
-  const amountAfterDiscounts = totalAmount - rewardPointsUsed - discount;
+  const amountAfterDiscounts = totalAmount - (rewardPointsUsed || 0) - discount;
 
   // --- VAT Calculation (e.g., 5%) ---
-  const vatAmount = (amountAfterDiscounts * vatPercentage) / 100;
+  const vatAmount = (amountAfterDiscounts * (vatPercentage || 0)) / 100;
 
   useEffect(() => {
     const fetchVatAmount = async () => {
@@ -116,9 +127,12 @@ const Checkout = () => {
         const res = await axios.get(`${apiUrl}/getVatPercentage`);
         if (res.data?.success) {
           setVatPercentage(res.data?.data?.value);
+        } else {
+          setVatPercentage(0);
         }
       } catch (err) {
         console.error('Failed to fetch VAT Percentage', err);
+        setVatPercentage(0);
       }
     };
 
@@ -128,14 +142,14 @@ const Checkout = () => {
   // Data Layer for Initiat Checkout
 
   useEffect(() => {
-    if (cart.length > 0) {
+    if ((cart || []).length > 0) {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         event: 'begin_checkout',
         ecommerce: {
           currency: 'BDT',
           value: totalAmount,
-          items: cart.map((item) => ({
+          items: (cart || []).map((item) => ({
             item_name: item.name,
             item_id: item.contentId,
             price:
@@ -148,7 +162,13 @@ const Checkout = () => {
     }
   }, [cart, totalAmount]);
 
-  if (vatPercentage === null || freeDelivery === null) return null;
+  if (vatPercentage === null || freeDelivery === null) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh] text-gray-500">
+        Loading checkout…
+      </div>
+    );
+  }
 
   // --- Grand Total ---
   const grandTotal = amountAfterDiscounts + vatAmount + actualShippingCost;
@@ -165,7 +185,7 @@ const Checkout = () => {
         address: addressData.address,
       },
       shippingId: selectedShipping.id,
-      items: cart.map((item) => {
+      items: (cart || []).map((item) => {
         const baseItem = {
           productId: item.productId,
           quantity: item.quantity,
@@ -323,11 +343,11 @@ const Checkout = () => {
             />
             <button
               className={`primaryBgColor accentTextColor px-4 py-2 w-full rounded-lg ${
-                isProcessingOrder || cart.length === 0
+                isProcessingOrder || (cart || []).length === 0
                   ? 'opacity-50 cursor-not-allowed'
                   : 'cursor-pointer'
               }`}
-              disabled={isProcessingOrder || cart.length === 0}
+              disabled={isProcessingOrder || (cart || []).length === 0}
             >
               {paymentMethod === 'cash_on_delivery'
                 ? 'Place Order (Cash on Delivery)'

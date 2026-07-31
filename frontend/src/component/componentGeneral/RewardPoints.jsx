@@ -15,23 +15,26 @@ import {
 const RewardPoints = ({ availablePoints, points, onPointsChange }) => {
   const [expanded, setExpanded] = useState(false);
   const [useMax, setUseMax] = useState(true);
-  const [inputPoints, setInputPoints] = useState(availablePoints); // local input state
+  const [inputPoints, setInputPoints] = useState(availablePoints ?? 0);
 
   useEffect(() => {
     // When availablePoints change, reset input
-    setInputPoints(availablePoints);
+    setInputPoints(availablePoints ?? 0);
   }, [availablePoints]);
 
   const handleCheckboxChange = (e) => {
     const checked = e.target.checked;
     setUseMax(checked);
-    const newPoints = checked ? availablePoints : 0;
+    const newPoints = checked ? availablePoints || 0 : 0;
     setInputPoints(newPoints); // update local input
   };
 
   const handleInputChange = (e) => {
     const value = Number(e.target.value);
-    const clampedValue = Math.max(0, Math.min(value, availablePoints)); // between 0 and availablePoints
+    const clampedValue = Math.max(
+      0,
+      Math.min(value || 0, availablePoints ?? 0),
+    ); // between 0 and availablePoints
     setInputPoints(clampedValue);
     if (clampedValue !== availablePoints) {
       setUseMax(false);
@@ -40,7 +43,7 @@ const RewardPoints = ({ availablePoints, points, onPointsChange }) => {
 
   const handleApply = (e) => {
     e.preventDefault();
-    onPointsChange(inputPoints); // only update parent on Apply
+    onPointsChange(Number(inputPoints) || 0); // only update parent on Apply
   };
 
   return (

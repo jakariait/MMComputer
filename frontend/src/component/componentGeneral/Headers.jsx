@@ -42,7 +42,7 @@ const Headers = () => {
   const cartMenuRef = useRef(null);
 
   const prevCartCount = useRef(
-    cart.reduce((total, item) => total + item.quantity, 0),
+    (cart || []).reduce((total, item) => total + (item?.quantity || 0), 0),
   );
 
   const avatarClass = `
@@ -105,8 +105,8 @@ const Headers = () => {
   }, [isMenuOpen, isCartOpen, isDropdownOpen, closeCart]);
 
   useEffect(() => {
-    const currentCartCount = cart.reduce(
-      (total, item) => total + item.quantity,
+    const currentCartCount = (cart || []).reduce(
+      (total, item) => total + (item?.quantity || 0),
       0,
     );
     if (
@@ -118,7 +118,10 @@ const Headers = () => {
     prevCartCount.current = currentCartCount;
   }, [cart, openCart]);
 
-  const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
+  const totalQuantity = (cart || []).reduce(
+    (total, item) => total + (item?.quantity || 0),
+    0,
+  );
 
   const handleLogout = () => {
     logout();
@@ -193,9 +196,9 @@ const Headers = () => {
                 aria-label="Wishlist"
               >
                 <Heart className="md:w-8 md:h-8 cursor-pointer text-white" />
-                {wishlist.length > 0 && (
+                {(wishlist || []).length > 0 && (
                   <span className="absolute top-0 -right-2 -mt-2 -mr-2 md:mr-0 secondaryBgColor rounded-full h-6 w-6 flex items-center justify-center text-xs accentTextColor">
-                    {wishlist.length}
+                    {(wishlist || []).length}
                   </span>
                 )}
               </Link>
@@ -237,14 +240,14 @@ const Headers = () => {
                   >
                     {user?.userImage &&
                     typeof user.userImage === 'string' &&
-                    user.userImage.trim() !== '' ? (
+                    user?.userImage?.trim() !== '' ? (
                       <ImageComponent
                         imageName={user.userImage}
                         className={avatarClass}
                       />
                     ) : (
                       <span className={avatarInitialClass}>
-                        {(user?.fullName &&
+                        {(typeof user?.fullName === 'string' &&
                           user.fullName.trim().charAt(0).toUpperCase()) ||
                           'U'}
                       </span>
@@ -362,7 +365,7 @@ const Headers = () => {
 
         {/* Cart Menu */}
         <div
-          className={`fixed inset-0 z-50 ß transition-opacity duration-300 ${
+          className={`fixed inset-0 z-50 transition-opacity duration-300 ${
             isCartOpen
               ? 'opacity-100 pointer-events-auto'
               : 'opacity-0 pointer-events-none'

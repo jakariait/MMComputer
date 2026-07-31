@@ -237,7 +237,9 @@ const ProductReviewSections = ({ productId }) => {
               </div>
               <p className="text-gray-800 mb-1">{review.comment}</p>
               <p className="text-xs text-gray-400 mt-2">
-                {new Date(review.createdAt).toLocaleString()}
+                {review.createdAt
+                  ? new Date(review.createdAt).toLocaleString()
+                  : ''}
               </p>
             </div>
           ))

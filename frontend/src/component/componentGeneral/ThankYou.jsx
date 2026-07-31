@@ -61,10 +61,10 @@ const ThankYou = () => {
               event: 'purchase',
 
               user: {
-                name: order.shippingInfo.fullName || '',
-                email: order.shippingInfo.email || '',
-                phone: order.shippingInfo.mobileNo || '',
-                address: order.shippingInfo.address || '',
+                name: order.shippingInfo?.fullName || '',
+                email: order.shippingInfo?.email || '',
+                phone: order.shippingInfo?.mobileNo || '',
+                address: order.shippingInfo?.address || '',
               },
 
               ecommerce: {
@@ -74,7 +74,7 @@ const ThankYou = () => {
                 tax: order.vat,
                 shipping: order.deliveryCharge,
                 coupon: order.promoCode || '',
-                items: order.items.map((item) => ({
+                items: (order.items || []).map((item) => ({
                   item_name: item.productId?.name || 'Unknown Product',
                   item_id: item.productId?.productId || 'N/A',
                   price: item.price,
@@ -167,11 +167,13 @@ const ThankYou = () => {
               </div>
               <p className="text-sm text-gray-500 mt-4">
                 Order placed on{' '}
-                {new Date(order?.createdAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                {order?.createdAt
+                  ? new Date(order.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })
+                  : ''}
               </p>
             </div>
 

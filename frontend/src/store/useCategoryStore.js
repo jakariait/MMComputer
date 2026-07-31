@@ -27,6 +27,7 @@ const useCategoryStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get(`${apiUrl}/category/${id}`);
+      set({ loading: false });
       return response.data;
     } catch (error) {
       set({

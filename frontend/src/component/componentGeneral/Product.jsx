@@ -209,9 +209,44 @@ const Product = () => {
   }, [fetchFlags, flags, fetchBrands, brands]);
 
   // Effect to fetch products whenever filters change
+  const {
+    page,
+    limit,
+    sort,
+    category,
+    subcategory,
+    childCategory,
+    stock,
+    flags: flagFilter,
+    brand,
+    search,
+  } = currentFilters;
   useEffect(() => {
-    fetchProducts(currentFilters);
-  }, [currentFilters, fetchProducts]);
+    fetchProducts({
+      page,
+      limit,
+      sort,
+      category,
+      subcategory,
+      childCategory,
+      stock,
+      flags: flagFilter,
+      brand,
+      search,
+    });
+  }, [
+    page,
+    limit,
+    sort,
+    category,
+    subcategory,
+    childCategory,
+    stock,
+    flagFilter,
+    brand,
+    search,
+    fetchProducts,
+  ]);
 
   // Cleanup search timeout on unmount
   useEffect(() => {
@@ -654,7 +689,7 @@ const Product = () => {
           )}
 
           {/* Product List or No Results */}
-          {products.length === 0 && !loading ? (
+          {(products || []).length === 0 && !loading ? (
             <div className="text-center py-20">
               <Typography variant="h6" className="text-gray-500 mb-4">
                 {currentFilters.search

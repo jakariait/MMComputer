@@ -285,11 +285,12 @@ const ViewOrder = () => {
 
   if (loading) return <div className="p-4">Loading...</div>;
   if (error) return <div className="p-4 text-destructive">{error}</div>;
+  if (!order) return <div className="p-4">Order not found.</div>;
 
   const currentOrderData = isEditMode ? editableOrder : order;
-  const orderStatusColor = getStatusColor(currentOrderData.orderStatus);
+  const orderStatusColor = getStatusColor(currentOrderData?.orderStatus);
   const paymentStatusColor = getPaymentStatusColor(
-    currentOrderData.paymentStatus,
+    currentOrderData?.paymentStatus,
   );
 
   return (
@@ -357,22 +358,22 @@ const ViewOrder = () => {
                 </div>
               ) : (
                 <div className="space-y-0.5">
-                  <p>{currentOrderData.shippingInfo.fullName}</p>
+                  <p>{currentOrderData?.shippingInfo?.fullName}</p>
                   <p className="text-muted-foreground">
-                    {currentOrderData.shippingInfo.mobileNo}
+                    {currentOrderData?.shippingInfo?.mobileNo}
                   </p>
                   <p className="text-muted-foreground">
-                    {currentOrderData.shippingInfo.email}
+                    {currentOrderData?.shippingInfo?.email}
                   </p>
                   <p className="text-muted-foreground">
-                    {currentOrderData.shippingInfo.address}
+                    {currentOrderData?.shippingInfo?.address}
                   </p>
                 </div>
               )}
             </div>
             <div id="secondRowRight" className="text-right space-y-1">
               <p>
-                <strong>Order No:</strong> {currentOrderData.orderNo}
+                <strong>Order No:</strong> {currentOrderData?.orderNo}
               </p>
               <p>
                 <strong>Order Date:</strong>{' '}
@@ -388,7 +389,7 @@ const ViewOrder = () => {
               </p>
               <p>
                 <strong>Payment Method:</strong>{' '}
-                {getPaymentMethodText(currentOrderData.paymentMethod)}
+                {getPaymentMethodText(currentOrderData?.paymentMethod)}
               </p>
               <p>
                 <strong>Payment Status:</strong>{' '}
@@ -396,20 +397,22 @@ const ViewOrder = () => {
                   {paymentStatusColor.text}
                 </span>
               </p>
-              {currentOrderData.paymentId && (
+              {currentOrderData?.paymentId && (
                 <p>
                   <strong>Payment ID:</strong>{' '}
-                  <span className="text-sm">{currentOrderData.paymentId}</span>
+                  <span className="text-sm">
+                    {currentOrderData.paymentId}
+                  </span>
                 </p>
               )}
-              {currentOrderData.transId && (
+              {currentOrderData?.transId && (
                 <p>
                   <strong>Transaction ID:</strong> {currentOrderData.transId}
                 </p>
               )}
               <p>
                 <strong>Delivery Method:</strong>{' '}
-                {getDeliveryMethodText(currentOrderData.deliveryMethod)}
+                {getDeliveryMethodText(currentOrderData?.deliveryMethod)}
               </p>
             </div>
           </div>
@@ -529,12 +532,12 @@ const ViewOrder = () => {
               ) : (
                 <>
                   <p>
-                    {currentOrderData.billingInfo?.fullName ||
-                      currentOrderData.shippingInfo.fullName}
+                    {currentOrderData?.billingInfo?.fullName ||
+                      currentOrderData?.shippingInfo?.fullName}
                   </p>
                   <p className="text-muted-foreground">
-                    {currentOrderData.billingInfo?.address ||
-                      currentOrderData.shippingInfo.address}
+                    {currentOrderData?.billingInfo?.address ||
+                      currentOrderData?.shippingInfo?.address}
                   </p>
                 </>
               )}
@@ -599,7 +602,7 @@ const ViewOrder = () => {
       </Card>
 
       <RequirePermission permission="edit_orders">
-        <OrderStatusUpdate orderId={order._id} onUpdate={fetchOrder} />
+        <OrderStatusUpdate orderId={order?._id} onUpdate={fetchOrder} />
       </RequirePermission>
 
       <CourierStats phone={order?.shippingInfo?.mobileNo ?? ''} />

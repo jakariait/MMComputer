@@ -15,8 +15,10 @@ const Brands = ({ topBrandsOnly = false }) => {
     ? brands.filter((b) => b.isTopBrand)
     : brands;
 
-  const filteredBrands = displayBrands.filter((brand) =>
-    brand.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  const filteredBrands = (displayBrands || []).filter(
+    (brand) =>
+      brand &&
+      brand.name?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   useEffect(() => {

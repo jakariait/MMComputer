@@ -5,9 +5,15 @@ const RecentlyViewedProducts = ({ currentProductId }) => {
   const [recentProducts, setRecentProducts] = useState([]);
 
   useEffect(() => {
-    const viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    let viewed;
+    try {
+      viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    } catch {
+      viewed = [];
+    }
+    if (!Array.isArray(viewed)) viewed = [];
     // Exclude the currently viewed product
-    const filtered = viewed.filter((item) => item._id !== currentProductId);
+    const filtered = viewed.filter((item) => item?._id !== currentProductId);
 
     setRecentProducts(filtered.slice(0, 5));
   }, [currentProductId]);

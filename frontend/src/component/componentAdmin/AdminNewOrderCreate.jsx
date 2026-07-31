@@ -182,7 +182,7 @@ const AdminNewOrderCreate = () => {
     if (variant.attributes && variant.attributes.length > 0) {
       return variant.attributes.map((attr) => attr.value).join(' - ');
     }
-    return `Variant ${variant._id.slice(-4)}`;
+    return variant._id ? `Variant ${variant._id.slice(-4)}` : 'Variant';
   };
 
   const filteredProducts = useMemo(() => {

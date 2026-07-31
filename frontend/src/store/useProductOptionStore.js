@@ -65,7 +65,10 @@ const useProductOptionStore = create((set) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
       set((state) => ({
-        productOptions: [...state.productOptions, response.data.productOption],
+        productOptions: [
+          ...state.productOptions,
+          ...(response.data?.productOption ? [response.data.productOption] : []),
+        ],
         loading: false,
       }));
     } catch (error) {

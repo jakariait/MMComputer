@@ -22,7 +22,9 @@ const ImageComponent = ({
         setImageSrc(imageName);
       } else {
         const apiUrl = import.meta.env.VITE_API_URL;
-        const imageUrl = `${apiUrl.replace('/api', '')}/uploads/${imageName}`;
+        const imageUrl = apiUrl
+          ? `${apiUrl.replace('/api', '')}/uploads/${imageName}`
+          : imageName;
         setImageSrc(imageUrl);
       }
     } else {

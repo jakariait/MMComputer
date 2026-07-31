@@ -172,7 +172,7 @@ const AdminCategoryAllinone = () => {
   const filteredCategories = useMemo(() => {
     return categories
       .filter((cat) =>
-        cat.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        cat?.name?.toLowerCase().includes(searchTerm.toLowerCase()),
       )
       .reverse();
   }, [categories, searchTerm]);

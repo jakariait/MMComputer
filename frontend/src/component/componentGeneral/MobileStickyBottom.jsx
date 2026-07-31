@@ -40,7 +40,10 @@ export default function MobileStickyBottom() {
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
 
-  const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
+  const totalQuantity = (cart || []).reduce(
+    (total, item) => total + (item?.quantity || 0),
+    0,
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -104,15 +107,16 @@ export default function MobileStickyBottom() {
                   />
                   {item.showBadge &&
                     ((item.id === 'cart' && totalQuantity > 0) ||
-                      (item.id === 'wishlist' && wishlist.length > 0)) && (
+                      (item.id === 'wishlist' &&
+                        (wishlist || []).length > 0)) && (
                       <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full primaryBgColor flex items-center justify-center text-[10px] font-medium text-white">
                         {item.id === 'cart'
                           ? totalQuantity > 99
                             ? '99+'
                             : totalQuantity
-                          : wishlist.length > 99
+                          : (wishlist || []).length > 99
                             ? '99+'
-                            : wishlist.length}
+                            : (wishlist || []).length}
                       </span>
                     )}
                 </div>

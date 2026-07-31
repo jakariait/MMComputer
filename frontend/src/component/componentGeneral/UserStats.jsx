@@ -29,7 +29,9 @@ const UserStats = () => {
           },
         });
         if (response.data.success) {
-          const orders = response.data.orders;
+          const orders = Array.isArray(response.data.orders)
+            ? response.data.orders
+            : [];
 
           setTotalOrders(response.data.totalOrders);
 
@@ -75,7 +77,11 @@ const UserStats = () => {
       icon: <FaBox className="text-3xl text-yellow-500" />,
     },
     {
-      value: cart?.reduce((total, item) => total + item.quantity, 0) || 0,
+      value:
+        (cart || []).reduce(
+          (total, item) => total + (item?.quantity || 0),
+          0,
+        ) || 0,
       label: 'Items in cart',
       icon: <FaShoppingCart className="text-3xl text-green-500" />,
     },

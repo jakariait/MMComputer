@@ -19,7 +19,10 @@ const ProductGallery = ({ images, discount, zoom = true, productName }) => {
     if (images?.length > 0) {
       const apiUrl = import.meta.env.VITE_API_URL;
       const urls = images.map(
-        (imageName) => `${apiUrl.replace('/api', '')}/uploads/${imageName}`,
+        (imageName) =>
+          apiUrl
+            ? `${apiUrl.replace('/api', '')}/uploads/${imageName}`
+            : imageName,
       );
       setImageUrls(urls);
     }

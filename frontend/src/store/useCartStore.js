@@ -3,8 +3,13 @@ import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const loadCart = () => {
-  const savedCart = localStorage.getItem('cart');
-  return savedCart ? JSON.parse(savedCart) : [];
+  try {
+    const savedCart = localStorage.getItem('cart');
+    const parsed = savedCart ? JSON.parse(savedCart) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 };
 
 const saveCart = (cart) => {
@@ -20,7 +25,7 @@ const useCartStore = create((set, get) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const serverCartItems = res.data?.cart?.items.map((item) => ({
+      const serverCartItems = (res.data?.cart?.items || []).map((item) => ({
         productId: item.productId,
         contentId: item.contentId,
         name: item.name,
@@ -193,7 +198,7 @@ const useCartStore = create((set, get) => ({
     try {
       for (const item of localCart) {
         await axios.post(
-          `/api/addToCart`,
+          `${apiUrl}/addToCart`,
           {
             productId: item.productId,
             contentId: item.contentId, // ✅ added here
@@ -215,14 +220,14 @@ const useCartStore = create((set, get) => ({
         );
       }
 
-      const res = await axios.get(`/api/getCart`, {
+      const res = await axios.get(`${apiUrl}/getCart`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      const serverCartItems = res.data?.cart?.items.map((item) => ({
-        productId: item.product._id,
+      const serverCartItems = (res.data?.cart?.items || []).map((item) => ({
+        productId: item.product?._id || item.productId,
         contentId: item.contentId, // ✅ added here
         name: item.name,
         originalPrice: item.originalPrice,
@@ -230,7 +235,7 @@ const useCartStore = create((set, get) => ({
         variant: item.variant,
         quantity: item.quantity,
         thumbnail: item.thumbnail,
-        slug: item.product?.slug,
+        slug: item.product?.slug || item.slug,
         variantId: item.variantId,
         freeShipping: item.freeShipping,
       }));

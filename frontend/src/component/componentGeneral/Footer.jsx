@@ -120,7 +120,8 @@ const Footer = () => {
                 <div className="space-y-3">
                   {phoneFields.map(
                     ({ label, field }) =>
-                      GeneralInfoList?.[field]?.length > 0 && (
+                      Array.isArray(GeneralInfoList?.[field]) &&
+                      GeneralInfoList[field].length > 0 && (
                         <div key={field} className="flex items-start gap-2">
                           <Phone className="size-4 mt-0.5 shrink-0 tertiaryTextColor" />
                           <div>

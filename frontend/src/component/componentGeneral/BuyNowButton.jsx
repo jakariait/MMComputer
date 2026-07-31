@@ -50,7 +50,7 @@ const BuyNowButton = ({ product, isAddToCart = false }) => {
 
   // Handle variant selection by its display name
   const handleVariantChange = (displayName) => {
-    const newVariant = product.variants.find(
+    const newVariant = product.variants?.find(
       (variant) => getVariantDisplayName(variant) === displayName,
     );
     setSelectedVariant(newVariant);

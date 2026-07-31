@@ -121,7 +121,9 @@ const AllOrders = ({ title, status = '' }) => {
 
   const allOrders = useMemo(
     () =>
-      activeStatus ? orderListByStatus[activeStatus] : allOrdersFromStore || [],
+      activeStatus
+        ? orderListByStatus[activeStatus] || []
+        : allOrdersFromStore || [],
     [activeStatus, orderListByStatus, allOrdersFromStore],
   );
 

@@ -51,15 +51,21 @@ const CouponSection = ({
         }
 
         // Date validation for coupon usage
-        const now = new Date();
-        const startDate = new Date(couponData.startDate);
-        const endDate = new Date(couponData.endDate);
+        if (couponData.startDate && couponData.endDate) {
+          const now = new Date();
+          const startDate = new Date(couponData.startDate);
+          const endDate = new Date(couponData.endDate);
 
-        if (now < startDate || now > endDate) {
-          setCouponError('This coupon is not valid at this time.');
-          setAppliedCoupon(null);
-          setAppliedCouponGlobal(null);
-          return;
+          if (
+            !isNaN(startDate) &&
+            !isNaN(endDate) &&
+            (now < startDate || now > endDate)
+          ) {
+            setCouponError('This coupon is not valid at this time.');
+            setAppliedCoupon(null);
+            setAppliedCouponGlobal(null);
+            return;
+          }
         }
 
         const discountAmount =

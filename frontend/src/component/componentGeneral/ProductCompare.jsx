@@ -10,8 +10,9 @@ const ProductCompare = () => {
   const { compareList, removeFromCompare, clearCompare } = useCompareStore();
 
   const formatPrice = (price) => {
-    if (isNaN(price)) return price;
-    return price.toLocaleString();
+    const n = Number(price);
+    if (isNaN(n)) return '';
+    return n.toLocaleString();
   };
 
   const cleanHtml = (html) => {
@@ -21,7 +22,9 @@ const ProductCompare = () => {
     return doc.body.innerHTML;
   };
 
-  if (compareList.length === 0) {
+  const compareItems = Array.isArray(compareList) ? compareList : [];
+
+  if (compareItems.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-200 bg-gray-50">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">
@@ -56,13 +59,14 @@ const ProductCompare = () => {
 
       <div className="overflow-x-auto">
         <div className="flex gap-4 pb-4">
-          {compareList.map((product) => {
+          {compareItems.map((product) => {
             const hasVariant = product.variants?.length > 0;
-            const firstVariant = hasVariant ? product.variants[0] : null;
-            const regularPrice = hasVariant
+            const firstVariant =
+              hasVariant && product.variants[0] ? product.variants[0] : null;
+            const regularPrice = firstVariant
               ? firstVariant.price
               : product.finalPrice;
-            const offerPrice = hasVariant
+            const offerPrice = firstVariant
               ? firstVariant.discount
               : product.finalDiscount;
             const hasDiscount = offerPrice > 0;
@@ -118,9 +122,11 @@ const ProductCompare = () => {
                         </h4>
                         <ul className="space-y-1">
                           {product.keyFeatures.map((feature, i) => (
-                            <li key={i} className="text-sm text-gray-700">
-                              <span className="font-medium">{feature.key}:</span>{' '}
-                              {feature.value}
+                            <li key={feature?.key ?? i} className="text-sm text-gray-700">
+                              <span className="font-medium">
+                                {feature?.key}:
+                              </span>{' '}
+                              {feature?.value}
                             </li>
                           ))}
                         </ul>

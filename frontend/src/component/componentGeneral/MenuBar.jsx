@@ -68,6 +68,7 @@ const MenuBar = () => {
         >
           {categories?.length ? (
             categories.map((category) => {
+              if (!category) return null;
               const categoryQuery = buildQueryString({
                 category: category.name,
               });
@@ -76,30 +77,31 @@ const MenuBar = () => {
                 Array.isArray(subCategories) &&
                 subCategories.some(
                   (subCat) =>
-                    subCat?.category?._id === category._id && subCat.isActive,
+                    subCat?.category?._id === category?._id &&
+                    subCat?.isActive,
                 );
 
               if (!hasSubCategories) {
                 return (
-                  <MenubarMenu key={category._id}>
+                  <MenubarMenu key={category?._id}>
                     <MenubarTrigger
                       className="uppercase  text-sm font-semibold tracking-wide px-3 py-2 data-[state=open]:bg-transparent focus:bg-transparent cursor-pointer"
                       onClick={() => handleNavigate(categoryPath)}
                     >
-                      {category.name}
+                      {category?.name}
                     </MenubarTrigger>
                   </MenubarMenu>
                 );
               }
 
               return (
-                <MenubarMenu key={category._id} value={category._id}>
+                <MenubarMenu key={category?._id} value={category?._id}>
                   <MenubarTrigger
                     className="uppercase  text-sm font-semibold tracking-wide  px-2 py-2 data-[state=open]:bg-transparent focus:bg-transparent cursor-pointer"
-                    onPointerEnter={() => setActiveMenu(category._id)}
+                    onPointerEnter={() => setActiveMenu(category?._id)}
                     onClick={() => handleNavigate(categoryPath)}
                   >
-                    {category.name}
+                    {category?.name}
                   </MenubarTrigger>
                   <MenubarContent className="-mt-[10px]">
                     <SubMenu
@@ -140,21 +142,21 @@ const SubMenu = memo(
     return (
       <>
         {filteredSubCategories
-          .filter((subCategory) => subCategory.isActive)
+          .filter((subCategory) => subCategory?.isActive)
           .map((subCategory) => {
             const subCategoryQuery = buildQueryString({
               subcategory: subCategory.slug,
             });
             const subCategoryPath = `/shop?${subCategoryQuery}`;
-            const hasChildren = Array.isArray(childCategories)
-              ? childCategories.some(
-                  (childCategory) =>
-                    String(
-                      childCategory?.subCategory?._id ||
-                        childCategory?.subCategory,
-                    ) === String(subCategory._id) && childCategory.isActive,
-                )
-              : false;
+              const hasChildren = Array.isArray(childCategories)
+                ? childCategories.some(
+                    (childCategory) =>
+                      String(
+                        childCategory?.subCategory?._id ||
+                          childCategory?.subCategory,
+                      ) === String(subCategory._id) && childCategory?.isActive,
+                  )
+                : false;
 
             if (!hasChildren) {
               return (
@@ -216,7 +218,7 @@ const ChildSubMenu = memo(
     if (filteredChildCategories.length === 0) return null;
 
     return filteredChildCategories
-      .filter((childCategory) => childCategory.isActive)
+      .filter((childCategory) => childCategory?.isActive)
       .map((childCategory) => {
         const childCategoryQuery = buildQueryString({
           childCategory: childCategory.slug,

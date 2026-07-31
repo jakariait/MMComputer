@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 const Specification = ({ product, comparePage }) => {
-  const { specifications } = product;
+  const { specifications } = product ?? {};
   const [collapsed, setCollapsed] = useState({});
 
-  if (!specifications || specifications.length === 0) {
+  if (!Array.isArray(specifications) || specifications.length === 0) {
     return null;
   }
 
@@ -42,7 +42,7 @@ const Specification = ({ product, comparePage }) => {
               {!isCollapsed && (
                 <table className="w-full text-sm">
                   <tbody>
-                    {specGroup.labels.map((spec, specIndex) => {
+                    {specGroup.labels?.map((spec, specIndex) => {
                       const isEven = specIndex % 2 === 0;
                       return (
                         <tr
@@ -54,10 +54,10 @@ const Specification = ({ product, comparePage }) => {
                               comparePage ? 'w-auto' : 'w-2/5 md:w-1/3'
                             }`}
                           >
-                            {spec.label}
+                            {spec?.label}
                           </td>
                           <td className="align-top py-3 pr-4 text-gray-900 font-medium">
-                            {spec.value}
+                            {spec?.value}
                           </td>
                         </tr>
                       );

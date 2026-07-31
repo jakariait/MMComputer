@@ -130,7 +130,7 @@ const ProductQuestionsSection = ({ productId }) => {
                 </p>
                 <p className="text-xs text-gray-400 mt-2">
                   Asked by: {q?.userId?.fullName || 'Anonymous'} —{' '}
-                  {new Date(q.createdAt).toLocaleString()}
+                  {q.createdAt ? new Date(q.createdAt).toLocaleString() : ''}
                 </p>
               </div>
             ))

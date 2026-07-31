@@ -17,7 +17,8 @@ const ProductByFlag = () => {
   }, [fetchFlags, flags]);
 
   const hasFlags = flags && flags.length > 0;
-  const hasProducts = Object.keys(homeProducts).length > 0;
+  const hasProducts =
+    homeProducts && Object.keys(homeProducts).length > 0;
 
   if (loading || flagsLoading || !hasFlags || !hasProducts)
     return (

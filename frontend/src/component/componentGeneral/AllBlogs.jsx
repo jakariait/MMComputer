@@ -12,9 +12,10 @@ const AllBlogs = () => {
 
   const searchParams = new URLSearchParams(window.location.search);
   const navigate = useNavigate();
+  const currentPageParam = searchParams.get('page');
 
   useEffect(() => {
-    const page = parseInt(searchParams.get('page')) || 1;
+    const page = parseInt(currentPageParam) || 1;
     setCurrentPage(page);
 
     const fetchBlogs = async () => {
@@ -25,7 +26,7 @@ const AllBlogs = () => {
         if (!res.ok) throw new Error('Failed to fetch blogs');
         const data = await res.json();
 
-        setBlogs(data.data || []);
+        setBlogs(Array.isArray(data.data) ? data.data : []);
         setTotalPages(data.totalPages || 1);
         setErrorMsg('');
       } catch (err) {
@@ -37,7 +38,7 @@ const AllBlogs = () => {
     };
 
     fetchBlogs();
-  }, [window.location.search]);
+  }, [currentPageParam]);
 
   const handlePageChange = (newPage) => {
     navigate(`?page=${newPage}`);

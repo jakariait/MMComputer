@@ -10,7 +10,11 @@ const PcBuilderCategoryPage = () => {
   const isCore = searchParams.get('core') === '1';
   return (
     <PcBuilderAddProduct
-      name={decodeURIComponent(categoryName)}
+      name={
+        categoryName
+          ? decodeURIComponent(categoryName.replace(/\+/g, '%20'))
+          : ''
+      }
       slug={slug}
       category={category}
       redirectOnAdd={isCore}

@@ -381,7 +381,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
 
     if (value) {
       const filtered = subCategories.filter(
-        (sub) => sub.category._id === value,
+        (sub) => sub?.category?._id === value,
       );
       setFilteredSubCategories(filtered);
     }
@@ -394,7 +394,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
 
     if (value) {
       const filtered = childCategories.filter(
-        (child) => child.subCategory._id === value,
+        (child) => child?.subCategory?._id === value,
       );
       setFilteredChildCategories(filtered);
     }

@@ -39,7 +39,7 @@ const OrderSummary = ({
           <div className="flex justify-between">
             <span>
               Coupon Discount{' '}
-              <span className={'text-xs'}>({appliedCoupon.code})</span>
+              <span className={'text-xs'}>({appliedCoupon?.code})</span>
             </span>
             <span className="text-green-600">
               -Tk. {formattedTotalAmount(discount)}

@@ -403,8 +403,14 @@ export default function SidebarMenu() {
   };
 
   const [expandedSections, setExpandedSections] = useState(() => {
-    const saved = localStorage.getItem('sidebar-expanded');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('sidebar-expanded');
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
   });
 
   const handleAccordionChange = useCallback(

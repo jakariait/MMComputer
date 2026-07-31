@@ -209,7 +209,7 @@ const PcBuilder = () => {
   const loadBuild = () => {
     try {
       const saved = JSON.parse(localStorage.getItem('pcBuild') || '[]');
-      setBuild(saved);
+      setBuild(Array.isArray(saved) ? saved : []);
     } catch {
       setBuild([]);
     }

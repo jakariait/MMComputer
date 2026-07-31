@@ -1,8 +1,18 @@
 // src/store/useCompareStore.js
 import { create } from 'zustand';
 
+const loadCompareList = () => {
+  try {
+    const raw = localStorage.getItem('compareList');
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
 const useCompareStore = create((set) => ({
-  compareList: JSON.parse(localStorage.getItem('compareList')) || [],
+  compareList: loadCompareList(),
 
   addToCompare: (product) =>
     set((state) => {

@@ -130,10 +130,16 @@ const ProductDetailsGadget = () => {
     if (!product?._id) return;
 
     // Get existing list or empty array
-    let viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    let viewed;
+    try {
+      viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    } catch {
+      viewed = [];
+    }
+    if (!Array.isArray(viewed)) viewed = [];
 
     // Remove if already exists (avoid duplicates)
-    viewed = viewed.filter((item) => item._id !== product._id);
+    viewed = viewed.filter((item) => item?._id !== product._id);
 
     // Add new one at beginning
     viewed.unshift({
@@ -214,13 +220,13 @@ const ProductDetailsGadget = () => {
       {product && (
         <div>
           {/*Seo Meta Data*/}
-          <Helmet titleTemplate={`%s | ${GeneralInfoList?.CompanyName}`}>
+          <Helmet titleTemplate={`%s | ${GeneralInfoList?.CompanyName || 'MM Computer'}`}>
             <html lang="en" />
             <meta name="robots" content="index, follow" />
             <title>{product?.name || product?.metaTitle}</title>
             <meta charSet="utf-8" />
             <meta name="description" content={product?.metaDescription} />
-            <meta name="keywords" content={product.metaKeywords.join(', ')} />
+            <meta name="keywords" content={product?.metaKeywords?.join(', ') ?? ''} />
             <meta
               name="viewport"
               content="width=device-width, initial-scale=1"
@@ -331,11 +337,11 @@ const ProductDetailsGadget = () => {
               )}
 
               <div ref={questionRef} className="scroll-mt-[140px]">
-                <ProductQuestionsSection productId={product.id} />
+                <ProductQuestionsSection productId={product._id} />
               </div>
 
               <div ref={reviewRef} className="scroll-mt-[140px]">
-                <ProductReviewSections productId={product.id} />
+                <ProductReviewSections productId={product._id} />
               </div>
             </div>
 
@@ -345,7 +351,7 @@ const ProductDetailsGadget = () => {
                 productId={product?._id}
               />
 
-              <RecentlyViewedProducts currentProductId={product.id} />
+              <RecentlyViewedProducts currentProductId={product._id} />
             </div>
           </div>
         </div>

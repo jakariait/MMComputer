@@ -22,6 +22,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Star,
+  PackageSearch,
 } from 'lucide-react';
 import { SectionHeader } from '@/component/componentAdmin/SectionHeader.jsx';
 import Skeleton from 'react-loading-skeleton';

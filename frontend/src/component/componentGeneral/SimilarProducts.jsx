@@ -20,7 +20,7 @@ const SimilarProducts = ({ categoryId, productId }) => {
           `${apiUrl}/similar/${categoryId}/${productId}`,
         );
         if (res.data.success) {
-          setSimilarProducts(res.data.data);
+          setSimilarProducts(Array.isArray(res.data.data) ? res.data.data : []);
         } else {
           setError(res.data.message || 'No similar products found');
         }
@@ -35,7 +35,8 @@ const SimilarProducts = ({ categoryId, productId }) => {
   }, [categoryId, productId]);
 
   if (loading) return null;
-  if (error || similarProducts.length === 0) return null;
+  if (error || !Array.isArray(similarProducts) || similarProducts.length === 0)
+    return null;
 
   return (
     <div>

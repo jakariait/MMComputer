@@ -10,8 +10,9 @@ import ImageComponent from './ImageComponent.jsx';
 
 // Memoize the formatted price function
 const formatPrice = (price) => {
-  if (isNaN(price)) return price;
-  return price.toLocaleString();
+  const n = Number(price);
+  if (isNaN(n)) return '';
+  return n.toLocaleString();
 };
 
 const ProductList = ({
@@ -24,7 +25,8 @@ const ProductList = ({
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [build, setBuild] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('pcBuild') || '[]');
+      const saved = JSON.parse(localStorage.getItem('pcBuild') || '[]');
+      return Array.isArray(saved) ? saved : [];
     } catch {
       return [];
     }
@@ -79,7 +81,7 @@ const ProductList = ({
   };
   return (
     <div>
-      {products.filter((product) => product.isActive).length === 0 ? (
+      {!Array.isArray(products) || products.length === 0 ? (
         <Typography
           variant="body1"
           className="text-center text-gray-500 p-20 md:p-70 shadow rounded-lg"
@@ -95,11 +97,11 @@ const ProductList = ({
           }
         >
           {/*Product Display Section*/}
-          {products.map((product) =>
+          {(products || []).map((product) =>
             productPage ? (
               // List View
               <div
-                key={product.slug}
+                key={product._id || product.slug}
                 className="relative flex gap-4 items-center rounded-md  shadow-sm "
               >
                 <div className="w-1/3 relative">
@@ -111,7 +113,7 @@ const ProductList = ({
                     />
                   </Link>
                   {product.variants?.length ? (
-                    product.variants.every((v) => v.stock === 0)
+                    product.variants.every((v) => v?.stock === 0)
                   ) : product.finalStock === 0 ? (
                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded ">
                       <span className="bg-red-600 text-white px-2 py-1 text-xs font-bold uppercase tracking-wide rounded shadow">
@@ -130,13 +132,13 @@ const ProductList = ({
                   <div className="flex gap-2 items-center">
                     {/*Base Price*/}
                     {product.variants?.length ? (
-                      product.variants[0].discount > 0 ? (
+                      product.variants[0]?.discount > 0 ? (
                         <div className="line-through text-gray-500">
-                          Tk. {formatPrice(Number(product.variants[0].price))}
+                          Tk. {formatPrice(Number(product.variants[0]?.price))}
                         </div>
                       ) : (
                         <div className="font-semibold">
-                          Tk. {formatPrice(Number(product.variants[0].price))}
+                          Tk. {formatPrice(Number(product.variants[0]?.price))}
                         </div>
                       )
                     ) : product.finalDiscount > 0 ? (
@@ -151,10 +153,10 @@ const ProductList = ({
 
                     {/*Discount Price*/}
                     {product.variants?.length
-                      ? product.variants[0].discount > 0 && (
+                      ? product.variants[0]?.discount > 0 && (
                           <div className="text-red-800 font-semibold">
                             Tk.{' '}
-                            {formatPrice(Number(product.variants[0].discount))}
+                            {formatPrice(Number(product.variants[0]?.discount))}
                           </div>
                         )
                       : product.finalDiscount > 0 && (
@@ -187,12 +189,12 @@ const ProductList = ({
                 {/* Discount Percentage */}
                 <div className="absolute top-1 left-1 z-10">
                   {product.variants?.length > 0
-                    ? product.variants[0].discount > 0 && (
+                    ? product.variants[0]?.discount > 0 && (
                         <span className="bg-red-400 px-2 py-1 text-white text-xs">
                           -
                           {calculateDiscountPercentage(
-                            product.variants[0].price,
-                            product.variants[0].discount,
+                            product.variants[0]?.price,
+                            product.variants[0]?.discount,
                           )}
                           %
                         </span>
@@ -222,7 +224,7 @@ const ProductList = ({
             ) : (
               // Grid View
               <div
-                key={product.slug}
+                key={product._id || product.slug}
                 className="relative shadow-sm rounded-md pb-2 flex flex-col"
               >
                 <div className="relative">
@@ -234,7 +236,7 @@ const ProductList = ({
                     />
                   </Link>
                   {product.variants?.length ? (
-                    product.variants.every((v) => v.stock === 0)
+                    product.variants.every((v) => v?.stock === 0)
                   ) : product.finalStock === 0 ? (
                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded">
                       <span className="bg-red-600 text-white px-2 py-1 text-xs font-bold uppercase tracking-wide rounded shadow">
@@ -252,13 +254,13 @@ const ProductList = ({
                 <div className="flex md:flex-row flex-col items-center gap-2 justify-center mt-auto">
                   {/*Base Price*/}
                   {product.variants?.length ? (
-                    product.variants[0].discount > 0 ? (
+                    product.variants[0]?.discount > 0 ? (
                       <div className="line-through">
-                        Tk. {formatPrice(Number(product.variants[0].price))}
+                        Tk. {formatPrice(Number(product.variants[0]?.price))}
                       </div>
                     ) : (
                       <div>
-                        Tk. {formatPrice(Number(product.variants[0].price))}
+                        Tk. {formatPrice(Number(product.variants[0]?.price))}
                       </div>
                     )
                   ) : product.finalDiscount > 0 ? (
@@ -271,10 +273,10 @@ const ProductList = ({
 
                   {/*Discount Price*/}
                   {product.variants?.length
-                    ? product.variants[0].discount > 0 && (
+                    ? product.variants[0]?.discount > 0 && (
                         <div className="text-red-800">
                           Tk.{' '}
-                          {formatPrice(Number(product.variants[0].discount))}
+                          {formatPrice(Number(product.variants[0]?.discount))}
                         </div>
                       )
                     : product.finalDiscount > 0 && (
@@ -307,12 +309,12 @@ const ProductList = ({
                 {/* Discount Percentage */}
                 <div className="absolute top-1 z-10">
                   {product.variants?.length > 0
-                    ? product.variants[0].discount > 0 && (
+                    ? product.variants[0]?.discount > 0 && (
                         <span className="bg-red-400 px-2 py-1 text-white">
                           -
                           {calculateDiscountPercentage(
-                            product.variants[0].price,
-                            product.variants[0].discount,
+                            product.variants[0]?.price,
+                            product.variants[0]?.discount,
                           )}
                           %
                         </span>

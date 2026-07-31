@@ -32,7 +32,10 @@ const RecentOrders = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.data.success) {
-          const sortedOrders = response.data.orders
+          const orders = Array.isArray(response.data.orders)
+            ? response.data.orders
+            : [];
+          const sortedOrders = orders
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             .slice(0, 10);
           setOrders(sortedOrders);
@@ -120,15 +123,17 @@ const RecentOrders = () => {
               </thead>
               <tbody className="divide-y divide-border/30">
                 {orders.map((order) => {
-                  const qty = order.items?.reduce((s, i) => s + i.quantity, 0);
-                  const date = new Date(order.createdAt).toLocaleDateString(
-                    'en-US',
-                    {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                    },
+                  const qty = order.items?.reduce(
+                    (s, i) => s + (i?.quantity || 0),
+                    0,
                   );
+                  const date = order.createdAt
+                    ? new Date(order.createdAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })
+                    : '';
                   const cls =
                     statusStyles[order.orderStatus] ||
                     'bg-gray-50 text-gray-700 ring-1 ring-gray-600/20';

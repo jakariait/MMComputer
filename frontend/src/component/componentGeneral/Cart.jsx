@@ -11,22 +11,24 @@ const Cart = ({ onCloseCartMenu }) => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCartStore();
 
   // Calculate the total price of all items in the cart
-  const totalAmount = cart.reduce((total, item) => {
+  const totalAmount = (cart || []).reduce((total, item) => {
     const price =
       item.discountPrice > 0 ? item.discountPrice : item.originalPrice;
-    return total + price * item.quantity;
+    return total + (price || 0) * (item.quantity || 0);
   }, 0);
 
   // Format the totalAmount with commas for better readability
   const formattedTotalAmount = (amount) => {
-    return Number(amount).toLocaleString();
+    const n = Number(amount);
+    if (isNaN(n)) return '';
+    return n.toLocaleString();
   };
 
   // console.table(cart);
 
   return (
     <div className="py-3">
-      {cart.length === 0 ? (
+      {(cart || []).length === 0 ? (
         <div className="flex items-center justify-center h-[800px] p-4">
           <div className="flex flex-col items-center text-center">
             <img src={emptyCart} alt="Empty Cart" className="w-48 h-auto" />
@@ -44,9 +46,9 @@ const Cart = ({ onCloseCartMenu }) => {
         </div>
       ) : (
         <div className="grid gap-4">
-          {cart.map((item) => (
+          {(cart || []).map((item) => (
             <div
-              key={`${item.productId}-${item.variantId}`}
+              key={`${item.productId}-${item.variant || item.variantId || 'Default'}`}
               className="grid grid-cols-2 gap-3 border-t border-dashed py-2"
             >
               {/*Product Thumbnail*/}

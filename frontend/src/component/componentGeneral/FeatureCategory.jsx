@@ -91,33 +91,35 @@ const FeatureCategory = () => {
           </div>
         ) : (
           <div className="flex flex-wrap justify-center gap-4 ">
-            {allItems.map((item, i) => (
-              <Link
-                key={`${item._id || i}`}
-                to={item.link}
-                className="w-[calc(33.333%-0.667rem)] md:w-[calc(12%-0.75rem)] lg:w-[calc(11.666%-0.833rem)] xl:w-[calc(8.5%-0.875rem)] group relative bg-white rounded-md border border-gray-200 overflow-hidden transition-colors duration-200 hover:border-[var(--primaryColor)]/40"
-              >
-                <span className="pointer-events-none absolute top-1.5 left-1.5 w-3 h-3 border-t-2 border-l-2 border-[var(--primaryColor)] opacity-0 -translate-x-1 -translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200 z-10" />
-                <span className="pointer-events-none absolute top-1.5 right-1.5 w-3 h-3 border-t-2 border-r-2 border-[var(--primaryColor)] opacity-0 translate-x-1 -translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200 z-10" />
-                <span className="pointer-events-none absolute bottom-1.5 left-1.5 w-3 h-3 border-b-2 border-l-2 border-[var(--primaryColor)] opacity-0 -translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200 z-10" />
-                <span className="pointer-events-none absolute bottom-1.5 right-1.5 w-3 h-3 border-b-2 border-r-2 border-[var(--primaryColor)] opacity-0 translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200 z-10" />
+            {allItems.map((item, i) =>
+              !item ? null : (
+                <Link
+                  key={`${item._id || i}`}
+                  to={item.link}
+                  className="w-[calc(33.333%-0.667rem)] md:w-[calc(12%-0.75rem)] lg:w-[calc(11.666%-0.833rem)] xl:w-[calc(8.5%-0.875rem)] group relative bg-white rounded-md border border-gray-200 overflow-hidden transition-colors duration-200 hover:border-[var(--primaryColor)]/40"
+                >
+                  <span className="pointer-events-none absolute top-1.5 left-1.5 w-3 h-3 border-t-2 border-l-2 border-[var(--primaryColor)] opacity-0 -translate-x-1 -translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200 z-10" />
+                  <span className="pointer-events-none absolute top-1.5 right-1.5 w-3 h-3 border-t-2 border-r-2 border-[var(--primaryColor)] opacity-0 translate-x-1 -translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200 z-10" />
+                  <span className="pointer-events-none absolute bottom-1.5 left-1.5 w-3 h-3 border-b-2 border-l-2 border-[var(--primaryColor)] opacity-0 -translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200 z-10" />
+                  <span className="pointer-events-none absolute bottom-1.5 right-1.5 w-3 h-3 border-b-2 border-r-2 border-[var(--primaryColor)] opacity-0 translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-200 z-10" />
 
-                <div className="aspect-square bg-gray-100 overflow-hidden">
-                  <ImageComponent
-                    imageName={item.image}
-                    className="w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-300 p-5"
-                    altName={item.name}
-                    skeletonHeight={160}
-                  />
-                </div>
+                  <div className="aspect-square bg-gray-100 overflow-hidden">
+                    <ImageComponent
+                      imageName={item.image}
+                      className="w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-300 p-5"
+                      altName={item.name}
+                      skeletonHeight={160}
+                    />
+                  </div>
 
-                <div className="p-3">
-                  <h3 className="font-medium text-gray-800 text-sm truncate group-hover:primaryTextColor transition-colors">
-                    {item.name}
-                  </h3>
-                </div>
-              </Link>
-            ))}
+                  <div className="p-3">
+                    <h3 className="font-medium text-gray-800 text-sm truncate group-hover:primaryTextColor transition-colors">
+                      {item.name}
+                    </h3>
+                  </div>
+                </Link>
+              ),
+            )}
           </div>
         )}
       </div>

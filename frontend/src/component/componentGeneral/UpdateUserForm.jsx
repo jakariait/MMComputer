@@ -49,8 +49,8 @@ const UpdateUserForm = ({ token }) => {
         const res = await axios.get(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const user = res.data.user || res.data;
-        setUserId(user._id);
+        const user = res.data?.user || res.data;
+        setUserId(user?._id || null);
         setFormData({
           fullName: user.fullName || '',
           email: user.email || '',

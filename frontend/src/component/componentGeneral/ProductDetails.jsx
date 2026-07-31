@@ -109,10 +109,16 @@ const ProductDetails = () => {
     if (!product?._id) return;
 
     // Get existing list or empty array
-    let viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    let viewed;
+    try {
+      viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    } catch {
+      viewed = [];
+    }
+    if (!Array.isArray(viewed)) viewed = [];
 
     // Remove if already exists (avoid duplicates)
-    viewed = viewed.filter((item) => item._id !== product._id);
+    viewed = viewed.filter((item) => item?._id !== product._id);
 
     // Add new one at beginning
     viewed.unshift({

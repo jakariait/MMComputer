@@ -81,9 +81,12 @@ export default function GeneralInfoForm() {
     };
   }, [previews]);
 
+  const toArray = (value) =>
+    Array.isArray(value) ? value : value ? [value] : [''];
+
   const handleArrayChange = (index, field, value) => {
     setFormData((prev) => {
-      const newArray = [...prev[field]];
+      const newArray = [...toArray(prev[field])];
       newArray[index] = value;
       return { ...prev, [field]: newArray };
     });
@@ -92,14 +95,14 @@ export default function GeneralInfoForm() {
   const addArrayField = (field) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: [...prev[field], ''],
+      [field]: [...toArray(prev[field]), ''],
     }));
   };
 
   const removeArrayField = (index, field) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: prev[field].filter((_, i) => i !== index),
+      [field]: toArray(prev[field]).filter((_, i) => i !== index),
     }));
   };
 

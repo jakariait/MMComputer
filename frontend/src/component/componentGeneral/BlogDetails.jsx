@@ -54,11 +54,13 @@ const BlogDetails = () => {
       <div className="flex justify-between items-center">
         <p className="text-gray-600 mb-2">By {blog.author || 'Unknown'}</p>
         <p className="text-gray-600 mb-2">
-          {new Date(blog.updatedAt).toLocaleDateString(undefined, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
+          {blog.updatedAt
+            ? new Date(blog.updatedAt).toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })
+            : ''}
         </p>
       </div>
 
