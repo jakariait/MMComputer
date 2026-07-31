@@ -1,7 +1,14 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, ShoppingCart, Trash2 } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ShoppingCart,
+  Trash2,
+  Search,
+  X,
+} from 'lucide-react';
 import { Select } from '@/components/ui/legacy-select';
 import { MenuItem } from '@/components/ui/menu-item';
 import ImageComponent from './ImageComponent.jsx';
@@ -27,6 +34,13 @@ const PcBuilderAddProduct = ({
   const [sort, setSort] = useState('');
   const [totalPages, setTotalPages] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [minPriceInput, setMinPriceInput] = useState('');
+  const [maxPriceInput, setMaxPriceInput] = useState('');
+  const searchTimeoutRef = useRef(null);
   const [selected, setSelected] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('pcBuild') || '[]');
@@ -43,7 +57,19 @@ const PcBuilderAddProduct = ({
     if (!slug) return;
     setPage(1);
     setSort('');
+    setSearch('');
+    setSearchInput('');
+    setMinPrice('');
+    setMaxPrice('');
+    setMinPriceInput('');
+    setMaxPriceInput('');
   }, [slug, category]);
+
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (!slug) return;
@@ -53,6 +79,15 @@ const PcBuilderAddProduct = ({
         const params = { limit: 24, page };
         if (sort) {
           params.sort = sort;
+        }
+        if (search) {
+          params.search = search;
+        }
+        if (minPrice) {
+          params.minPrice = minPrice;
+        }
+        if (maxPrice) {
+          params.maxPrice = maxPrice;
         }
         if (category) {
           params.category = category;
@@ -72,7 +107,7 @@ const PcBuilderAddProduct = ({
       }
     };
     fetchProducts();
-  }, [slug, category, page, sort]);
+  }, [slug, category, page, sort, search, minPrice, maxPrice]);
 
   const toggleProduct = (product) => {
     const alreadyInBuild = selected.some((item) => item._id === product._id);
@@ -114,6 +149,36 @@ const PcBuilderAddProduct = ({
 
   const handleSortChange = (e) => {
     setSort(e.target.value);
+    setPage(1);
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    searchTimeoutRef.current = setTimeout(() => {
+      setSearch(value);
+      setPage(1);
+    }, 500);
+  };
+
+  const handleClearSearch = () => {
+    setSearchInput('');
+    setSearch('');
+    setPage(1);
+  };
+
+  const handleApplyPrice = () => {
+    setMinPrice(minPriceInput.trim());
+    setMaxPrice(maxPriceInput.trim());
+    setPage(1);
+  };
+
+  const handleClearPrice = () => {
+    setMinPrice('');
+    setMaxPrice('');
+    setMinPriceInput('');
+    setMaxPriceInput('');
     setPage(1);
   };
 
@@ -161,6 +226,69 @@ const PcBuilderAddProduct = ({
               >
                 <Trash2 className="size-4" />
                 Clear Build ({selected.length})
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row md:items-center gap-3 mb-6">
+          <div className="relative flex-1">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+              size={18}
+              aria-hidden="true"
+            />
+            <input
+              value={searchInput}
+              onChange={handleSearchChange}
+              placeholder="Search products..."
+              className="h-10 w-full rounded-md border border-gray-200 bg-white pl-10 pr-9 text-sm outline-none focus:border-[var(--primaryColor)] focus:ring-2 focus:ring-[var(--primaryColor)]/20"
+            />
+            {searchInput && (
+              <button
+                onClick={handleClearSearch}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="size-4" aria-hidden="true" />
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min="0"
+              placeholder="Min price"
+              value={minPriceInput}
+              onChange={(e) => setMinPriceInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleApplyPrice()}
+              className="h-10 w-28 rounded-md border border-gray-200 bg-white px-3 text-sm outline-none focus:border-[var(--primaryColor)] focus:ring-2 focus:ring-[var(--primaryColor)]/20"
+            />
+            <span className="text-gray-400" aria-hidden="true">
+              -
+            </span>
+            <input
+              type="number"
+              min="0"
+              placeholder="Max price"
+              value={maxPriceInput}
+              onChange={(e) => setMaxPriceInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleApplyPrice()}
+              className="h-10 w-28 rounded-md border border-gray-200 bg-white px-3 text-sm outline-none focus:border-[var(--primaryColor)] focus:ring-2 focus:ring-[var(--primaryColor)]/20"
+            />
+            <button
+              onClick={handleApplyPrice}
+              className="h-10 shrink-0 px-4 rounded-md bg-[var(--primaryColor)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+            >
+              Apply
+            </button>
+            {(minPrice || maxPrice) && (
+              <button
+                onClick={handleClearPrice}
+                className="h-10 shrink-0 px-3 rounded-md bg-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-300 transition-colors"
+              >
+                Clear
               </button>
             )}
           </div>
