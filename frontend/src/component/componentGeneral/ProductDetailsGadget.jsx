@@ -14,7 +14,7 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from 'react-share';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 import ProductGallery from './ProductGallery.jsx';
 import ProductAddToCart from './ProductAddToCart.jsx';
