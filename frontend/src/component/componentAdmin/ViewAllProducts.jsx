@@ -270,7 +270,9 @@ const ViewAllProducts = () => {
           <p className="text-sm text-muted-foreground">Show</p>
           <Select
             value={String(filters.limit)}
-            onValueChange={(value) => handleFilterChange('limit', Number(value))}
+            onValueChange={(value) =>
+              handleFilterChange('limit', Number(value))
+            }
           >
             <SelectTrigger className="w-16 h-8 bg-background">
               <SelectValue />
@@ -334,9 +336,7 @@ const ViewAllProducts = () => {
                         className="w-16 h-16 object-cover rounded-lg shadow-sm"
                       />
                     </TableCell>
-                    <TableCell className="font-medium">
-                      {product?.name}
-                    </TableCell>
+                    <TableCell>{product?.name}</TableCell>
                     <TableCell>
                       <Badge variant="outline">
                         {product.category?.name || '\u2014'}

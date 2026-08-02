@@ -25,7 +25,6 @@ import {
 import { Link } from 'react-router-dom';
 import useAuthAdminStore from '../../store/AuthAdminStore.js';
 import { useNavigate } from 'react-router-dom';
-import useProductStore from '../../store/useProductStore.js';
 import useOrderStore from '../../store/useOrderStore.js';
 import React, { useEffect, useState, useCallback } from 'react';
 import RequirePermission from './RequirePermission.jsx';
@@ -186,7 +185,6 @@ export const MENU_CONFIG = [
         icon: FaTags,
         path: '/admin/manage-products',
         permission: 'view_products',
-        showCount: '',
       },
     ],
   },
@@ -386,15 +384,13 @@ function MenuAccordion({ item, countValue, expanded, onChange }) {
 }
 
 export default function SidebarMenu() {
-  const { totalProductsAdmin, fetchProductsAdmin } = useProductStore();
   const { logout } = useAuthAdminStore();
   const { totalByStatus, fetchAllStatusCounts } = useOrderStore();
   const { loading } = useAuthAdminStore();
 
   useEffect(() => {
-    fetchProductsAdmin({ page: 1, limit: 1 });
     fetchAllStatusCounts();
-  }, [fetchProductsAdmin, fetchAllStatusCounts]);
+  }, [fetchAllStatusCounts]);
 
   const totalOrders = Object.values(totalByStatus).reduce(
     (acc, count) => acc + count,
@@ -402,7 +398,6 @@ export default function SidebarMenu() {
   );
 
   const countValues = {
-    totalProductsAdmin,
     totalOrders,
   };
 

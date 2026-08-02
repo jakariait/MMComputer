@@ -26,17 +26,28 @@ import Loading from './component/skeleton/Loading.jsx';
 import AdminLoading from './component/skeleton/AdminLoading.jsx';
 
 import UserLayout from './component/componentGeneral/UserLayout.jsx';
-import BrandsPage from '@/pagesAdmin/BrandsPage.jsx';
-import AdminProductReviewPage from '@/pagesAdmin/AdminProductReviewPage.jsx';
-import CompareProductPage from '@/pagesUser/CompareProductPage.jsx';
-import WarrantyPageUser from '@/pagesUser/WarrantyPageUser.jsx';
-import BrandsPageUser from '@/pagesUser/BrandsPageUser.jsx';
-import RepairServicePage from '@/pagesUser/RepairServicePage.jsx';
-import FeedbackComplainPage from '@/pagesUser/FeedbackComplainPage.jsx';
-import PcBuilderPage from '@/pagesUser/PcBuilderPage.jsx';
-import PcBuilderCategoryPage from '@/pagesUser/PcBuilderCategoryPage.jsx';
 const LayoutAdmin = lazy(
   () => import('./component/componentAdmin/LayoutAdmin.jsx'),
+);
+
+const BrandsPage = lazy(() => import('@/pagesAdmin/BrandsPage.jsx'));
+const AdminProductReviewPage = lazy(
+  () => import('@/pagesAdmin/AdminProductReviewPage.jsx'),
+);
+const CompareProductPage = lazy(
+  () => import('@/pagesUser/CompareProductPage.jsx'),
+);
+const WarrantyPageUser = lazy(() => import('@/pagesUser/WarrantyPageUser.jsx'));
+const BrandsPageUser = lazy(() => import('@/pagesUser/BrandsPageUser.jsx'));
+const RepairServicePage = lazy(
+  () => import('@/pagesUser/RepairServicePage.jsx'),
+);
+const FeedbackComplainPage = lazy(
+  () => import('@/pagesUser/FeedbackComplainPage.jsx'),
+);
+const PcBuilderPage = lazy(() => import('@/pagesUser/PcBuilderPage.jsx'));
+const PcBuilderCategoryPage = lazy(
+  () => import('@/pagesUser/PcBuilderCategoryPage.jsx'),
 );
 
 const GeneralInfoPage = lazy(() => import('./pagesAdmin/GeneralInfoPage.jsx'));
