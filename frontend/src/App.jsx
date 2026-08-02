@@ -19,6 +19,7 @@ import ProtectedRoute from './component/componentAdmin/ProtectedRoute.jsx';
 import UserProtectedRoute from './component/componentGeneral/UserProtectedRoute.jsx';
 import ScrollToTop from './component/componentGeneral/ScrollToTop.jsx';
 import MetaProvider from './component/componentGeneral/MetaProvider.jsx';
+import PageTitle from './component/componentGeneral/PageTitle.jsx';
 import ScrollToTopButton from './component/componentGeneral/ScrollToTopButton.jsx';
 import { setFaviconFromApi } from './utils/setFavicon.js';
 import Loading from './component/skeleton/Loading.jsx';
@@ -406,6 +407,7 @@ const PublicLayoutWrapper = () => (
 
 const PublicSuspenseWrapper = () => (
   <Suspense fallback={<Loading />}>
+    <PageTitle />
     <Outlet />
   </Suspense>
 );
