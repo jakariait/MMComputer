@@ -229,7 +229,6 @@ async function main() {
   for (const cat of level0) {
     const doc = await CategoryModel.create({
       name: cat.name,
-      featureCategory: true,
       image: cat.image || '',
       showInHomepage: false,
     });

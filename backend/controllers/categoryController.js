@@ -11,12 +11,11 @@ const deleteOldFile = (filename) => {
 
 const createCategory = async (req, res) => {
   try {
-    const { name, featureCategory, showInHomepage } = req.body;
+    const { name, showInHomepage } = req.body;
     const image = req.files?.image?.[0]?.filename || req.body.image || '';
 
     const categoryData = {
       name,
-      featureCategory,
       showInHomepage,
       image,
     };
@@ -58,11 +57,10 @@ const getCategoryById = async (req, res) => {
 const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, featureCategory, showInHomepage, removeImage } = req.body;
+    const { name, showInHomepage, removeImage } = req.body;
 
     const categoryData = {
       name,
-      featureCategory,
       showInHomepage,
     };
 

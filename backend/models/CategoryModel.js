@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const dataSchema = new mongoose.Schema(
   {
     name: { type: String, trim: true, required: true, unique: true },
-    featureCategory: { type: Boolean, default: true, required: true },
     image: { type: String, default: '' },
     showInHomepage: { type: Boolean, default: false },
   },

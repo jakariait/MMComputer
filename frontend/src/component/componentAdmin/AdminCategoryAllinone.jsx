@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import axios from 'axios';
 import useAuthAdminStore from '../../store/AuthAdminStore.js';
 import { Input } from '@/components/ui/input';
@@ -56,7 +56,6 @@ const AdminCategoryAllinone = () => {
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    featureCategory: true,
     image: '',
     showInHomepage: false,
   });
@@ -91,7 +90,7 @@ const AdminCategoryAllinone = () => {
   const handleOpenCreate = () => {
     setIsEdit(false);
     setEditId(null);
-    setFormData({ name: '', featureCategory: true, image: null, showInHomepage: false });
+    setFormData({ name: '', image: null, showInHomepage: false });
     setImagePreview(null);
     setImageRemoved(false);
     setDialogOpen(true);
@@ -102,7 +101,6 @@ const AdminCategoryAllinone = () => {
     setEditId(cat._id);
     setFormData({
       name: cat.name,
-      featureCategory: cat.featureCategory,
       image: null,
       showInHomepage: cat.showInHomepage || false,
     });
@@ -120,7 +118,6 @@ const AdminCategoryAllinone = () => {
     try {
       const fd = new FormData();
       fd.append('name', formData.name);
-      fd.append('featureCategory', formData.featureCategory);
       fd.append('showInHomepage', formData.showInHomepage);
       if (formData.image instanceof File) {
         fd.append('image', formData.image);
@@ -224,9 +221,6 @@ const AdminCategoryAllinone = () => {
                     <TableHead className="text-center w-[60px]">
                       Image
                     </TableHead>
-                    <TableHead className="text-center w-[120px]">
-                      Featured
-                    </TableHead>
                     <TableHead className="text-center w-[130px]">
                       Show in Homepage
                     </TableHead>
@@ -239,7 +233,7 @@ const AdminCategoryAllinone = () => {
                   {paginatedCategories.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={5}
+                        colSpan={4}
                         className="text-center text-muted-foreground py-8"
                       >
                         No categories found.
@@ -261,15 +255,6 @@ const AdminCategoryAllinone = () => {
                           ) : (
                             <span className="text-xs text-muted-foreground">—</span>
                           )}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <Badge
-                            variant={
-                              cat.featureCategory ? 'default' : 'secondary'
-                            }
-                          >
-                            {cat.featureCategory ? 'Yes' : 'No'}
-                          </Badge>
                         </TableCell>
                         <TableCell className="text-center">
                           <Badge
@@ -409,47 +394,25 @@ const AdminCategoryAllinone = () => {
                 />
               )}
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Feature Category</label>
-                <Select
-                  value={String(formData.featureCategory)}
-                  onValueChange={(value) =>
-                    setFormData({
-                      ...formData,
-                      featureCategory: value === 'true',
-                    })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="true">Yes</SelectItem>
-                    <SelectItem value="false">No</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Show in Homepage</label>
-                <Select
-                  value={String(formData.showInHomepage)}
-                  onValueChange={(value) =>
-                    setFormData({
-                      ...formData,
-                      showInHomepage: value === 'true',
-                    })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="true">Yes</SelectItem>
-                    <SelectItem value="false">No</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Show in Homepage</label>
+              <Select
+                value={String(formData.showInHomepage)}
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    showInHomepage: value === 'true',
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">Yes</SelectItem>
+                  <SelectItem value="false">No</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>
