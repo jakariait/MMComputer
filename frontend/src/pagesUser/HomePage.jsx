@@ -7,6 +7,7 @@ import MarqueeModern from '@/component/componentGeneral/MarqueeModern.jsx';
 import FeatureCategory from '@/component/componentGeneral/FeatureCategory.jsx';
 import TrustBadges from '@/component/componentGeneral/Trustbadges.jsx';
 import Brands from '@/component/componentGeneral/Brands.jsx';
+import HomeSeoContent from '@/component/componentGeneral/HomeSeoContent.jsx';
 
 const HomePage = () => {
   const { CarouselStoreListRequest } = CarouselStore();
@@ -25,6 +26,7 @@ const HomePage = () => {
       <TrustBadges />
       <FeatureCategory />
       <ProductByFlag />
+      <HomeSeoContent />
       <Brands topBrandsOnly={true} />
     </>
   );
