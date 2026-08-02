@@ -12,14 +12,8 @@ import ProductFilters from './ProductFilters.jsx';
 
 const Product = () => {
   // Global store values
-  const {
-    products,
-    totalPages,
-    loading,
-    error,
-    fetchProducts,
-    totalProducts,
-  } = useProductStore();
+  const { products, totalPages, loading, error, fetchProducts, totalProducts } =
+    useProductStore();
 
   const { categories } = useCategoryStore();
   const { flags, fetchFlags } = useFlagStore();
@@ -178,7 +172,7 @@ const Product = () => {
                   ? `No products found for "${currentFilters.search}"`
                   : 'No products found'}
               </Typography>
-              <Typography variant="body2" className="text-gray-400">
+              <Typography variant="body2" className="text-gray-400 ml-2">
                 {currentFilters.search
                   ? 'Try a different search term or adjust your filters'
                   : 'Try adjusting your filters or search criteria'}

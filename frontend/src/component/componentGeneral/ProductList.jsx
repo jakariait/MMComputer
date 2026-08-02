@@ -264,7 +264,7 @@ const ProductList = ({
                 </Link>
 
                 {showKeyFeatures && product.keyFeatures?.length > 0 && (
-                  <ul className="list-disc  pl-5 px-2 mb-4 mx-2 text-sm text-gray-600">
+                  <ul className="list-disc mt-5 pl-5 px-2 mb-4 mx-2 text-sm text-gray-600">
                     {product.keyFeatures.map((feature, index) => (
                       <li key={index}>
                         {feature.key}: {feature.value}
