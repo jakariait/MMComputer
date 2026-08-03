@@ -585,7 +585,11 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     if (selectedChildCategory)
       formData.append('childCategory', selectedChildCategory);
 
-    selectedFlags.forEach((flag) => formData.append('flags', flag));
+    if (selectedFlags.length > 0) {
+      selectedFlags.forEach((flag) => formData.append('flags', flag));
+    } else {
+      formData.append('flags', '');
+    }
     searchTags.forEach((tag) => formData.append('searchTags', tag));
     metaKeywords.forEach((keyword) => formData.append('metaKeywords', keyword));
 

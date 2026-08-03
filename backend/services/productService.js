@@ -644,6 +644,14 @@ const updateProduct = async (productId, updatedData, files) => {
       updatedData.specifications = JSON.parse(updatedData.specifications);
     }
 
+    // Handle flags update (explicitly allow clearing all flags)
+    if (updatedData.flags !== undefined) {
+      let flags = updatedData.flags;
+      if (!Array.isArray(flags)) flags = flags ? [flags] : [];
+      flags = flags.filter((flag) => flag && String(flag).trim() !== '');
+      updatedData.flags = flags;
+    }
+
     // Handle other updates and save...
     Object.assign(product, updatedData);
 
@@ -796,7 +804,7 @@ const getHomePageProducts = async () => {
         flags: flag._id,
         isActive: true,
       })
-        .limit(10)
+        .limit(13) // fetch 13 to detect when more than 12 are shown on the homepage
         .sort({ createdAt: -1 }) // Sort products by newest first
 
         .select(

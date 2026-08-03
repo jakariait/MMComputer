@@ -6,7 +6,11 @@ import useCartStore from '../../store/useCartStore.js';
 import ProductBrand from './ProductBrand.jsx';
 import CompareButton from './CompareButton.jsx';
 
-const ProductAddToCart = ({ product }) => {
+const ProductAddToCart = ({
+  product,
+  showAddToCart = true,
+  showBuyNow = true,
+}) => {
   const [quantity, setQuantity] = useState(1);
   const MAX_QUANTITY = 5; // Set the limit for Cart Quantity
   const { addToCart } = useCartStore();
@@ -436,20 +440,22 @@ const ProductAddToCart = ({ product }) => {
                 Out of Stock
               </button>
             ) : (
-              <button
-                className="flex-1 min-w-[120px] max-w-[180px] h-9 md:h-10 rounded-lg
+              showAddToCart && (
+                <button
+                  className="flex-1 min-w-[120px] max-w-[180px] h-9 md:h-10 rounded-lg
                  border-2 primaryBorderColor primaryTextColor bg-transparent
                  text-sm font-semibold tracking-wide
                  hover:primaryBgColor hover:secondaryTextColor
                  active:scale-[0.98] transition-all duration-150 cursor-pointer"
-                onClick={handleAddToCart}
-              >
-                ADD TO CART
-              </button>
+                  onClick={handleAddToCart}
+                >
+                  ADD TO CART
+                </button>
+              )
             )}
 
             {/* Buy Now */}
-            {!isOutOfStock && (
+            {!isOutOfStock && showBuyNow && (
               <button
                 className="flex-1 min-w-[120px] max-w-[180px] h-9 md:h-10 rounded-lg
                  primaryBgColor accentTextColor text-sm font-semibold tracking-wide

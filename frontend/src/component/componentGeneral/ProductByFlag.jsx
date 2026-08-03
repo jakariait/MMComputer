@@ -17,8 +17,7 @@ const ProductByFlag = () => {
   }, [fetchFlags, flags]);
 
   const hasFlags = flags && flags.length > 0;
-  const hasProducts =
-    homeProducts && Object.keys(homeProducts).length > 0;
+  const hasProducts = homeProducts && Object.keys(homeProducts).length > 0;
 
   if (loading || flagsLoading || !hasFlags || !hasProducts)
     return (
@@ -83,7 +82,12 @@ const ProductByFlag = () => {
             </div>
 
             {/* ✅ Render once with sliced products */}
-            <ProductList products={slicedProducts} />
+            <ProductList
+              showAddToCart={false}
+              showBuyNow={false}
+              products={slicedProducts}
+            />
+
             <div className={'flex flex-wrap justify-center mt-5'}>
               {products.length > 12 && (
                 <Link

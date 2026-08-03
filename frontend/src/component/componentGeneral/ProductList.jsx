@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Typography } from '@/components/ui/typography';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
 import { Check, Plus } from 'lucide-react';
 import ProductGallery from './ProductGallery.jsx';
 import ProductAddToCart from './ProductAddToCart.jsx';
 import ImageComponent from './ImageComponent.jsx';
+import useCartStore from '../../store/useCartStore.js';
 
 // Memoize the formatted price function
 const formatPrice = (price) => {
@@ -22,8 +23,12 @@ const ProductList = ({
   buildOverrides,
   showBuildButton = false,
   showKeyFeatures = false,
+  showAddToCart = true,
+  showBuyNow = true,
 }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const { addToCart } = useCartStore();
+  const navigate = useNavigate();
   const [build, setBuild] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem('pcBuild') || '[]');
@@ -67,6 +72,71 @@ const ProductList = ({
   const handleClose = () => {
     setSelectedProduct(null);
   };
+
+  const isProductOutOfStock = (product) =>
+    product.variants?.length
+      ? product.variants.every((v) => v?.stock === 0)
+      : product.finalStock === 0;
+
+  const handleQuickAddToCart = (product) => {
+    if (product.variants?.length) {
+      navigate(`/product/${product.slug}`);
+      return;
+    }
+    addToCart(product, 1, null);
+  };
+
+  const handleQuickBuyNow = (product) => {
+    if (product.variants?.length) {
+      navigate(`/product/${product.slug}`);
+      return;
+    }
+    addToCart(product, 1, null);
+    navigate('/checkout');
+  };
+
+  const actionButtons = (product) => (
+    <div className="flex flex-wrap gap-3 md:gap-4 items-center justify-center mt-2">
+      {isProductOutOfStock(product) ? (
+        <button
+          type="button"
+          className="flex-1 min-w-[120px] max-w-[180px] h-9 md:h-10 rounded-lg
+                 border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30
+                 text-red-600 dark:text-red-400 text-sm font-semibold cursor-not-allowed"
+          disabled
+        >
+          Out of Stock
+        </button>
+      ) : (
+        showAddToCart && (
+          <button
+            type="button"
+            onClick={() => handleQuickAddToCart(product)}
+            className="flex-1 min-w-[120px] max-w-[180px] h-7 md:h-9 rounded-lg
+                 border-2 primaryBorderColor primaryTextColor bg-transparent
+                 text-sm font-semibold tracking-wide
+                 hover:primaryBgColor hover:secondaryTextColor
+                 active:scale-[0.98] transition-all duration-150 cursor-pointer"
+          >
+            ADD TO CART
+          </button>
+        )
+      )}
+      {!isProductOutOfStock(product) && showBuyNow && (
+        <button
+          type="button"
+          onClick={() => handleQuickBuyNow(product)}
+          className="flex-1 min-w-[120px] max-w-[180px] h-7 md:h-9 rounded-lg
+                 primaryBgColor accentTextColor text-sm font-medium tracking-wide
+                 shadow-sm hover:shadow-md hover:brightness-110
+                 active:scale-[0.98] transition-all duration-150 cursor-pointer"
+        >
+          BUY NOW
+        </button>
+      )}
+    </div>
+  );
+
   const calculateDiscountPercentage = (
     priceBeforeDiscount,
     priceAfterDiscount,
@@ -105,12 +175,16 @@ const ProductList = ({
                 key={product._id || product.slug}
                 className="relative flex gap-4 items-center rounded-md  shadow-sm "
               >
-                <div className="w-1/3 relative">
-                  <Link to={`/product/${product.slug}`}>
+                <div className="relative w-32 md:w-44 shrink-0 h-24 md:h-36 overflow-hidden rounded-md">
+                  <Link
+                    to={`/product/${product.slug}`}
+                    className="block w-full h-full"
+                  >
                     <ImageComponent
                       imageName={product.thumbnailImage || product.images?.[0]}
                       altName={product.name}
-                      skeletonHeight={120}
+                      skeletonHeight={144}
+                      className="object-cover w-full h-full"
                     />
                   </Link>
                   {product.variants?.length ? (
@@ -196,6 +270,7 @@ const ProductList = ({
                       )}
                     </button>
                   )}
+                  <div className={'py-4 px-2'}>{actionButtons(product)}</div>
                 </div>
                 {/* Discount Percentage */}
                 <div className="absolute top-1 left-1 z-10">
@@ -307,6 +382,7 @@ const ProductList = ({
                         </div>
                       )}
                 </div>
+                {actionButtons(product)}
                 {showBuildButton && (
                   <button
                     onClick={() => handleToggle(product)}
