@@ -315,6 +315,7 @@ const PcBuilderAddProduct = ({
             categoryName={name}
             buildOverrides={{ isInBuild: isSelected, onToggle: toggleProduct }}
             showBuildButton
+            showKeyFeatures={true}
           />
         )}
 
