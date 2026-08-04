@@ -48,6 +48,7 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
+  X,
 } from 'lucide-react';
 import { SectionHeader } from '@/component/componentAdmin/SectionHeader.jsx';
 
@@ -81,10 +82,25 @@ const ViewAllProducts = () => {
     stock: '',
   });
 
+  const [searchQuery, setSearchQuery] = useState('');
+
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [isFiltering, setIsFiltering] = useState(false);
+  const [totalProducts, setTotalProducts] = useState(0);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (filters.search || filters.brand || filters.category || filters.isActive || filters.stock) {
+        setIsFiltering(true);
+      } else {
+        setIsFiltering(false);
+      }
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [filters.search, filters.brand, filters.category, filters.isActive, filters.stock]);
 
   useEffect(() => {
     fetchBrands();
@@ -99,6 +115,12 @@ const ViewAllProducts = () => {
   }, [filters, fetchProductsAdmin]);
 
   useEffect(() => {
+    if (totalProductsAdmin > 0 && totalProducts === 0) {
+      setTotalProducts(totalProductsAdmin);
+    }
+  }, [totalProductsAdmin, totalProducts]);
+
+  useEffect(() => {
     setFilteredProducts(
       [...products].sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
@@ -109,6 +131,22 @@ const ViewAllProducts = () => {
   const handleFilterChange = useCallback((name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value, page: 1 }));
   }, []);
+
+  const handleSearch = () => {
+    handleFilterChange('search', searchQuery.trim());
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    handleFilterChange('search', '');
+  };
 
   const handlePageChange = (newPage) => {
     setFilters((prev) => ({ ...prev, page: newPage }));
@@ -151,27 +189,7 @@ const ViewAllProducts = () => {
     (currentPage - 1) * filters.limit + filteredProducts.length,
   );
 
-  if (loading) {
-    return (
-      <div className="p-6 space-y-6">
-        <Skeleton className="h-8 w-48" />
-        <div className="grid grid-cols-3 gap-4">
-          <Skeleton className="h-24" />
-          <Skeleton className="h-24" />
-          <Skeleton className="h-24" />
-        </div>
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-10 w-80" />
-          <Skeleton className="h-10 w-40" />
-        </div>
-        <Skeleton className="h-[400px] rounded-lg" />
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-5 w-48" />
-          <Skeleton className="h-8 w-72" />
-        </div>
-      </div>
-    );
-  }
+
 
   if (error) {
     return (
@@ -202,7 +220,7 @@ const ViewAllProducts = () => {
         <Card className="shadow-md border-0 border-l-4 border-l-[#00395d]">
           <CardContent className="p-4">
             <p className="text-3xl font-bold text-[#00395d]">
-              {totalProductsAdmin}
+              {totalProducts}
             </p>
             <p className="text-sm text-muted-foreground">All Products</p>
           </CardContent>
@@ -226,10 +244,30 @@ const ViewAllProducts = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
             placeholder="Search products..."
-            value={filters.search}
-            onChange={(e) => handleFilterChange('search', e.target.value)}
-            className="pl-9 bg-background"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
+            className="pl-9 pr-36 bg-background"
           />
+          <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+            {searchQuery && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleClearSearch}
+                className="h-7 px-3"
+              >
+                Clear
+              </Button>
+            )}
+            <Button
+              size="sm"
+              onClick={handleSearch}
+              className="h-7 px-3"
+            >
+              Search
+            </Button>
+          </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:flex md:items-center md:justify-between gap-2 md:gap-3">
           <Select
@@ -290,34 +328,42 @@ const ViewAllProducts = () => {
               <SelectItem value="out">Out of Stock</SelectItem>
             </SelectContent>
           </Select>
-          <span className="hidden md:inline text-sm text-muted-foreground">
-            Show
-          </span>
-          <Select
-            value={String(filters.limit)}
-            onValueChange={(value) =>
-              handleFilterChange('limit', Number(value))
-            }
-          >
-            <SelectTrigger className="w-full md:w-16 h-8 bg-background">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {[5, 10, 20].map((n) => (
-                <SelectItem key={n} value={String(n)}>
-                  {n}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <p className="hidden md:block text-sm text-muted-foreground">
-            entries
-          </p>
+          <div className={'flex items-center justify-center gap-2'}>
+            <span className="hidden md:inline text-sm text-muted-foreground">
+              Show
+            </span>
+            <Select
+              value={String(filters.limit)}
+              onValueChange={(value) =>
+                handleFilterChange('limit', Number(value))
+              }
+            >
+              <SelectTrigger className="w-full md:w-16 h-8 bg-background">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {[5, 10, 20].map((n) => (
+                  <SelectItem key={n} value={String(n)}>
+                    {n}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="hidden md:block text-sm text-muted-foreground">
+              entries
+            </p>
+          </div>
         </div>
       </div>
 
       <Card className="shadow-md border-0">
         <CardContent className="p-0">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-muted-foreground/10">
+            <div>
+              <h3 className="text-lg font-semibold">All Products</h3>
+
+            </div>
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
@@ -335,7 +381,23 @@ const ViewAllProducts = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredProducts.length === 0 ? (
+              {loading ? (
+                [...Array(filters.limit)].map((_, i) => (
+                  <TableRow key={`skeleton-${i}`}>
+                    <TableCell><Skeleton className="h-4 w-8" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-12 w-12 rounded-lg" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                    <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-20" /></TableCell>
+                    <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-16" /></TableCell>
+                    <TableCell><Skeleton className="h-8 w-28" /></TableCell>
+                  </TableRow>
+                ))
+              ) : filteredProducts.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={11}
@@ -523,7 +585,7 @@ const ViewAllProducts = () => {
       {totalPages > 1 && (
         <div className="flex items-center justify-between bg-muted/30 rounded-lg p-3">
           <p className="text-sm text-muted-foreground">
-            Showing {startItem} to {endItem} of {totalProductsAdmin} products
+            Showing {startItem} to {endItem} of {totalProducts} products
           </p>
           <div className="flex items-center gap-1">
             <Button
