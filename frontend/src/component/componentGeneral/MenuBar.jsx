@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useCategoryStore from '../../store/useCategoryStore.js';
 import useSubCategoryStore from '../../store/useSubCategoryStore.js';
@@ -21,6 +21,7 @@ const MenuBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeMenu, setActiveMenu] = useState('');
+  const closeTimeoutRef = useRef(null);
 
   const buildQueryString = useCallback((params) => {
     const urlParams = new URLSearchParams();
@@ -96,13 +97,29 @@ const MenuBar = () => {
               return (
                 <MenubarMenu key={category?._id} value={category?._id}>
                   <MenubarTrigger
-                    className="uppercase  text-sm font-medium tracking-wide  px-2 py-2 data-[state=open]:bg-transparent focus:bg-transparent cursor-pointer"
-                    onPointerEnter={() => setActiveMenu(category?._id)}
+                    className="uppercase text-sm font-medium tracking-wide px-2 py-2 data-[state=open]:bg-transparent focus:bg-transparent cursor-pointer"
+                    onPointerEnter={() => {
+                      clearTimeout(closeTimeoutRef.current);
+                      setActiveMenu(category?._id);
+                    }}
+                    onPointerLeave={() => {
+                      closeTimeoutRef.current = setTimeout(() => {
+                        setActiveMenu('');
+                      }, 100);
+                    }}
                     onClick={() => handleNavigate(categoryPath)}
                   >
                     {category?.name}
                   </MenubarTrigger>
-                  <MenubarContent className="-mt-[10px]">
+                  <MenubarContent
+                    className="-mt-[10px]"
+                    onPointerEnter={() => clearTimeout(closeTimeoutRef.current)}
+                    onPointerLeave={() => {
+                      closeTimeoutRef.current = setTimeout(() => {
+                        setActiveMenu('');
+                      }, 100);
+                    }}
+                  >
                     <SubMenu
                       subCategories={subCategories}
                       categoryId={category._id}

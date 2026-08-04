@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Upload, Trash2, Loader2 } from 'lucide-react';
+import { Upload, Trash2, Loader2, Link, ExternalLink, Pencil } from 'lucide-react';
 import ImageComponent from '../componentGeneral/ImageComponent.jsx';
 import useAuthAdminStore from '../../store/AuthAdminStore.js';
+import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
@@ -25,6 +26,9 @@ const CarouselUpload = () => {
   const [loading, setLoading] = useState(false);
   const [uploadingSlot, setUploadingSlot] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [linkInput, setLinkInput] = useState({});
+  const [editingLink, setEditingLink] = useState(null);
+  const [editLinkValue, setEditLinkValue] = useState('');
   const fileInputRefs = {
     'left-large': useRef(null),
     'right-top': useRef(null),
@@ -59,6 +63,9 @@ const CarouselUpload = () => {
     const formData = new FormData();
     formData.append('imgSrc', file);
     formData.append('position', slotKey);
+    if (linkInput[slotKey]) {
+      formData.append('link', linkInput[slotKey]);
+    }
 
     setUploadingSlot(slotKey);
     try {
@@ -71,6 +78,7 @@ const CarouselUpload = () => {
 
       if (response.data.imgSrc) {
         setImages((prev) => [...prev, response.data]);
+        setLinkInput((prev) => ({ ...prev, [slotKey]: '' }));
         toast.success(
           `Image added to ${SLOTS.find((s) => s.key === slotKey).label}`,
         );
@@ -99,6 +107,26 @@ const CarouselUpload = () => {
     }
   };
 
+  const handleUpdateLink = async (imageId) => {
+    try {
+      const response = await axios.put(
+        `${apiUrl}/updatecarousel/${imageId}`,
+        { link: editLinkValue },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      setImages((prev) =>
+        prev.map((img) =>
+          img._id === imageId ? { ...img, link: editLinkValue } : img,
+        ),
+      );
+      toast.success('Link updated');
+      setEditingLink(null);
+    } catch (error) {
+      console.error('Error updating link', error);
+      toast.error('Failed to update link');
+    }
+  };
+
   return (
     <div className="p-6 shadow bg-white rounded-lg">
       <h1 className="border-l-4 primaryBorderColor primaryTextColor mb-6 pl-2 text-lg font-semibold">
@@ -116,18 +144,35 @@ const CarouselUpload = () => {
                 <h2 className="text-sm font-semibold text-gray-700">
                   {slot.label}
                 </h2>
-                <label className="cursor-pointer inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded-md transition">
-                  <Upload size={14} />
-                  Add
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(e, slot.key)}
-                    className="hidden"
-                    ref={fileInputRefs[slot.key]}
-                    disabled={isUploading}
-                  />
-                </label>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <Link size={12} className="text-gray-400" />
+                    <Input
+                      type="text"
+                      placeholder="Link URL"
+                      value={linkInput[slot.key] || ''}
+                      onChange={(e) =>
+                        setLinkInput((prev) => ({
+                          ...prev,
+                          [slot.key]: e.target.value,
+                        }))
+                      }
+                      className="h-7 w-32 text-xs"
+                    />
+                  </div>
+                  <label className="cursor-pointer inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded-md transition">
+                    <Upload size={14} />
+                    Add
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, slot.key)}
+                      className="hidden"
+                      ref={fileInputRefs[slot.key]}
+                      disabled={isUploading}
+                    />
+                  </label>
+                </div>
               </div>
 
               {slotImages.length > 0 ? (
@@ -141,7 +186,28 @@ const CarouselUpload = () => {
                         imageName={image.imgSrc}
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100 gap-2">
+                        {image.link && (
+                          <a
+                            href={image.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded-full shadow transition"
+                            aria-label="Open link"
+                          >
+                            <ExternalLink size={16} />
+                          </a>
+                        )}
+                        <button
+                          onClick={() => {
+                            setEditingLink(image._id);
+                            setEditLinkValue(image.link || '');
+                          }}
+                          className="bg-green-500 hover:bg-green-600 text-white p-1.5 rounded-full shadow transition"
+                          aria-label="Edit link"
+                        >
+                          <Pencil size={16} />
+                        </button>
                         <button
                           onClick={() => setDeleteTarget(image._id)}
                           className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-full shadow transition"
@@ -193,6 +259,34 @@ const CarouselUpload = () => {
               onClick={() => deleteTarget && handleImageDelete(deleteTarget)}
             >
               Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!editingLink}
+        onOpenChange={(open) => !open && setEditingLink(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Link</DialogTitle>
+            <DialogDescription>
+              Enter the URL for this carousel image.
+            </DialogDescription>
+          </DialogHeader>
+          <Input
+            type="text"
+            placeholder="https://example.com"
+            value={editLinkValue}
+            onChange={(e) => setEditLinkValue(e.target.value)}
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingLink(null)}>
+              Cancel
+            </Button>
+            <Button onClick={() => handleUpdateLink(editingLink)}>
+              Save
             </Button>
           </DialogFooter>
         </DialogContent>

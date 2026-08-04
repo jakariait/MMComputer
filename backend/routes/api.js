@@ -182,6 +182,12 @@ router.post(
   CarouselController.createCarousel
 );
 router.get('/getallcarousel', CarouselController.getAllCarousel);
+router.put(
+  '/updatecarousel/:id',
+  adminProtect,
+  checkPermission('sliders-banners'),
+  CarouselController.updateCarousel
+);
 router.delete(
   '/deletebyidcarousel/:id',
   adminProtect,

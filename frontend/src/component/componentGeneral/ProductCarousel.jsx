@@ -42,12 +42,23 @@ const SlotCarousel = ({ images, aspectRatio, altName }) => {
             i === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
           }`}
         >
-          <ImageComponent
-            imageName={img.imgSrc}
-            className="w-full h-full object-contain p-2"
-            skeletonHeight="100%"
-            altName={altName}
-          />
+          {img.link ? (
+            <a href={img.link} className="block w-full h-full">
+              <ImageComponent
+                imageName={img.imgSrc}
+                className="w-full h-full object-contain p-2"
+                skeletonHeight="100%"
+                altName={altName}
+              />
+            </a>
+          ) : (
+            <ImageComponent
+              imageName={img.imgSrc}
+              className="w-full h-full object-contain p-2"
+              skeletonHeight="100%"
+              altName={altName}
+            />
+          )}
         </div>
       ))}
       {images.length > 1 && (

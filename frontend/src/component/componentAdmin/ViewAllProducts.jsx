@@ -183,7 +183,7 @@ const ViewAllProducts = () => {
   };
 
   const startItem =
-    products.length > 0 ? (currentPage - 1) * filters.limit + 1 : 0;
+    totalProductsAdmin > 0 ? (currentPage - 1) * filters.limit + 1 : 0;
   const endItem = Math.min(
     currentPage * filters.limit,
     (currentPage - 1) * filters.limit + filteredProducts.length,
@@ -585,7 +585,7 @@ const ViewAllProducts = () => {
       {totalPages > 1 && (
         <div className="flex items-center justify-between bg-muted/30 rounded-lg p-3">
           <p className="text-sm text-muted-foreground">
-            Showing {startItem} to {endItem} of {totalProducts} products
+            Showing {startItem} to {endItem} of {totalProductsAdmin} products
           </p>
           <div className="flex items-center gap-1">
             <Button
