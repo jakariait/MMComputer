@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import useProductStore from '../../store/useProductStore.js';
 import useBrandStore from '../../store/useBrandStore.js';
+import useCategoryStore from '../../store/useCategoryStore.js';
 import ImageComponent from '../componentGeneral/ImageComponent.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import RequirePermission from './RequirePermission.jsx';
@@ -66,6 +67,7 @@ const ViewAllProducts = () => {
   } = useProductStore();
 
   const { brands, fetchBrands } = useBrandStore();
+  const { categories, fetchCategories } = useCategoryStore();
 
   const navigate = useNavigate();
 
@@ -74,6 +76,7 @@ const ViewAllProducts = () => {
     limit: 10,
     search: '',
     brand: '',
+    category: '',
     isActive: '',
     stock: '',
   });
@@ -86,6 +89,10 @@ const ViewAllProducts = () => {
   useEffect(() => {
     fetchBrands();
   }, [fetchBrands]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   useEffect(() => {
     fetchProductsAdmin(filters);
@@ -214,8 +221,8 @@ const ViewAllProducts = () => {
         </Card>
       </div>
 
-      <div className="flex items-center justify-between gap-4 bg-muted/30 rounded-lg p-3">
-        <div className="relative flex-1 max-w-sm">
+      <div className="bg-muted/30 rounded-lg p-3 space-y-3">
+        <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
             placeholder="Search products..."
@@ -224,12 +231,12 @@ const ViewAllProducts = () => {
             className="pl-9 bg-background"
           />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:flex md:items-center md:justify-between gap-2 md:gap-3">
           <Select
             value={filters.brand}
             onValueChange={(value) => handleFilterChange('brand', value)}
           >
-            <SelectTrigger className="w-36 h-8 bg-background">
+            <SelectTrigger className="w-full md:w-36 h-8 bg-background">
               <SelectValue placeholder="All brands" />
             </SelectTrigger>
             <SelectContent>
@@ -242,10 +249,26 @@ const ViewAllProducts = () => {
             </SelectContent>
           </Select>
           <Select
+            value={filters.category}
+            onValueChange={(value) => handleFilterChange('category', value)}
+          >
+            <SelectTrigger className="w-full md:w-36 h-8 bg-background">
+              <SelectValue placeholder="All categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All categories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category._id} value={category.name}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
             value={filters.isActive}
             onValueChange={(value) => handleFilterChange('isActive', value)}
           >
-            <SelectTrigger className="w-28 h-8 bg-background">
+            <SelectTrigger className="w-full md:w-28 h-8 bg-background">
               <SelectValue placeholder="All status" />
             </SelectTrigger>
             <SelectContent>
@@ -258,7 +281,7 @@ const ViewAllProducts = () => {
             value={filters.stock}
             onValueChange={(value) => handleFilterChange('stock', value)}
           >
-            <SelectTrigger className="w-32 h-8 bg-background">
+            <SelectTrigger className="w-full md:w-32 h-8 bg-background">
               <SelectValue placeholder="All stock" />
             </SelectTrigger>
             <SelectContent>
@@ -267,14 +290,16 @@ const ViewAllProducts = () => {
               <SelectItem value="out">Out of Stock</SelectItem>
             </SelectContent>
           </Select>
-          <p className="text-sm text-muted-foreground">Show</p>
+          <span className="hidden md:inline text-sm text-muted-foreground">
+            Show
+          </span>
           <Select
             value={String(filters.limit)}
             onValueChange={(value) =>
               handleFilterChange('limit', Number(value))
             }
           >
-            <SelectTrigger className="w-16 h-8 bg-background">
+            <SelectTrigger className="w-full md:w-16 h-8 bg-background">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -285,7 +310,9 @@ const ViewAllProducts = () => {
               ))}
             </SelectContent>
           </Select>
-          <p className="text-sm text-muted-foreground">entries</p>
+          <p className="hidden md:block text-sm text-muted-foreground">
+            entries
+          </p>
         </div>
       </div>
 
