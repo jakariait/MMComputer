@@ -219,7 +219,12 @@ const FilterContent = ({
   </div>
 );
 
-const ActiveChips = ({ filters, handleClearSearch, handleClearPriceRange, onUpdateFilters }) => {
+const ActiveChips = ({
+  filters,
+  handleClearSearch,
+  handleClearPriceRange,
+  onUpdateFilters,
+}) => {
   const hasFilters =
     filters.search ||
     filters.category ||
@@ -517,7 +522,12 @@ const ProductFilters = ({
     sliderMaxValue,
   };
 
-  const sharedProps = { filters, handleClearSearch, handleClearPriceRange, onUpdateFilters };
+  const sharedProps = {
+    filters,
+    handleClearSearch,
+    handleClearPriceRange,
+    onUpdateFilters,
+  };
 
   // Mobile only mode - render buttons + inline sort + active chips
   if (mobileOnly) {
@@ -528,13 +538,13 @@ const ProductFilters = ({
             <button
               onClick={() => setDrawerOpen(true)}
               aria-label="Open filters"
-              className="flex items-center gap-2 px-3 py-2 rounded-md bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
+              className="flex items-center gap-2 px-3 py-2 rounded-md bg-white hover:bg-gray-200 transition-colors cursor-pointer"
             >
               <SlidersHorizontal size={20} className="primaryTextColor" />
               <span className="text-sm font-medium">Filter</span>
             </button>
-            <div className="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-md">
-              <span className="text-sm font-medium text-gray-600 whitespace-nowrap">
+            <div className="flex items-center gap-2 bg-white hover:bg-gray-200 px-3 py-1.5 rounded-md">
+              <span className="text-sm font-medium  whitespace-nowrap">
                 Sort by:
               </span>
               <Select

@@ -128,7 +128,7 @@ const Product = () => {
 
   if (loading) {
     return (
-      <div className="xl:container xl:mx-auto px-6 py-5">
+      <div className="xl:container xl:mx-auto px-6 py-5 ">
         <div className="flex gap-6">
           <aside className="hidden xl:block w-64 shrink-0">
             <Skeleton className="h-9 w-full mb-4" />
@@ -152,102 +152,104 @@ const Product = () => {
   }
 
   return (
-    <div className="xl:container xl:mx-auto px-6 py-5">
-      <div className="flex gap-6">
-        {/* Sidebar Filters - xl+ */}
-        <aside className="hidden xl:block w-64 shrink-0">
-          <div className="sticky top-24">
+    <section className={'bg-gray-300/10'}>
+      <div className="xl:container xl:mx-auto px-6 py-5 ">
+        <div className="flex gap-6">
+          {/* Sidebar Filters - xl+ */}
+          <aside className="hidden xl:block w-64 shrink-0">
+            <div className="sticky top-24">
+              <ProductFilters
+                filters={currentFilters}
+                categories={memoizedCategories}
+                flags={memoizedFlags}
+                brands={memoizedBrands}
+                onUpdateFilters={updateFilters}
+              />
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1 min-w-0">
+            {/* Mobile/MD Filter Buttons + Active Chips */}
             <ProductFilters
               filters={currentFilters}
               categories={memoizedCategories}
               flags={memoizedFlags}
               brands={memoizedBrands}
               onUpdateFilters={updateFilters}
+              mobileOnly
             />
-          </div>
-        </aside>
 
-        {/* Main Content */}
-        <main className="flex-1 min-w-0">
-          {/* Mobile/MD Filter Buttons + Active Chips */}
-          <ProductFilters
-            filters={currentFilters}
-            categories={memoizedCategories}
-            flags={memoizedFlags}
-            brands={memoizedBrands}
-            onUpdateFilters={updateFilters}
-            mobileOnly
-          />
+            {/* Product List */}
+            {(products || []).length === 0 ? (
+              <div className="text-center py-20">
+                <Typography variant="h6" className="text-gray-500 mb-4">
+                  {currentFilters.search
+                    ? `No products found for "${currentFilters.search}"`
+                    : 'No products found'}
+                </Typography>
+                <Typography variant="body2" className="text-gray-400">
+                  {currentFilters.search
+                    ? 'Try a different search term or adjust your filters'
+                    : 'Try adjusting your filters or search criteria'}
+                </Typography>
+              </div>
+            ) : (
+              <ProductList
+                products={products}
+                showKeyFeatures={true}
+                gridClassName={
+                  'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 mt-4'
+                }
+              />
+            )}
 
-          {/* Product List */}
-          {(products || []).length === 0 ? (
-            <div className="text-center py-20">
-              <Typography variant="h6" className="text-gray-500 mb-4">
-                {currentFilters.search
-                  ? `No products found for "${currentFilters.search}"`
-                  : 'No products found'}
-              </Typography>
-              <Typography variant="body2" className="text-gray-400">
-                {currentFilters.search
-                  ? 'Try a different search term or adjust your filters'
-                  : 'Try adjusting your filters or search criteria'}
-              </Typography>
-            </div>
-          ) : (
-            <ProductList
-              products={products}
-              showKeyFeatures={true}
-              gridClassName={
-                'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 mt-4'
-              }
-            />
-          )}
-
-          {/* Pagination */}
-          {totalPages > 0 && (
-            <div className="flex justify-center items-center mt-8 gap-4">
-              <button
-                onClick={() => handlePageChange(currentFilters.page - 1)}
-                disabled={currentFilters.page === 1 || loading}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors
+            {/* Pagination */}
+            {totalPages > 0 && (
+              <div className="flex justify-center items-center mt-8 gap-4">
+                <button
+                  onClick={() => handlePageChange(currentFilters.page - 1)}
+                  disabled={currentFilters.page === 1 || loading}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors
                   ${
                     currentFilters.page === 1 || loading
                       ? 'border-gray-300 text-gray-400 cursor-not-allowed'
                       : 'border-gray-500 hover:bg-gray-100'
                   }`}
-              >
-                <ChevronLeft size={18} />
-                <span className="hidden sm:block">Previous</span>
-              </button>
+                >
+                  <ChevronLeft size={18} />
+                  <span className="hidden sm:block">Previous</span>
+                </button>
 
-              <div className="flex items-center gap-2 text-sm">
-                <span>
-                  Page {currentFilters.page} of {totalPages}
-                </span>
-                <span className="hidden md:block text-gray-500">
-                  &middot; {totalProducts} Products
-                  {currentFilters.search && ` for "${currentFilters.search}"`}
-                </span>
-              </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <span>
+                    Page {currentFilters.page} of {totalPages}
+                  </span>
+                  <span className="hidden md:block text-gray-500">
+                    &middot; {totalProducts} Products
+                    {currentFilters.search && ` for "${currentFilters.search}"`}
+                  </span>
+                </div>
 
-              <button
-                onClick={() => handlePageChange(currentFilters.page + 1)}
-                disabled={currentFilters.page >= totalPages || loading}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors
+                <button
+                  onClick={() => handlePageChange(currentFilters.page + 1)}
+                  disabled={currentFilters.page >= totalPages || loading}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors
                   ${
                     currentFilters.page >= totalPages || loading
                       ? 'border-gray-300 text-gray-400 cursor-not-allowed'
                       : 'border-gray-500 hover:bg-gray-100'
                   }`}
-              >
-                <span className="hidden sm:block">Next</span>
-                <ChevronRight size={18} />
-              </button>
-            </div>
-          )}
-        </main>
+                >
+                  <span className="hidden sm:block">Next</span>
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
