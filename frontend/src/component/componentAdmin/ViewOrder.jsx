@@ -296,7 +296,7 @@ const ViewOrder = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Order Details</h1>
+        <h1 className="text-2xl  tracking-tight">Order Details</h1>
         <div className="flex gap-2 no-print">
           <RequirePermission permission="edit_orders">
             <Button variant="outline" onClick={handleEditToggle}>
@@ -314,19 +314,17 @@ const ViewOrder = () => {
       <Card className="shadow-md border-0">
         <CardContent className="p-6" id="print-area" ref={printRef}>
           <div id="firstRow" className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold">
-              {GeneralInfoList?.CompanyName ?? ''}
-            </h1>
+            <h1 className="text-2xl ">{GeneralInfoList?.CompanyName ?? ''}</h1>
             <ImageComponent
               imageName={GeneralInfoList?.PrimaryLogo}
               className="w-30"
             />
-            <div className="text-2xl font-bold">Invoice</div>
+            <div className="text-2xl ">Invoice</div>
           </div>
 
           <div id="secondRow" className="flex justify-between mb-6 gap-8">
             <div className="flex-1">
-              <h2 className="font-bold text-lg mb-2">Shipping Info:</h2>
+              <h2 className="font-medium text-lg mb-2">Shipping Info:</h2>
               {isEditMode ? (
                 <div className="space-y-2">
                   <Input
@@ -373,45 +371,45 @@ const ViewOrder = () => {
             </div>
             <div id="secondRowRight" className="text-right space-y-1">
               <p>
-                <strong>Order No:</strong> {currentOrderData?.orderNo}
+                <strong className={'font-medium'}>Order No:</strong>{' '}
+                {currentOrderData?.orderNo}
               </p>
               <p>
-                <strong>Order Date:</strong>{' '}
+                <strong className={'font-medium'}>Order Date:</strong>{' '}
                 {currentOrderData?.orderDate
                   ? new Date(currentOrderData.orderDate).toLocaleDateString()
                   : ''}
               </p>
               <p>
-                <strong>Status:</strong>{' '}
+                <strong className={'font-medium'}>Status:</strong>{' '}
                 <span className={orderStatusColor.color}>
                   {orderStatusColor.text}
                 </span>
               </p>
               <p>
-                <strong>Payment Method:</strong>{' '}
+                <strong className={'font-medium'}>Payment Method:</strong>{' '}
                 {getPaymentMethodText(currentOrderData?.paymentMethod)}
               </p>
               <p>
-                <strong>Payment Status:</strong>{' '}
+                <strong className={'font-medium'}>Payment Status:</strong>{' '}
                 <span className={paymentStatusColor.color}>
                   {paymentStatusColor.text}
                 </span>
               </p>
               {currentOrderData?.paymentId && (
                 <p>
-                  <strong>Payment ID:</strong>{' '}
-                  <span className="text-sm">
-                    {currentOrderData.paymentId}
-                  </span>
+                  <strong className={'font-medium'}>Payment ID:</strong>{' '}
+                  <span className="text-sm">{currentOrderData.paymentId}</span>
                 </p>
               )}
               {currentOrderData?.transId && (
                 <p>
-                  <strong>Transaction ID:</strong> {currentOrderData.transId}
+                  <strong className={'font-medium'}>Transaction ID:</strong>{' '}
+                  {currentOrderData.transId}
                 </p>
               )}
               <p>
-                <strong>Delivery Method:</strong>{' '}
+                <strong className={'font-medium'}>Delivery Method:</strong>{' '}
                 {getDeliveryMethodText(currentOrderData?.deliveryMethod)}
               </p>
             </div>
@@ -511,7 +509,7 @@ const ViewOrder = () => {
 
           <div id="thirdRow" className="mt-6 flex justify-between gap-8">
             <div>
-              <h2 className="font-bold text-lg mb-2">Billing Address:</h2>
+              <h2 className="font-medium text-lg mb-2">Billing Address:</h2>
               {isEditMode ? (
                 <div className="space-y-2">
                   <Input
@@ -571,7 +569,7 @@ const ViewOrder = () => {
                   {(currentOrderData?.specialDiscount ?? 0).toFixed(2)}
                 </p>
               )}
-              <p className="text-xl font-bold">
+              <p className="text-xl font-medium">
                 Total Order Amount:{' '}
                 {(currentOrderData?.totalAmount ?? 0).toFixed(2)}
               </p>
@@ -580,7 +578,7 @@ const ViewOrder = () => {
                   Advance: {(currentOrderData?.advanceAmount ?? 0).toFixed(2)}
                 </p>
               )}
-              <p className="text-xl font-bold">
+              <p className="text-xl font-medium">
                 Total Due Amount:{' '}
                 {(currentOrderData?.dueAmount ?? 0).toFixed(2)}
               </p>
