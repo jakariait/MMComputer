@@ -11,7 +11,6 @@ import ProductList from './ProductList.jsx';
 import ProductFilters from './ProductFilters.jsx';
 
 const Product = () => {
-  // Global store values
   const { products, totalPages, loading, error, fetchProducts, totalProducts } =
     useProductStore();
 
@@ -19,10 +18,8 @@ const Product = () => {
   const { flags, fetchFlags } = useFlagStore();
   const { brands, fetchBrands } = useBrandStore();
 
-  // URL search parameters
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Get current filters from URL params - single source of truth
   const currentFilters = useMemo(
     () => ({
       page: parseInt(searchParams.get('page')) || 1,
@@ -41,11 +38,9 @@ const Product = () => {
     [searchParams],
   );
 
-  // Function to update URL params
   const updateFilters = useCallback(
     (newFilters) => {
       const params = new URLSearchParams(searchParams);
-
       Object.entries(newFilters).forEach(([key, value]) => {
         if (value && value !== '') {
           params.set(key, value);
@@ -53,13 +48,11 @@ const Product = () => {
           params.delete(key);
         }
       });
-
       setSearchParams(params, { replace: true });
     },
     [searchParams, setSearchParams],
   );
 
-  // Handler to change pages
   const handlePageChange = useCallback(
     (newPage) => {
       updateFilters({ ...currentFilters, page: newPage });
@@ -67,7 +60,6 @@ const Product = () => {
     [currentFilters, updateFilters],
   );
 
-  // Memoized values to avoid unnecessary re-renders
   const memoizedCategories = useMemo(() => categories || [], [categories]);
   const memoizedFlags = useMemo(
     () => (flags || []).filter((flag) => flag.isActive),
@@ -75,17 +67,11 @@ const Product = () => {
   );
   const memoizedBrands = useMemo(() => brands || [], [brands]);
 
-  // Fetch flags and brands on mount if not already loaded
   useEffect(() => {
-    if (!flags || flags.length === 0) {
-      fetchFlags();
-    }
-    if (!brands || brands.length === 0) {
-      fetchBrands();
-    }
+    if (!flags || flags.length === 0) fetchFlags();
+    if (!brands || brands.length === 0) fetchBrands();
   }, [fetchFlags, flags, fetchBrands, brands]);
 
-  // Effect to fetch products whenever filters change
   const {
     page,
     limit,
@@ -100,6 +86,7 @@ const Product = () => {
     minPrice,
     maxPrice,
   } = currentFilters;
+
   useEffect(() => {
     fetchProducts({
       page,
@@ -131,7 +118,6 @@ const Product = () => {
     fetchProducts,
   ]);
 
-  // Show error if exists
   if (error) {
     return (
       <Typography variant="h6" color="error" className="p-4">
@@ -140,49 +126,84 @@ const Product = () => {
     );
   }
 
-  return (
-    <div className="xl:container xl:mx-auto px-6 py-5 justify-center md:justify-start">
-      {/* Loading skeletons */}
-      {loading ? (
-        <div className="space-y-4">
-          {[...Array(3)].map((_, idx) => (
-            <div key={idx} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[...Array(4)].map((_, subIdx) => (
-                <Skeleton key={subIdx} height={250} width="100%" />
+  if (loading) {
+    return (
+      <div className="xl:container xl:mx-auto px-6 py-5">
+        <div className="flex gap-6">
+          <aside className="hidden xl:block w-64 shrink-0">
+            <Skeleton className="h-9 w-full mb-4" />
+            <Skeleton className="h-9 w-full mb-4" />
+            <Skeleton className="h-9 w-full mb-4" />
+            <Skeleton className="h-9 w-full mb-4" />
+            <Skeleton className="h-9 w-full mb-4" />
+            <Skeleton className="h-20 w-full mb-4" />
+            <Skeleton className="h-9 w-full" />
+          </aside>
+          <div className="flex-1 min-w-0">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+              {[...Array(8)].map((_, i) => (
+                <Skeleton key={i} height={280} className="rounded-lg" />
               ))}
             </div>
-          ))}
+          </div>
         </div>
-      ) : (
-        <>
-          {/* Filters (mobile drawers, desktop bar, price range, active chips) */}
+      </div>
+    );
+  }
+
+  return (
+    <div className="xl:container xl:mx-auto px-6 py-5">
+      <div className="flex gap-6">
+        {/* Sidebar Filters - xl+ */}
+        <aside className="hidden xl:block w-64 shrink-0">
+          <div className="sticky top-24">
+            <ProductFilters
+              filters={currentFilters}
+              categories={memoizedCategories}
+              flags={memoizedFlags}
+              brands={memoizedBrands}
+              onUpdateFilters={updateFilters}
+            />
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 min-w-0">
+          {/* Mobile/MD Filter Buttons + Active Chips */}
           <ProductFilters
             filters={currentFilters}
             categories={memoizedCategories}
             flags={memoizedFlags}
             brands={memoizedBrands}
             onUpdateFilters={updateFilters}
+            mobileOnly
           />
 
-          {/* Product List or No Results */}
-          {(products || []).length === 0 && !loading ? (
+          {/* Product List */}
+          {(products || []).length === 0 ? (
             <div className="text-center py-20">
               <Typography variant="h6" className="text-gray-500 mb-4">
                 {currentFilters.search
                   ? `No products found for "${currentFilters.search}"`
                   : 'No products found'}
               </Typography>
-              <Typography variant="body2" className="text-gray-400 ml-2">
+              <Typography variant="body2" className="text-gray-400">
                 {currentFilters.search
                   ? 'Try a different search term or adjust your filters'
                   : 'Try adjusting your filters or search criteria'}
               </Typography>
             </div>
           ) : (
-            <ProductList products={products} showKeyFeatures={true} />
+            <ProductList
+              products={products}
+              showKeyFeatures={true}
+              gridClassName={
+                'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 mt-4'
+              }
+            />
           )}
 
-          {/* Pagination Controls */}
+          {/* Pagination */}
           {totalPages > 0 && (
             <div className="flex justify-center items-center mt-8 gap-4">
               <button
@@ -194,10 +215,9 @@ const Product = () => {
                       ? 'border-gray-300 text-gray-400 cursor-not-allowed'
                       : 'border-gray-500 hover:bg-gray-100'
                   }`}
-                aria-label="Previous page"
               >
-                <ChevronLeft size={18} aria-hidden="true" />
-                <span className="hidden md:block">Previous</span>
+                <ChevronLeft size={18} />
+                <span className="hidden sm:block">Previous</span>
               </button>
 
               <div className="flex items-center gap-2 text-sm">
@@ -205,7 +225,7 @@ const Product = () => {
                   Page {currentFilters.page} of {totalPages}
                 </span>
                 <span className="hidden md:block text-gray-500">
-                  • {totalProducts} Products
+                  &middot; {totalProducts} Products
                   {currentFilters.search && ` for "${currentFilters.search}"`}
                 </span>
               </div>
@@ -219,15 +239,14 @@ const Product = () => {
                       ? 'border-gray-300 text-gray-400 cursor-not-allowed'
                       : 'border-gray-500 hover:bg-gray-100'
                   }`}
-                aria-label="Next page"
               >
-                <span className="hidden md:block">Next</span>
-                <ChevronRight size={18} aria-hidden="true" />
+                <span className="hidden sm:block">Next</span>
+                <ChevronRight size={18} />
               </button>
             </div>
           )}
-        </>
-      )}
+        </main>
+      </div>
     </div>
   );
 };

@@ -25,6 +25,7 @@ const ProductList = ({
   showKeyFeatures = false,
   showAddToCart = true,
   showBuyNow = true,
+  gridClassName = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3 mt-4',
 }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { addToCart } = useCartStore();
@@ -163,8 +164,8 @@ const ProductList = ({
         <div
           className={
             productPage
-              ? 'grid grid-cols-1 gap-3 mt-4 '
-              : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6  gap-3 mt-4'
+              ? 'grid grid-cols-1 gap-3 mt-4'
+              : gridClassName
           }
         >
           {/*Product Display Section*/}
