@@ -219,7 +219,7 @@ const FilterContent = ({
   </div>
 );
 
-const ActiveChips = ({ filters, handleClearSearch, handleClearPriceRange }) => {
+const ActiveChips = ({ filters, handleClearSearch, handleClearPriceRange, onUpdateFilters }) => {
   const hasFilters =
     filters.search ||
     filters.category ||
@@ -232,6 +232,10 @@ const ActiveChips = ({ filters, handleClearSearch, handleClearPriceRange }) => {
 
   if (!hasFilters) return null;
 
+  const clearFilter = (key) => {
+    onUpdateFilters({ ...filters, [key]: '', page: 1 });
+  };
+
   return (
     <div className="mb-4 flex flex-wrap gap-2">
       {filters.search && (
@@ -240,38 +244,68 @@ const ActiveChips = ({ filters, handleClearSearch, handleClearPriceRange }) => {
           Search: &quot;{filters.search}&quot;
           <button
             onClick={handleClearSearch}
-            className="hover:bg-blue-200 rounded-full p-1"
+            className="hover:bg-blue-200 rounded-full p-0.5"
           >
             <CloseIcon size={12} />
           </button>
         </div>
       )}
       {filters.category && (
-        <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+        <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
           Category: {filters.category}
+          <button
+            onClick={() => clearFilter('category')}
+            className="hover:bg-green-200 rounded-full p-0.5"
+          >
+            <CloseIcon size={12} />
+          </button>
         </div>
       )}
       {filters.flags && (
-        <div className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">
+        <div className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
           Flag: {filters.flags}
+          <button
+            onClick={() => clearFilter('flags')}
+            className="hover:bg-purple-200 rounded-full p-0.5"
+          >
+            <CloseIcon size={12} />
+          </button>
         </div>
       )}
       {filters.brand && (
-        <div className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm">
+        <div className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
           Brand: {filters.brand}
+          <button
+            onClick={() => clearFilter('brand')}
+            className="hover:bg-teal-200 rounded-full p-0.5"
+          >
+            <CloseIcon size={12} />
+          </button>
         </div>
       )}
       {filters.stock && (
-        <div className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">
+        <div className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
           Stock: {filters.stock === 'in' ? 'In Stock' : 'Out of Stock'}
+          <button
+            onClick={() => clearFilter('stock')}
+            className="hover:bg-orange-200 rounded-full p-0.5"
+          >
+            <CloseIcon size={12} />
+          </button>
         </div>
       )}
       {filters.sort && (
-        <div className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
+        <div className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
           Sort:{' '}
           {filters.sort
             .replace('_', ' ')
             .replace(/\b\w/g, (l) => l.toUpperCase())}
+          <button
+            onClick={() => clearFilter('sort')}
+            className="hover:bg-gray-200 rounded-full p-0.5"
+          >
+            <CloseIcon size={12} />
+          </button>
         </div>
       )}
       {(filters.minPrice || filters.maxPrice) && (
@@ -286,7 +320,7 @@ const ActiveChips = ({ filters, handleClearSearch, handleClearPriceRange }) => {
             : 'Any'}
           <button
             onClick={handleClearPriceRange}
-            className="hover:bg-pink-200 rounded-full p-1"
+            className="hover:bg-pink-200 rounded-full p-0.5"
           >
             <CloseIcon size={12} />
           </button>
@@ -483,7 +517,7 @@ const ProductFilters = ({
     sliderMaxValue,
   };
 
-  const sharedProps = { filters, handleClearSearch, handleClearPriceRange };
+  const sharedProps = { filters, handleClearSearch, handleClearPriceRange, onUpdateFilters };
 
   // Mobile only mode - render buttons + inline sort + active chips
   if (mobileOnly) {
