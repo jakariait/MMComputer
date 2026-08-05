@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import axios from 'axios';
 import useProductStore from '../../store/useProductStore.js';
 import useBrandStore from '../../store/useBrandStore.js';
 import useCategoryStore from '../../store/useCategoryStore.js';
@@ -89,18 +90,30 @@ const ViewAllProducts = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [isFiltering, setIsFiltering] = useState(false);
-  const [totalProducts, setTotalProducts] = useState(0);
+  const [allProductsCount, setAllProductsCount] = useState(0);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (filters.search || filters.brand || filters.category || filters.isActive || filters.stock) {
+      if (
+        filters.search ||
+        filters.brand ||
+        filters.category ||
+        filters.isActive ||
+        filters.stock
+      ) {
         setIsFiltering(true);
       } else {
         setIsFiltering(false);
       }
     }, 300);
     return () => clearTimeout(timeout);
-  }, [filters.search, filters.brand, filters.category, filters.isActive, filters.stock]);
+  }, [
+    filters.search,
+    filters.brand,
+    filters.category,
+    filters.isActive,
+    filters.stock,
+  ]);
 
   useEffect(() => {
     fetchBrands();
@@ -115,10 +128,19 @@ const ViewAllProducts = () => {
   }, [filters, fetchProductsAdmin]);
 
   useEffect(() => {
-    if (totalProductsAdmin > 0 && totalProducts === 0) {
-      setTotalProducts(totalProductsAdmin);
-    }
-  }, [totalProductsAdmin, totalProducts]);
+    const fetchTotalCount = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const response = await axios.get(
+          `${apiUrl}/getAllProductsAdmin?page=1&limit=1`,
+        );
+        setAllProductsCount(response.data.totalProducts || 0);
+      } catch (err) {
+        console.error('Failed to fetch total count', err);
+      }
+    };
+    fetchTotalCount();
+  }, []);
 
   useEffect(() => {
     setFilteredProducts(
@@ -189,8 +211,6 @@ const ViewAllProducts = () => {
     (currentPage - 1) * filters.limit + filteredProducts.length,
   );
 
-
-
   if (error) {
     return (
       <div className="p-6">
@@ -220,7 +240,7 @@ const ViewAllProducts = () => {
         <Card className="shadow-md border-0 border-l-4 border-l-[#00395d]">
           <CardContent className="p-4">
             <p className="text-3xl font-bold text-[#00395d]">
-              {totalProducts}
+              {allProductsCount}
             </p>
             <p className="text-sm text-muted-foreground">All Products</p>
           </CardContent>
@@ -260,11 +280,7 @@ const ViewAllProducts = () => {
                 Clear
               </Button>
             )}
-            <Button
-              size="sm"
-              onClick={handleSearch}
-              className="h-7 px-3"
-            >
+            <Button size="sm" onClick={handleSearch} className="h-7 px-3">
               Search
             </Button>
           </div>
@@ -361,7 +377,6 @@ const ViewAllProducts = () => {
           <div className="flex items-center justify-between px-4 py-3 border-b border-muted-foreground/10">
             <div>
               <h3 className="text-lg font-semibold">All Products</h3>
-
             </div>
           </div>
           <Table>
@@ -384,17 +399,39 @@ const ViewAllProducts = () => {
               {loading ? (
                 [...Array(filters.limit)].map((_, i) => (
                   <TableRow key={`skeleton-${i}`}>
-                    <TableCell><Skeleton className="h-4 w-8" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-12 w-12 rounded-lg" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                    <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-20" /></TableCell>
-                    <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-5 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-8 w-28" /></TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-8" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-16" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-12 w-12 rounded-lg" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-32" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-20" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-20" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-16" />
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <Skeleton className="h-4 w-20" />
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <Skeleton className="h-4 w-16" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-16" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-8 w-28" />
+                    </TableCell>
                   </TableRow>
                 ))
               ) : filteredProducts.length === 0 ? (
@@ -453,10 +490,12 @@ const ViewAllProducts = () => {
                         </div>
                       ) : (
                         <div>
-                          <p className="font-semibold">৳{product.finalPrice}</p>
-                          {product.finalDiscount > 0 && (
+                          <p className="font-semibold">
+                            ৳{product.finalDiscount}
+                          </p>
+                          {product.finalPrice > 0 && (
                             <p className="text-xs text-destructive line-through">
-                              ৳{product.finalDiscount}
+                              ৳{product.finalPrice}
                             </p>
                           )}
                         </div>
@@ -492,7 +531,7 @@ const ViewAllProducts = () => {
                           ))
                         ) : (
                           <span className="text-sm text-muted-foreground">
-                            \u2014
+                            No Flag
                           </span>
                         )}
                       </div>

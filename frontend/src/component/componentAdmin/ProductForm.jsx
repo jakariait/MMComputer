@@ -85,7 +85,9 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const [videoUrl, setVideoUrl] = useState('');
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
-  const [specifications, setSpecifications] = useState([{ title: '', labels: [{ label: '', value: '' }] }]);
+  const [specifications, setSpecifications] = useState([
+    { title: '', labels: [{ label: '', value: '' }] },
+  ]);
   const [metaKeywords, setMetaKeywords] = useState([]);
   const [keywordInput, setKeywordInput] = useState('');
   const [searchTags, setSearchTags] = useState([]);
@@ -146,8 +148,16 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   useEffect(() => {
     if (isEditMode && product) {
       setName(product.name || '');
-      setKeyFeatures(product.keyFeatures?.length ? product.keyFeatures : [{ key: '', value: '' }]);
-      setSpecifications(product.specifications?.length ? product.specifications : [{ title: '', labels: [{ label: '', value: '' }] }]);
+      setKeyFeatures(
+        product.keyFeatures?.length
+          ? product.keyFeatures
+          : [{ key: '', value: '' }],
+      );
+      setSpecifications(
+        product.specifications?.length
+          ? product.specifications
+          : [{ title: '', labels: [{ label: '', value: '' }] }],
+      );
       setLongDesc(product.longDesc || '');
       setProductCode(product.productCode || '');
       setRewardPoints(product.rewardPoints || '');
@@ -506,7 +516,10 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   };
 
   const handleAddSpecification = () => {
-    setSpecifications([...specifications, { title: '', labels: [{ label: '', value: '' }] }]);
+    setSpecifications([
+      ...specifications,
+      { title: '', labels: [{ label: '', value: '' }] },
+    ]);
   };
 
   const handleRemoveSpecification = (index) => {
@@ -563,8 +576,16 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     setSubmitting(true);
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('keyFeatures', JSON.stringify(keyFeatures.filter(kf => kf.key.trim() && kf.value.trim())));
-    formData.append('specifications', JSON.stringify(specifications.filter(s => s.title.trim())));
+    formData.append(
+      'keyFeatures',
+      JSON.stringify(
+        keyFeatures.filter((kf) => kf.key.trim() && kf.value.trim()),
+      ),
+    );
+    formData.append(
+      'specifications',
+      JSON.stringify(specifications.filter((s) => s.title.trim())),
+    );
     formData.append('longDesc', longDesc);
     formData.append('productCode', productCode);
     formData.append('rewardPoints', rewardPoints);
@@ -745,7 +766,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-hidden">
       <SectionHeader
         title={`${isEditMode ? 'Update Product' : 'Add New Product'}`}
       />
@@ -784,14 +805,22 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                           aria-label={`Feature key ${index + 1}`}
                           placeholder="Key"
                           value={feature.key}
-                          onChange={(e) => handleKeyFeatureChange(index, 'key', e.target.value)}
+                          onChange={(e) =>
+                            handleKeyFeatureChange(index, 'key', e.target.value)
+                          }
                           className="flex-1"
                         />
                         <Input
                           aria-label={`Feature value ${index + 1}`}
                           placeholder="Value"
                           value={feature.value}
-                          onChange={(e) => handleKeyFeatureChange(index, 'value', e.target.value)}
+                          onChange={(e) =>
+                            handleKeyFeatureChange(
+                              index,
+                              'value',
+                              e.target.value,
+                            )
+                          }
                           className="flex-1"
                         />
                         <Button
@@ -842,7 +871,12 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                       <Input
                         placeholder="Specification Title"
                         value={spec.title}
-                        onChange={(e) => handleSpecificationTitleChange(specIndex, e.target.value)}
+                        onChange={(e) =>
+                          handleSpecificationTitleChange(
+                            specIndex,
+                            e.target.value,
+                          )
+                        }
                         className="flex-1"
                       />
                       <Button
@@ -858,24 +892,43 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     </div>
                     <div className="space-y-2 pl-6 border-l-2 border-muted">
                       {spec.labels.map((labelItem, labelIndex) => (
-                        <div key={labelIndex} className="flex items-center gap-2">
+                        <div
+                          key={labelIndex}
+                          className="flex items-center gap-2"
+                        >
                           <Input
                             placeholder="Label"
                             value={labelItem.label}
-                            onChange={(e) => handleSpecLabelChange(specIndex, labelIndex, 'label', e.target.value)}
+                            onChange={(e) =>
+                              handleSpecLabelChange(
+                                specIndex,
+                                labelIndex,
+                                'label',
+                                e.target.value,
+                              )
+                            }
                             className="flex-1"
                           />
                           <Input
                             placeholder="Value"
                             value={labelItem.value}
-                            onChange={(e) => handleSpecLabelChange(specIndex, labelIndex, 'value', e.target.value)}
+                            onChange={(e) =>
+                              handleSpecLabelChange(
+                                specIndex,
+                                labelIndex,
+                                'value',
+                                e.target.value,
+                              )
+                            }
                             className="flex-1"
                           />
                           <Button
                             type="button"
                             variant="ghost"
                             size="icon-xs"
-                            onClick={() => handleRemoveSpecLabel(specIndex, labelIndex)}
+                            onClick={() =>
+                              handleRemoveSpecLabel(specIndex, labelIndex)
+                            }
                             className="text-destructive hover:text-destructive shrink-0"
                             aria-label={`Remove label ${labelIndex + 1}`}
                           >
