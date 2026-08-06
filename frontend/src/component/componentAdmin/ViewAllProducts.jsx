@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { SearchableSelect } from '@/components/ui/searchable-select';
 import {
   Table,
   TableBody,
@@ -286,22 +287,14 @@ const ViewAllProducts = () => {
           </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:flex md:items-center md:justify-between gap-2 md:gap-3">
-          <Select
+          <SearchableSelect
             value={filters.brand}
             onValueChange={(value) => handleFilterChange('brand', value)}
-          >
-            <SelectTrigger className="w-full md:w-36 h-8 bg-background">
-              <SelectValue placeholder="All brands" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">All brands</SelectItem>
-              {brands.map((brand) => (
-                <SelectItem key={brand._id} value={brand.name}>
-                  {brand.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            placeholder="All brands"
+            searchPlaceholder="Search brands..."
+            options={brands.map((brand) => ({ value: brand.name, label: brand.name }))}
+            triggerClassName="w-full md:w-36 h-8 bg-background"
+          />
           <Select
             value={filters.category}
             onValueChange={(value) => handleFilterChange('category', value)}
@@ -465,12 +458,12 @@ const ViewAllProducts = () => {
                     <TableCell>{product?.name}</TableCell>
                     <TableCell>
                       <Badge variant="outline">
-                        {product.category?.name || '\u2014'}
+                        {product.category?.name || 'No Category'}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary">
-                        {product.brand?.name || '\u2014'}
+                        {product.brand?.name || 'No Brand'}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -491,9 +484,9 @@ const ViewAllProducts = () => {
                       ) : (
                         <div>
                           <p className="font-semibold">
-                            ৳{product.finalDiscount}
+                            ৳{product.finalDiscount > 0 ? product.finalDiscount : product.finalPrice}
                           </p>
-                          {product.finalPrice > 0 && (
+                          {product.finalDiscount > 0 && product.finalPrice > 0 && (
                             <p className="text-xs text-destructive line-through">
                               ৳{product.finalPrice}
                             </p>

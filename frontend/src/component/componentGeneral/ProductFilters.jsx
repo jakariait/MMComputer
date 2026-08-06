@@ -538,12 +538,12 @@ const ProductFilters = ({
             <button
               onClick={() => setDrawerOpen(true)}
               aria-label="Open filters"
-              className="flex items-center gap-2 px-3 py-2 rounded-md bg-white hover:bg-gray-200 transition-colors cursor-pointer"
+              className="flex items-center gap-2 px-3 py-2 rounded-md bg-white hover:bg-gray-200/40 transition-colors cursor-pointer"
             >
               <SlidersHorizontal size={20} className="primaryTextColor" />
               <span className="text-sm font-medium">Filter</span>
             </button>
-            <div className="flex items-center gap-2 bg-white hover:bg-gray-200 px-3 py-1.5 rounded-md">
+            <div className="flex items-center gap-2 bg-white hover:bg-gray-200/40 px-3 py-1.5 rounded-md">
               <span className="text-sm font-medium  whitespace-nowrap">
                 Sort by:
               </span>

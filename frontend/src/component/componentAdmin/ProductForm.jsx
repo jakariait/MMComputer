@@ -568,6 +568,29 @@ const ProductForm = ({ isEdit: isEditMode }) => {
       validationErrors.images = 'At least one image is required.';
     }
 
+    if (!hasVariant) {
+      if (!finalPrice && finalPrice !== 0) {
+        validationErrors.finalPrice = 'Price is required.';
+      }
+      if (!finalStock && finalStock !== 0) {
+        validationErrors.finalStock = 'Stock is required.';
+      }
+    }
+
+    if (hasVariant) {
+      const hasIncompleteVariant = variants.some(
+        (v) =>
+          v.attributes.some((attr) => !attr.option || !attr.value) ||
+          !v.price ||
+          v.stock === '' ||
+          v.stock == null,
+      );
+      if (hasIncompleteVariant) {
+        validationErrors.variants =
+          'Please complete all variant fields (attributes, price, and stock).';
+      }
+    }
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -1080,6 +1103,11 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                       onChange={handleFinalPriceChange}
                       required={!hasVariant}
                     />
+                    {errors.finalPrice && (
+                      <p role="alert" className="text-xs text-destructive">
+                        {errors.finalPrice}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="finalDiscount">Discount Price</Label>
@@ -1101,6 +1129,11 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                       onChange={handleFinalStockChange}
                       required={!hasVariant}
                     />
+                    {errors.finalStock && (
+                      <p role="alert" className="text-xs text-destructive">
+                        {errors.finalStock}
+                      </p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -1649,6 +1682,11 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                 <p className="text-center text-sm text-destructive">
                   Product Variant (Insert the Base Variant First)
                 </p>
+                {errors.variants && (
+                  <p role="alert" className="text-center text-sm text-destructive">
+                    {errors.variants}
+                  </p>
+                )}
 
                 <div className="overflow-x-auto">
                   <Table>

@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Upload, Trash2, Loader2, Link, ExternalLink, Pencil } from 'lucide-react';
+import {
+  Upload,
+  Trash2,
+  Loader2,
+  Link,
+  ExternalLink,
+  Pencil,
+} from 'lucide-react';
 import ImageComponent from '../componentGeneral/ImageComponent.jsx';
 import useAuthAdminStore from '../../store/AuthAdminStore.js';
 import { Input } from '@/components/ui/input';
@@ -133,7 +140,7 @@ const CarouselUpload = () => {
         Manage Slider Images
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="flex flex-col gap-6">
         {SLOTS.map((slot) => {
           const slotImages = getImagesForSlot(slot.key);
           const isUploading = uploadingSlot === slot.key;
@@ -285,9 +292,7 @@ const CarouselUpload = () => {
             <Button variant="outline" onClick={() => setEditingLink(null)}>
               Cancel
             </Button>
-            <Button onClick={() => handleUpdateLink(editingLink)}>
-              Save
-            </Button>
+            <Button onClick={() => handleUpdateLink(editingLink)}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
