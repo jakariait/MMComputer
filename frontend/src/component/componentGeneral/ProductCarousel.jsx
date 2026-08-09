@@ -147,7 +147,7 @@ const ProductCarousel = () => {
 
   return (
     <section className="w-full bg-gray-50">
-      <div className="xl:containter xl:mx-auto ">
+      <div className="xl:container xl:mx-auto ">
         {CarouselStoreListLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3">
             <div className="md:col-span-2">

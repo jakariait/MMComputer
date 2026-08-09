@@ -316,6 +316,8 @@ const PcBuilderAddProduct = ({
             buildOverrides={{ isInBuild: isSelected, onToggle: toggleProduct }}
             showBuildButton
             showKeyFeatures={true}
+            showBuyNow={false}
+            showAddToCart={false}
           />
         )}
 
