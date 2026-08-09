@@ -62,7 +62,7 @@ const HeaderSearch = ({ fullSize }) => {
   return (
     <div ref={containerRef} className="relative flex items-center">
       {fullSize ? (
-        <div className="flex items-center w-150 rounded bg-white/90">
+        <div className="flex items-center w-110 rounded bg-white/90">
           <button
             onClick={handleSearch}
             className="flex-shrink-0 p-1.5 cursor-pointer transition-colors"
