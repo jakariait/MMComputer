@@ -163,9 +163,7 @@ const ProductList = ({
       ) : (
         <div
           className={
-            productPage
-              ? 'grid grid-cols-1 gap-3 mt-4'
-              : gridClassName
+            productPage ? 'grid grid-cols-1 gap-3 mt-4' : gridClassName
           }
         >
           {/*Product Display Section*/}
@@ -315,7 +313,7 @@ const ProductList = ({
                 key={product._id || product.slug}
                 className="relative shadow-sm rounded-md pb-2 flex flex-col"
               >
-                <div className="relative">
+                <div className="relative aspect-square">
                   <Link to={`/product/${product.slug}`}>
                     <ImageComponent
                       imageName={product.thumbnailImage || product.images?.[0]}
@@ -334,7 +332,7 @@ const ProductList = ({
                   ) : null}
                 </div>
                 <Link to={`/product/${product.slug}`}>
-                  <div className="px-2  mt-2 mb-1 font-medium hover:underline">
+                  <div className="px-2  mt-2 mb-5 font-medium hover:underline">
                     {product.name}
                   </div>
                 </Link>
@@ -349,7 +347,7 @@ const ProductList = ({
                   </ul>
                 )}
 
-                <div className="flex  md:flex-row flex-col items-center gap-2 justify-center mt-auto">
+                <div className="flex  md:flex-row flex-col px-3 gap-2  mt-auto">
                   {/*Base Price*/}
                   {product.variants?.length ? (
                     product.variants[0]?.discount > 0 ? (

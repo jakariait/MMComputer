@@ -169,7 +169,7 @@ const Headers = () => {
             <Link to="/">
               <ImageComponent
                 imageName={GeneralInfoList?.PrimaryLogo}
-                className="w-30 h-10"
+                className="w-60"
                 altName={GeneralInfoList?.CompanyName}
                 skeletonHeight={'10'}
               />

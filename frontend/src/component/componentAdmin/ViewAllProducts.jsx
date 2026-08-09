@@ -3,6 +3,7 @@ import axios from 'axios';
 import useProductStore from '../../store/useProductStore.js';
 import useBrandStore from '../../store/useBrandStore.js';
 import useCategoryStore from '../../store/useCategoryStore.js';
+import useFlagStore from '../../store/useFlagStore.js';
 import ImageComponent from '../componentGeneral/ImageComponent.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import RequirePermission from './RequirePermission.jsx';
@@ -71,6 +72,7 @@ const ViewAllProducts = () => {
 
   const { brands, fetchBrands } = useBrandStore();
   const { categories, fetchCategories } = useCategoryStore();
+  const { flags, fetchFlags } = useFlagStore();
 
   const navigate = useNavigate();
 
@@ -80,6 +82,7 @@ const ViewAllProducts = () => {
     search: '',
     brand: '',
     category: '',
+    flags: '',
     isActive: '',
     stock: '',
   });
@@ -99,6 +102,7 @@ const ViewAllProducts = () => {
         filters.search ||
         filters.brand ||
         filters.category ||
+        filters.flags ||
         filters.isActive ||
         filters.stock
       ) {
@@ -112,6 +116,7 @@ const ViewAllProducts = () => {
     filters.search,
     filters.brand,
     filters.category,
+    filters.flags,
     filters.isActive,
     filters.stock,
   ]);
@@ -123,6 +128,10 @@ const ViewAllProducts = () => {
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
+
+  useEffect(() => {
+    fetchFlags();
+  }, [fetchFlags]);
 
   useEffect(() => {
     fetchProductsAdmin(filters);
@@ -307,6 +316,22 @@ const ViewAllProducts = () => {
               {categories.map((category) => (
                 <SelectItem key={category._id} value={category.name}>
                   {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={filters.flags}
+            onValueChange={(value) => handleFilterChange('flags', value)}
+          >
+            <SelectTrigger className="w-full md:w-32 h-8 bg-background">
+              <SelectValue placeholder="All flags" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All flags</SelectItem>
+              {flags.map((flag) => (
+                <SelectItem key={flag._id} value={flag.name}>
+                  {flag.name}
                 </SelectItem>
               ))}
             </SelectContent>
