@@ -1,17 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { FormControl } from '@/components/ui/form-control';
-import { InputLabel } from '@/components/ui/input-label';
 import { MenuItem } from '@/components/ui/menu-item';
 import { Select } from '@/components/ui/legacy-select';
 import { Typography } from '@/components/ui/typography';
 import { Drawer } from '@/components/ui/drawer';
 import { IconButton } from '@/components/ui/icon-button';
-import {
-  X as CloseIcon,
-  ArrowDownWideNarrow,
-  SlidersHorizontal,
-  Search,
-} from 'lucide-react';
+import { X as CloseIcon, SlidersHorizontal, Search } from 'lucide-react';
 
 const PRICE_SLIDER_MIN = 0;
 const PRICE_SLIDER_MAX = 500000;
@@ -39,30 +32,32 @@ const FilterContent = ({
 }) => (
   <div className="flex flex-col">
     {/* Search */}
-    <div className="relative pb-4 border-b border-gray-200">
-      <Search
-        size={18}
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-      />
-      <label htmlFor="filter-search" className="sr-only">
-        Search products
-      </label>
-      <input
-        id="filter-search"
-        placeholder="Search products..."
-        value={searchInput}
-        onChange={handleSearchChange}
-        className="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-8 py-1 text-sm outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
-      />
-      {searchInput && (
-        <button
-          onClick={handleClearSearch}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-          aria-label="Clear search"
-        >
-          <CloseIcon size={16} />
-        </button>
-      )}
+    <div className="pb-4 border-b border-gray-200">
+      <div className="relative">
+        <Search
+          size={18}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        />
+        <label htmlFor="filter-search" className="sr-only">
+          Search products
+        </label>
+        <input
+          id="filter-search"
+          placeholder="Search products..."
+          value={searchInput}
+          onChange={handleSearchChange}
+          className="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-8 py-1 text-sm outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
+        />
+        {searchInput && (
+          <button
+            onClick={handleClearSearch}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            aria-label="Clear search"
+          >
+            <CloseIcon size={16} />
+          </button>
+        )}
+      </div>
     </div>
 
     {/* Category */}
@@ -387,7 +382,17 @@ const ProductFilters = ({
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    onUpdateFilters({ ...filters, [name]: value, page: 1 });
+    if (name === 'category') {
+      onUpdateFilters({
+        ...filters,
+        category: value,
+        subcategory: '',
+        childCategory: '',
+        page: 1,
+      });
+    } else {
+      onUpdateFilters({ ...filters, [name]: value, page: 1 });
+    }
     setDrawerOpen(false);
   };
 

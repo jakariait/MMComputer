@@ -152,7 +152,7 @@ const Product = () => {
   }
 
   return (
-    <section className={'bg-gray-300/10'}>
+    <section className={'bg-gray-300/10 '}>
       <div className="xl:container xl:mx-auto px-6 py-5 ">
         <div className="flex gap-6">
           {/* Sidebar Filters - xl+ */}
@@ -182,13 +182,13 @@ const Product = () => {
 
             {/* Product List */}
             {(products || []).length === 0 ? (
-              <div className="text-center py-20">
+              <div className="text-center py-20 md:py-100">
                 <Typography variant="h6" className="text-gray-500 mb-4">
                   {currentFilters.search
                     ? `No products found for "${currentFilters.search}"`
                     : 'No products found'}
                 </Typography>
-                <Typography variant="body2" className="text-gray-400">
+                <Typography variant="body2" className="text-gray-400 pl-2">
                   {currentFilters.search
                     ? 'Try a different search term or adjust your filters'
                     : 'Try adjusting your filters or search criteria'}
