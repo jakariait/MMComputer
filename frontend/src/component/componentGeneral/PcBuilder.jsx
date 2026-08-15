@@ -362,10 +362,10 @@ const PcBuilder = () => {
               <span className="text-xs font-medium uppercase tracking-[0.25em] primaryTextColor">
                 Configuration Console
               </span>
-              <h1 className="mt-2 text-3xl font-bold tracking-tight secondaryTextColor sm:text-4xl">
+              <h1 className="mt-2 md:text-2xl font-bold tracking-tight secondaryTextColor text-xl">
                 PC Builder
               </h1>
-              <p className="mt-2 max-w-md text-base leading-relaxed text-gray-500">
+              <p className="mt-2 max-w-md text-sm leading-relaxed text-gray-500">
                 Assemble a compatible rig, slot by slot — pick your core
                 hardware first, then round it out with peripherals.
               </p>
@@ -376,7 +376,7 @@ const PcBuilder = () => {
                 <p className="text-[11px] uppercase tracking-widest text-gray-400">
                   Items
                 </p>
-                <p className="mt-1 text-2xl font-bold secondaryTextColor">
+                <p className="mt-1 text-lg font-bold secondaryTextColor">
                   {totalItems}
                 </p>
               </div>
@@ -384,7 +384,7 @@ const PcBuilder = () => {
                 <p className="text-[11px] uppercase tracking-widest primaryTextColor">
                   Total
                 </p>
-                <p className="mt-1 text-2xl font-bold primaryTextColor">
+                <p className="mt-1 text-lg font-bold primaryTextColor">
                   ৳{formatPrice(totalPrice)}
                 </p>
               </div>
@@ -428,7 +428,7 @@ const PcBuilder = () => {
 
           {/* Progress trace */}
           <div className="mt-8">
-            <div className="mb-2 flex items-center justify-between text-sm">
+            <div className="mb-2 flex items-center justify-between text-xs">
               <span className="uppercase tracking-widest text-gray-500">
                 Required Components&nbsp;
                 <span className="secondaryTextColor">
@@ -461,7 +461,7 @@ const PcBuilder = () => {
           return (
             <div key={group} className="mt-10">
               <div className="mb-4 flex items-center gap-3">
-                <h2 className="text-lg font-bold uppercase tracking-wider secondaryTextColor">
+                <h2 className="md:text-base font-bold uppercase tracking-wider secondaryTextColor">
                   {group}
                 </h2>
                 <div className="h-px flex-1 bg-gray-200" />
@@ -496,7 +496,7 @@ const PcBuilder = () => {
 
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-lg font-semibold secondaryTextColor">
+                            <span className="md:text-base font-medium secondaryTextColor">
                               {slot.name}
                             </span>
                             {slot.required ? (
@@ -522,13 +522,13 @@ const PcBuilder = () => {
                               </div>
                               <Link
                                 to={`/product/${selected.slug}`}
-                                className="truncate text-base text-gray-600 transition-colors hover:primaryTextColor"
+                                className="truncate text-sm text-gray-600 transition-colors hover:primaryTextColor"
                               >
                                 {selected.name}
                               </Link>
                             </div>
                           ) : (
-                            <p className="mt-1.5 text-sm text-gray-400">
+                            <p className="mt-1.5 text-xs text-gray-400">
                               No component selected yet
                             </p>
                           )}
@@ -537,7 +537,7 @@ const PcBuilder = () => {
                         <div className="flex w-full shrink-0 items-center gap-3 sm:w-auto sm:justify-end">
                           {selected ? (
                             <>
-                              <span className="text-xl font-bold primaryTextColor">
+                              <span className="md:text-lg font-bold primaryTextColor">
                                 ৳{formatPrice(selected.finalPrice)}
                               </span>
                               {slot.link && (
@@ -559,7 +559,7 @@ const PcBuilder = () => {
                           ) : (
                             <Link
                               to={slot.link}
-                              className="flex items-center gap-2 border primaryBorderColor primaryBgColor px-4 py-2.5 text-base font-semibold text-white transition-colors hover:bg-[var(--primaryColor)]/90"
+                              className="flex items-center gap-2 border primaryBorderColor primaryBgColor px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--primaryColor)]/90"
                             >
                               <Plus className="size-4" />
                               Choose
@@ -579,10 +579,10 @@ const PcBuilder = () => {
         {build.length > 0 && (
           <div className="mt-12 border-t border-gray-200 pt-8">
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <h2 className="flex items-center gap-2.5 text-xl font-bold secondaryTextColor">
-                <ShoppingCart className="size-6 primaryTextColor" />
+              <h2 className="flex items-center gap-2.5 text-lg font-bold secondaryTextColor">
+                <ShoppingCart className="size-5 primaryTextColor" />
                 Your Build
-                <span className="text-base font-normal text-gray-400">
+                <span className="text-sm font-normal text-gray-400">
                   ({build.length} items)
                 </span>
               </h2>
@@ -590,12 +590,12 @@ const PcBuilder = () => {
                 <button
                   onClick={handleAddAllToCart}
                   disabled={build.length === 0 || addingToCart}
-                  className="flex items-center gap-2 border primaryBorderColor primaryBgColor px-4 py-2.5 text-base font-semibold text-white transition-colors hover:bg-[var(--primaryColor)]/90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="flex items-center gap-2 border primaryBorderColor primaryBgColor px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--primaryColor)]/90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <ShoppingBag className="size-4" />
                   {addingToCart ? 'Adding…' : 'Add to Cart'}
                 </button>
-                <span className="text-2xl font-bold primaryTextColor">
+                <span className="text-lg font-bold primaryTextColor">
                   ৳{formatPrice(totalPrice)}
                 </span>
               </div>
@@ -618,13 +618,13 @@ const PcBuilder = () => {
                   <div className="min-w-0 flex-1">
                     <Link
                       to={`/product/${item.slug}`}
-                      className="block truncate text-base font-medium text-gray-800 transition-colors hover:primaryTextColor"
+                      className="block truncate text-sm font-medium text-gray-800 transition-colors hover:primaryTextColor"
                     >
                       {item.name}
                     </Link>
-                    <p className="text-sm text-gray-400">{item.category}</p>
+                    <p className="text-xs text-gray-400">{item.category}</p>
                   </div>
-                  <p className="shrink-0 text-base font-bold primaryTextColor">
+                  <p className="shrink-0 text-sm font-bold primaryTextColor">
                     ৳{formatPrice(item.finalPrice)}
                   </p>
                   <button
