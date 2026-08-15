@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { MenuItem } from '@/components/ui/menu-item';
 import { Select } from '@/components/ui/legacy-select';
 import { Typography } from '@/components/ui/typography';
@@ -29,6 +29,7 @@ const FilterContent = ({
   priceSlider,
   sliderMinValue,
   sliderMaxValue,
+  hideCategory = false,
 }) => (
   <div className="flex flex-col">
     {/* Search */}
@@ -61,25 +62,27 @@ const FilterContent = ({
     </div>
 
     {/* Category */}
-    <div className="py-3 border-b border-gray-200">
-      <label className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-1.5 block">
-        Category
-      </label>
-      <Select
-        name="category"
-        value={filters.category}
-        onChange={handleFilterChange}
-      >
-        <MenuItem value="">
-          <em>All Categories</em>
-        </MenuItem>
-        {categories.map((cat) => (
-          <MenuItem key={cat._id} value={cat.name}>
-            {cat.name}
+    {!hideCategory && (
+      <div className="py-3 border-b border-gray-200">
+        <label className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-1.5 block">
+          Category
+        </label>
+        <Select
+          name="category"
+          value={filters.category}
+          onChange={handleFilterChange}
+        >
+          <MenuItem value="">
+            <em>All Categories</em>
           </MenuItem>
-        ))}
-      </Select>
-    </div>
+          {categories.map((cat) => (
+            <MenuItem key={cat._id} value={cat.name}>
+              {cat.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </div>
+    )}
 
     {/* Flag */}
     <div className="py-3 border-b border-gray-200">
@@ -219,10 +222,11 @@ const ActiveChips = ({
   handleClearSearch,
   handleClearPriceRange,
   onUpdateFilters,
+  hideCategory = false,
 }) => {
   const hasFilters =
     filters.search ||
-    filters.category ||
+    (filters.category && !hideCategory) ||
     filters.flags ||
     filters.brand ||
     filters.stock !== '' ||
@@ -250,7 +254,7 @@ const ActiveChips = ({
           </button>
         </div>
       )}
-      {filters.category && (
+      {filters.category && !hideCategory && (
         <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
           Category: {filters.category}
           <button
@@ -335,8 +339,10 @@ const ProductFilters = ({
   categories = [],
   flags = [],
   brands = [],
+  products,
   onUpdateFilters,
   mobileOnly = false,
+  hideCategory = false,
 }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchInput, setSearchInput] = useState('');
@@ -364,6 +370,17 @@ const ProductFilters = ({
   }, []);
 
   const activeFlags = flags.filter((flag) => flag.isActive);
+
+  const availableBrands = useMemo(() => {
+    if (!Array.isArray(products)) return brands;
+    const map = new Map();
+    products.forEach((p) => {
+      if (p.brand?._id && p.brand?.name && !map.has(p.brand._id)) {
+        map.set(p.brand._id, p.brand);
+      }
+    });
+    return map.size > 0 ? Array.from(map.values()) : brands;
+  }, [products, brands]);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -510,7 +527,7 @@ const ProductFilters = ({
     filters,
     categories,
     activeFlags,
-    brands,
+    brands: availableBrands,
     searchInput,
     handleSearchChange,
     handleClearSearch,
@@ -525,6 +542,7 @@ const ProductFilters = ({
     priceSlider,
     sliderMinValue,
     sliderMaxValue,
+    hideCategory,
   };
 
   const sharedProps = {
@@ -532,6 +550,7 @@ const ProductFilters = ({
     handleClearSearch,
     handleClearPriceRange,
     onUpdateFilters,
+    hideCategory,
   };
 
   // Mobile only mode - render buttons + inline sort + active chips

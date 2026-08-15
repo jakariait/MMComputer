@@ -163,6 +163,7 @@ const Product = () => {
                 categories={memoizedCategories}
                 flags={memoizedFlags}
                 brands={memoizedBrands}
+                products={products}
                 onUpdateFilters={updateFilters}
               />
             </div>
@@ -176,6 +177,7 @@ const Product = () => {
               categories={memoizedCategories}
               flags={memoizedFlags}
               brands={memoizedBrands}
+              products={products}
               onUpdateFilters={updateFilters}
               mobileOnly
             />
