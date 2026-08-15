@@ -478,6 +478,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   };
 
   const handleCategoryChange = (value) => {
+    if (!value) return;
     setSelectedCategory(value);
     setSelectedSubCategory('');
     setSelectedChildCategory('');
@@ -486,12 +487,14 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   };
 
   const handleSubCategoryChange = (value) => {
+    if (!value) return;
     setSelectedSubCategory(value);
     setSelectedChildCategory('');
     setSavedChildCategory(null);
   };
 
   const handleChildCategoryChange = (value) => {
+    if (!value) return;
     setSelectedChildCategory(value);
   };
 
