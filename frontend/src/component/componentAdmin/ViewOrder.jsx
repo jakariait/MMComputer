@@ -316,7 +316,7 @@ const ViewOrder = () => {
           <div id="firstRow" className="flex items-center justify-between mb-6">
             <h1 className="text-2xl ">{GeneralInfoList?.CompanyName ?? ''}</h1>
             <ImageComponent
-              imageName={GeneralInfoList?.PrimaryLogo}
+              imageName={GeneralInfoList?.SecondaryLogo}
               className="w-30"
             />
             <div className="text-2xl ">Invoice</div>
