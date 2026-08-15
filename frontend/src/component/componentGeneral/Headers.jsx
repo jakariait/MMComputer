@@ -62,6 +62,18 @@ const Headers = () => {
 `;
 
   useEffect(() => {
+    if (isCartOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isCartOpen]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       // Close mobile menu
       if (
@@ -386,7 +398,7 @@ const Headers = () => {
           {/* Slide-In Cart from Right */}
           <div
             ref={cartMenuRef}
-            className="fixed top-0 right-0 h-full w-[350px] bg-white shadow-lg transition-transform duration-300 ease-in-out"
+            className="fixed top-0 right-0 h-full w-[85%] sm:w-[350px] bg-white shadow-lg transition-transform duration-300 ease-in-out"
             onKeyDown={(e) => {
               if (e.key === 'Escape') closeCart();
             }}

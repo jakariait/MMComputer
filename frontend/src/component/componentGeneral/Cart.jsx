@@ -5,7 +5,7 @@ import { FaTrash } from 'react-icons/fa';
 import ImageComponent from './ImageComponent.jsx';
 import { FiMinus } from 'react-icons/fi';
 import { FaPlus } from 'react-icons/fa6';
-import emptyCart from '../../assets/empty_cart.png';
+import { ShoppingCart } from 'lucide-react';
 
 const Cart = ({ onCloseCartMenu }) => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCartStore();
@@ -27,11 +27,14 @@ const Cart = ({ onCloseCartMenu }) => {
   // console.table(cart);
 
   return (
-    <div className="py-3">
+    <div className="py-3 h-full">
       {(cart || []).length === 0 ? (
-        <div className="flex items-center justify-center h-[800px] p-4">
-          <div className="flex flex-col items-center text-center">
-            <img src={emptyCart} alt="Empty Cart" className="w-48 h-auto" />
+        <div className="flex items-center justify-center h-full p-4">
+          <div className="flex flex-col gap-5 items-center text-center">
+            <ShoppingCart
+              className="w-24 h-24 primaryTextColor "
+              aria-hidden="true"
+            />
             <p>There are no more items in your cart!</p>
 
             <Link
