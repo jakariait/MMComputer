@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const API_URL = process.env.VITE_API_URL;
-const FRONTEND_URL = 'https://server.mmcomputerbd.com';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://mmcomputerbd.com';
 
 const generateRobotsTxt = () => {
   const robotsTxt = `User-agent: *
@@ -56,8 +56,7 @@ const generateSitemap = async () => {
       }
       const restResponses = await Promise.all(remainingPages);
       for (const res of restResponses) {
-        const pageData =
-          res.data?.products || res.data?.data || res.data || [];
+        const pageData = res.data?.products || res.data?.data || res.data || [];
         if (Array.isArray(pageData)) {
           products.push(...pageData);
         }

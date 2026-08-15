@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
-Sitemap: https://server.mmcomputerbd.com/sitemap.xml
+Sitemap: http://localhost:5173/sitemap.xml
