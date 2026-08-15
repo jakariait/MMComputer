@@ -65,6 +65,21 @@ const OrderProgress = ({ status }) => {
     }
   };
 
+  const getStatusHexColor = (step) => {
+    switch (step) {
+      case 'pending':
+        return '#f97316';
+      case 'approved':
+        return '#3b82f6';
+      case 'intransit':
+        return '#a855f7';
+      case 'delivered':
+        return '#22c55e';
+      default:
+        return '#9ca3af';
+    }
+  };
+
   return (
     <div className="mt-6 px-4 py-6 bg-gray-50 rounded-lg">
       <h4 className="text-lg font-semibold mb-6">Order Progress</h4>
@@ -73,12 +88,12 @@ const OrderProgress = ({ status }) => {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-3">
           <div className="flex-1">
-            <div className="w-full primaryBgColor rounded-full h-2">
+            <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="h-2 rounded-full transition-all duration-500"
                 style={{
                   width: `${progressPercentage}%`,
-                  backgroundColor: getStatusColor(status),
+                  backgroundColor: getStatusHexColor(status),
                 }}
               />
             </div>
@@ -135,9 +150,7 @@ const OrderProgress = ({ status }) => {
         <div
           className="mt-6 p-3 bg-white rounded-lg border-l-4"
           style={{
-            borderLeftColor:
-              getStatusColor(status).replace('bg-', '#').split('-')[0] ||
-              '#666',
+            borderLeftColor: getStatusHexColor(status),
           }}
         >
           <p className="text-sm">
