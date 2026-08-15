@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { MenuItem } from '@/components/ui/menu-item';
 import { Select } from '@/components/ui/legacy-select';
 import { Typography } from '@/components/ui/typography';
@@ -339,7 +339,6 @@ const ProductFilters = ({
   categories = [],
   flags = [],
   brands = [],
-  products,
   onUpdateFilters,
   mobileOnly = false,
   hideCategory = false,
@@ -370,17 +369,6 @@ const ProductFilters = ({
   }, []);
 
   const activeFlags = flags.filter((flag) => flag.isActive);
-
-  const availableBrands = useMemo(() => {
-    if (!Array.isArray(products)) return brands;
-    const map = new Map();
-    products.forEach((p) => {
-      if (p.brand?._id && p.brand?.name && !map.has(p.brand._id)) {
-        map.set(p.brand._id, p.brand);
-      }
-    });
-    return map.size > 0 ? Array.from(map.values()) : brands;
-  }, [products, brands]);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -527,7 +515,7 @@ const ProductFilters = ({
     filters,
     categories,
     activeFlags,
-    brands: availableBrands,
+    brands,
     searchInput,
     handleSearchChange,
     handleClearSearch,

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, lazy } from 'react';
+import React, { useRef, useState, useEffect, useMemo, lazy } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useCategoryStore from '../../store/useCategoryStore.js';
 import useSubCategoryStore from '../../store/useSubCategoryStore.js';
@@ -55,13 +55,18 @@ import {
 import axios from 'axios';
 import { SectionHeader } from '#component/componentAdmin/SectionHeader.jsx';
 
+const getRefId = (ref) => {
+  if (!ref) return null;
+  return typeof ref === 'object' ? ref._id : ref;
+};
+
 const ProductForm = ({ isEdit: isEditMode }) => {
   const { slug } = useParams();
 
   const { fetchProductBySlug, product } = useProductStore();
-  const { categories } = useCategoryStore();
-  const { subCategories } = useSubCategoryStore();
-  const { childCategories } = useChildCategoryStore();
+  const { categories, fetchCategories } = useCategoryStore();
+  const { subCategories, fetchSubCategories } = useSubCategoryStore();
+  const { childCategories, fetchChildCategories } = useChildCategoryStore();
   const { flags, fetchFlags } = useFlagStore();
   const { productOptions, fetchProductOptions } = useProductOptionStore();
   const { brands, fetchBrands } = useBrandStore();
@@ -78,10 +83,10 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const [brandSearch, setBrandSearch] = useState('');
   const [brandOpen, setBrandOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [filteredSubCategories, setFilteredSubCategories] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
-  const [filteredChildCategories, setFilteredChildCategories] = useState([]);
   const [selectedChildCategory, setSelectedChildCategory] = useState('');
+  const [savedSubCategory, setSavedSubCategory] = useState(null);
+  const [savedChildCategory, setSavedChildCategory] = useState(null);
   const [videoUrl, setVideoUrl] = useState('');
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
@@ -136,6 +141,9 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     fetchProductOptions();
     fetchBrands();
     fetchFlags();
+    if (!categories.length) fetchCategories();
+    if (!subCategories.length) fetchSubCategories();
+    if (!childCategories.length) fetchChildCategories();
   }, [
     isEditMode,
     slug,
@@ -143,6 +151,12 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     fetchProductOptions,
     fetchBrands,
     fetchFlags,
+    categories.length,
+    subCategories.length,
+    childCategories.length,
+    fetchCategories,
+    fetchSubCategories,
+    fetchChildCategories,
   ]);
 
   useEffect(() => {
@@ -211,26 +225,74 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   }, [product, isEditMode, apiUrl]);
 
   useEffect(() => {
-    if (isEditMode && product && product.category) {
-      setSelectedCategory(product.category._id);
-      const filteredSubs = subCategories.filter(
-        (sub) => sub?.category?._id === product.category._id,
-      );
-      setFilteredSubCategories(filteredSubs);
-
-      if (product.subCategory) {
-        setSelectedSubCategory(product.subCategory._id);
-        const filteredChilds = childCategories.filter(
-          (child) => child?.subCategory?._id === product.subCategory._id,
-        );
-        setFilteredChildCategories(filteredChilds);
-
-        if (product.childCategory) {
-          setSelectedChildCategory(product.childCategory._id);
-        }
-      }
+    if (isEditMode && product) {
+      setSelectedCategory(product.category?._id || '');
+      setSelectedSubCategory(product.subCategory?._id || '');
+      setSelectedChildCategory(product.childCategory?._id || '');
+      setSavedSubCategory(product.subCategory || null);
+      setSavedChildCategory(product.childCategory || null);
     }
-  }, [product, subCategories, childCategories, isEditMode]);
+  }, [product, isEditMode]);
+
+  const subCategoryOptions = useMemo(() => {
+    const base = selectedCategory
+      ? subCategories.filter(
+          (sub) =>
+            String(getRefId(sub?.category)) === String(selectedCategory),
+        )
+      : [];
+    const unique = new Map(base.map((sub) => [sub._id, sub]));
+    if (savedSubCategory?._id) {
+      unique.set(savedSubCategory._id, savedSubCategory);
+    }
+    return Array.from(unique.values());
+  }, [subCategories, selectedCategory, savedSubCategory]);
+
+  const selectedSubCategoryObj =
+    savedSubCategory ||
+    subCategories.find((sub) => sub._id === selectedSubCategory) ||
+    null;
+
+  const childCategoryOptions = useMemo(() => {
+    const idMatches = selectedSubCategory
+      ? childCategories.filter(
+          (child) =>
+            String(getRefId(child?.subCategory)) ===
+            String(selectedSubCategory),
+        )
+      : [];
+
+    if (idMatches.length > 0) {
+      const unique = new Map(idMatches.map((child) => [child._id, child]));
+      if (savedChildCategory?._id) {
+        unique.set(savedChildCategory._id, savedChildCategory);
+      }
+      return Array.from(unique.values());
+    }
+
+    // Some subcategories are duplicated with different _ids but the same name,
+    // and child categories may reference the duplicate _id. Fall back to
+    // matching by name so the child categories still show reliably.
+    if (selectedSubCategoryObj?.name) {
+      const nameMatches = childCategories.filter(
+        (child) =>
+          child?.subCategory?.name &&
+          String(child.subCategory.name) === String(selectedSubCategoryObj.name),
+      );
+      if (nameMatches.length > 0) return nameMatches;
+    }
+
+    const unique = new Map();
+    if (savedChildCategory?._id) {
+      unique.set(savedChildCategory._id, savedChildCategory);
+    }
+    return Array.from(unique.values());
+  }, [
+    childCategories,
+    selectedSubCategory,
+    selectedSubCategoryObj,
+    savedChildCategory,
+  ]);
 
   const handleToggle = () => {
     setHasVariant(!hasVariant);
@@ -418,29 +480,15 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const handleCategoryChange = (value) => {
     setSelectedCategory(value);
     setSelectedSubCategory('');
-    setFilteredSubCategories([]);
     setSelectedChildCategory('');
-    setFilteredChildCategories([]);
-
-    if (value) {
-      const filtered = subCategories.filter(
-        (sub) => sub?.category?._id === value,
-      );
-      setFilteredSubCategories(filtered);
-    }
+    setSavedSubCategory(null);
+    setSavedChildCategory(null);
   };
 
   const handleSubCategoryChange = (value) => {
     setSelectedSubCategory(value);
     setSelectedChildCategory('');
-    setFilteredChildCategories([]);
-
-    if (value) {
-      const filtered = childCategories.filter(
-        (child) => child?.subCategory?._id === value,
-      );
-      setFilteredChildCategories(filtered);
-    }
+    setSavedChildCategory(null);
   };
 
   const handleChildCategoryChange = (value) => {
@@ -792,6 +840,21 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     <div className="space-y-6 overflow-hidden">
       <SectionHeader
         title={`${isEditMode ? 'Update Product' : 'Add New Product'}`}
+        description={
+          isEditMode && product?.updatedAt
+            ? `Last updated: ${new Date(product.updatedAt).toLocaleDateString(
+                'en-US',
+                {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                },
+              )} at ${new Date(product.updatedAt).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}`
+            : undefined
+        }
       />
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -1247,16 +1310,16 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      {filteredSubCategories.length > 0 ? (
-                        filteredSubCategories.map((sub) => (
+                      {subCategoryOptions.length > 0 ? (
+                        subCategoryOptions.map((sub) => (
                           <SelectItem key={sub._id} value={sub._id}>
                             {sub.name}
                           </SelectItem>
                         ))
                       ) : (
-                        <SelectItem value="" disabled>
+                        <p className="px-2 py-1.5 text-sm text-muted-foreground">
                           No subcategories available
-                        </SelectItem>
+                        </p>
                       )}
                     </SelectContent>
                   </Select>
@@ -1279,16 +1342,16 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      {filteredChildCategories.length > 0 ? (
-                        filteredChildCategories.map((child) => (
+                      {childCategoryOptions.length > 0 ? (
+                        childCategoryOptions.map((child) => (
                           <SelectItem key={child._id} value={child._id}>
                             {child.name}
                           </SelectItem>
                         ))
                       ) : (
-                        <SelectItem value="" disabled>
+                        <p className="px-2 py-1.5 text-sm text-muted-foreground">
                           No child categories available
-                        </SelectItem>
+                        </p>
                       )}
                     </SelectContent>
                   </Select>
@@ -1683,7 +1746,10 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                   Product Variant (Insert the Base Variant First)
                 </p>
                 {errors.variants && (
-                  <p role="alert" className="text-center text-sm text-destructive">
+                  <p
+                    role="alert"
+                    className="text-center text-sm text-destructive"
+                  >
                     {errors.variants}
                   </p>
                 )}

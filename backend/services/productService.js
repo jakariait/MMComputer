@@ -125,176 +125,6 @@ const deleteProduct = async (productId) => {
 };
 
 // Get all products with pagination, filters, and sorting
-// const getAllProducts = async ({
-//   page = 1,
-//   limit = 10,
-//   sort,
-//   category,
-//   subcategory,
-//   childCategory,
-//   stock,
-//   flags,
-//   isActive,
-//   search, // <-- added
-// }) => {
-//   try {
-//     // Fetch category, subcategory, and childCategory independently
-//     const [categoryDoc, subCategoryDoc, childCategoryDoc, flagDocs] =
-//       await Promise.all([
-//         category
-//           ? CategoryModel.findOne({ name: category }).select("_id")
-//           : null,
-//         subcategory
-//           ? SubCategoryModel.findOne({
-//               slug: subcategory,
-//               isActive: true,
-//             }).select("_id")
-//           : null,
-//         childCategory
-//           ? ChildCategoryModel.findOne({
-//               slug: childCategory,
-//               isActive: true,
-//             }).select("_id")
-//           : null,
-//         flags
-//           ? FlagModel.find({
-//               name: { $in: flags.split(",") },
-//               isActive: true,
-//             }).select("_id")
-//           : [],
-//       ]);
-//
-//     // If any provided category, subcategory, or childCategory is invalid, return an empty result
-//     if (
-//       (category && !categoryDoc) ||
-//       (subcategory && !subCategoryDoc) ||
-//       (childCategory && !childCategoryDoc) ||
-//       (flags && flagDocs.length === 0)
-//     ) {
-//       return {
-//         products: [],
-//         totalProducts: 0,
-//         totalPages: 0,
-//         currentPage: page,
-//       };
-//     }
-//
-//     let query = {};
-//
-//     if (typeof isActive === "boolean") {
-//       query.isActive = isActive;
-//     }
-//
-//     // Apply filters for valid active categories, subcategories, and child categories
-//     if (categoryDoc) query.category = categoryDoc._id;
-//     if (subCategoryDoc) query.subCategory = subCategoryDoc._id;
-//     if (childCategoryDoc) query.childCategory = childCategoryDoc._id;
-//
-//     // Apply stock filter (in-stock or out-of-stock)
-//     if (stock === "in") query.finalStock = { $gt: 0 };
-//     if (stock === "out") query.finalStock = { $lte: 0 };
-//
-//
-//
-//
-//
-//     // Apply flags filter if provided
-//     if (flagDocs.length)
-//       query.flags = { $in: flagDocs.map((flag) => flag._id) };
-//
-//     // Default sorting to newest first
-//     let sortOption = { createdAt: -1 };
-//
-//     // Check for valid sorting values
-//     const validSortValues = [
-//       "price_high",
-//       "price_low",
-//       "name_asc",
-//       "name_desc",
-//       "latest",
-//       "oldest",
-//     ];
-//     if (sort && !validSortValues.includes(sort)) {
-//       return {
-//         products: [],
-//         totalProducts: 0,
-//         totalPages: 0,
-//         currentPage: page,
-//       };
-//     }
-//
-//     // Sorting logic
-//     if (sort === "price_high") sortOption = { finalDiscount: -1 };
-//     if (sort === "price_low") sortOption = { finalDiscount: 1 };
-//     if (sort === "name_asc") sortOption = { name: 1 }; // A-Z
-//     if (sort === "name_desc") sortOption = { name: -1 }; // Z-A
-//     if (sort === "oldest") sortOption = { createdAt: 1 }; // Oldest first
-//
-//     // Count total products based on the active filter
-//     const totalProducts = await ProductModel.countDocuments(query);
-//
-//     // Fetch products with filters, sorting, and pagination
-//     const products = await ProductModel.find(query)
-//       .sort(sortOption)
-//       .skip((page - 1) * limit)
-//       .limit(limit)
-//       .select(
-//         "name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productId",
-//       )
-//       .populate([
-//         { path: "category", select: "-createdAt -updatedAt" },
-//         { path: "flags", select: "-createdAt -updatedAt" },
-//         { path: "variants.size", select: "-createdAt -updatedAt" },
-//       ]);
-//     if (
-//       (category && !categoryDoc) ||
-//       (subcategory && !subCategoryDoc) ||
-//       (childCategory && !childCategoryDoc) ||
-//       (flags && flagDocs.length === 0)
-//     ) {
-//       return {
-//         products: [],
-//         totalProducts: 0,
-//         totalPages: 0,
-//         currentPage: page,
-//       };
-//     }
-//
-// // ✅ ADD THIS NEXT
-//     if (search && search.trim()) {
-//       const matchedProduct = await ProductModel.findOne({
-//         $expr: {
-//           $eq: [{ $toLower: "$name" }, search.toLowerCase()],
-//         },
-//         isActive: true,
-//       })
-//         .select(
-//           "name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags"
-//         )
-//         .populate([
-//           { path: "category", select: "-createdAt -updatedAt" },
-//           { path: "flags", select: "-createdAt -updatedAt" },
-//           { path: "variants.size", select: "-createdAt -updatedAt" },
-//         ]);
-//
-//       return {
-//         products: matchedProduct ? [matchedProduct] : [],
-//         totalProducts: matchedProduct ? 1 : 0,
-//         totalPages: 1,
-//         currentPage: page,
-//       };
-//     }
-//
-//     return {
-//       products,
-//       totalProducts,
-//       totalPages: Math.ceil(totalProducts / limit),
-//       currentPage: page,
-//     };
-//   } catch (error) {
-//     throw new Error(error.message);
-//   }
-// };
 
 const getAllProducts = async ({
   page = 1,
@@ -390,11 +220,7 @@ const getAllProducts = async ({
             ],
           },
           {
-            $cond: [
-              { $gt: ['$finalDiscount', 0] },
-              '$finalDiscount',
-              '$finalPrice',
-            ],
+            $cond: [{ $gt: ['$finalDiscount', 0] }, '$finalDiscount', '$finalPrice'],
           },
         ],
       };
@@ -433,80 +259,66 @@ const getAllProducts = async ({
     // Count total documents matching the query
     const totalProducts = await ProductModel.countDocuments(query);
 
-    let products;
-    if (sort === 'price_high' || sort === 'price_low') {
-      // Price sort must use the effective selling price (finalDiscount when a
-      // discount exists, otherwise finalPrice), since finalDiscount is 0 for
-      // non-discounted products.
-      const sortedIds = await ProductModel.aggregate([
-        { $match: query },
+    // Effective selling price expression (discount price when a discount
+    // exists, otherwise the base price) used for price sorting.
+    const effectivePriceExpr = {
+      $cond: [
+        { $gt: [{ $size: { $ifNull: ['$variants', []] } }, 0] },
         {
-          $addFields: {
-            price_sort: {
-              $cond: [
-                { $gt: [{ $size: { $ifNull: ['$variants', []] } }, 0] },
-                {
-                  $cond: [
-                    { $gt: ['$variants.0.discount', 0] },
-                    '$variants.0.discount',
-                    '$variants.0.price',
-                  ],
-                },
-                {
-                  $cond: [
-                    { $gt: ['$finalDiscount', 0] },
-                    '$finalDiscount',
-                    '$finalPrice',
-                  ],
-                },
-              ],
-            },
-          },
+          $cond: [
+            { $gt: ['$variants.0.discount', 0] },
+            '$variants.0.discount',
+            '$variants.0.price',
+          ],
         },
-        { $sort: { price_sort: sort === 'price_high' ? -1 : 1 } },
-        { $skip: (page - 1) * limit },
-        { $limit: limit },
-        { $project: { _id: 1 } },
+        {
+          $cond: [{ $gt: ['$finalDiscount', 0] }, '$finalDiscount', '$finalPrice'],
+        },
+      ],
+    };
+
+    // Sort in-stock products first, then out-of-stock products. Within each
+    // group, apply the requested sort option.
+    const sortObj = { in_stock: 1 };
+    if (sort === 'price_high') sortObj.price_sort = -1;
+    else if (sort === 'price_low') sortObj.price_sort = 1;
+    else if (sort === 'name_asc') sortObj.name = 1;
+    else if (sort === 'name_desc') sortObj.name = -1;
+    else if (sort === 'oldest') sortObj.createdAt = 1;
+    else sortObj.createdAt = -1; // default newest first
+
+    const pipeline = [
+      { $match: query },
+      {
+        $addFields: {
+          in_stock: { $cond: [{ $gt: ['$finalStock', 0] }, 0, 1] },
+          price_sort: effectivePriceExpr,
+        },
+      },
+      { $sort: sortObj },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+      { $project: { _id: 1 } },
+    ];
+
+    const sortedIds = await ProductModel.aggregate(pipeline);
+
+    const ids = sortedIds.map((doc) => doc._id);
+    const orderedDocs = await ProductModel.find({ _id: { $in: ids } })
+      .select(
+        'name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productCode freeShipping keyFeatures'
+      )
+      .populate([
+        { path: 'category', select: '-createdAt -updatedAt' },
+        { path: 'flags', select: '-createdAt -updatedAt' },
+        { path: 'brand', select: '-createdAt -updatedAt' },
+        { path: 'variants.attributes.option', select: '-createdAt -updatedAt' },
       ]);
 
-      const ids = sortedIds.map((doc) => doc._id);
-      const orderedDocs = await ProductModel.find({ _id: { $in: ids } })
-        .select(
-          'name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productCode freeShipping keyFeatures'
-        )
-        .populate([
-          { path: 'category', select: '-createdAt -updatedAt' },
-          { path: 'flags', select: '-createdAt -updatedAt' },
-          { path: 'brand', select: '-createdAt -updatedAt' },
-          { path: 'variants.attributes.option', select: '-createdAt -updatedAt' },
-        ]);
-
-      const idOrder = new Map(ids.map((id, index) => [String(id), index]));
-      products = orderedDocs.sort(
-        (a, b) => idOrder.get(String(a._id)) - idOrder.get(String(b._id)),
-      );
-    } else {
-      // Define sorting options
-      const sortOption = { createdAt: -1 }; // default newest first
-      if (sort === 'name_asc') sortOption.name = 1;
-      if (sort === 'name_desc') sortOption.name = -1;
-      if (sort === 'oldest') sortOption.createdAt = 1;
-
-      // Fetch products with filters, sorting, and pagination
-      products = await ProductModel.find(query)
-        .sort(sortOption)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .select(
-          'name slug finalDiscount finalPrice finalStock thumbnailImage isActive images productId category variants flags productCode freeShipping keyFeatures'
-        )
-        .populate([
-          { path: 'category', select: '-createdAt -updatedAt' },
-          { path: 'flags', select: '-createdAt -updatedAt' },
-          { path: 'brand', select: '-createdAt -updatedAt' },
-          { path: 'variants.attributes.option', select: '-createdAt -updatedAt' },
-        ]);
-    }
+    const idOrder = new Map(ids.map((id, index) => [String(id), index]));
+    products = orderedDocs.sort(
+      (a, b) => idOrder.get(String(a._id)) - idOrder.get(String(b._id))
+    );
 
     return {
       products,

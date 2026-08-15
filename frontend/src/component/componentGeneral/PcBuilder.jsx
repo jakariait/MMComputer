@@ -196,8 +196,8 @@ const PcBuilder = () => {
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const brandName = GeneralInfoList?.CompanyName || 'MM Computer';
-  const brandLogo = GeneralInfoList?.PrimaryLogo
-    ? `${apiUrl.replace('/api', '')}/uploads/${GeneralInfoList.PrimaryLogo}`
+  const brandLogo = GeneralInfoList?.SecondaryLogo
+    ? `${apiUrl.replace('/api', '')}/uploads/${GeneralInfoList.SecondaryLogo}`
     : null;
   const brandAddress = GeneralInfoList?.CompanyAddress || '';
   const phoneFields = [

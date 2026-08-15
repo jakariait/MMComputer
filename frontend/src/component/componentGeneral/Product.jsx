@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useProductStore from '../../store/useProductStore.js';
 import useCategoryStore from '../../store/useCategoryStore.js';
@@ -9,6 +9,7 @@ import Skeleton from 'react-loading-skeleton';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductList from './ProductList.jsx';
 import ProductFilters from './ProductFilters.jsx';
+import SubChildCategorisingShop from './SubChildCategorisingShop.jsx';
 
 const Product = () => {
   const { products, totalPages, loading, error, fetchProducts, totalProducts } =
@@ -171,6 +172,9 @@ const Product = () => {
 
           {/* Main Content */}
           <main className="flex-1 min-w-0">
+            {/* Category > Subcategory > Child Category chip navigation */}
+            <SubChildCategorisingShop />
+
             {/* Mobile/MD Filter Buttons + Active Chips */}
             <ProductFilters
               filters={currentFilters}
