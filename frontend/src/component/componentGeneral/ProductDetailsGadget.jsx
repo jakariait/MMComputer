@@ -201,7 +201,7 @@ const ProductDetailsGadget = () => {
   };
 
   // If product is loading, show a loading screen
-  if (loading || product?.slug !== slug) {
+  if (loading) {
     return (
       <div className="xl:container xl:mx-auto p-3">
         <div className={'grid md:grid-cols-2 gap-4'}>
@@ -230,14 +230,25 @@ const ProductDetailsGadget = () => {
     ); // Loading message while new product data is being fetched
   }
 
+  // If the product could not be found, show a "not found" message
+  if (error || !product || product?.slug !== slug) {
+    return (
+      <div className="xl:container xl:mx-auto p-3">
+        <div className="flex flex-col items-center justify-center pt-40 pb-20 text-center space-y-3">
+          <h1 className="text-3xl font-bold text-muted-foreground">
+            Product not found
+          </h1>
+          <p className="text-muted-foreground max-w-md">
+            Sorry, the product you are looking for does not exist or may have
+            been removed.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="xl:container xl:mx-auto p-3">
-      {error && (
-        <div className="text-red-500 flex items-center justify-center pt-40">
-          Error: {error}
-        </div>
-      )}
-
       {product && (
         <div>
           {/*Seo Meta Data*/}

@@ -90,8 +90,8 @@ const Footer = () => {
               <div className="flex items-center justify-between flex-col gap-4">
                 <Link to="/" className="inline-block">
                   <ImageComponent
-                    imageName={GeneralInfoList?.PrimaryLogo}
-                    className="max-h-11 object-contain "
+                    imageName={GeneralInfoList?.SecondaryLogo}
+                    className="w-30 h-30 object-contain "
                     altName={GeneralInfoList?.CompanyName}
                     skeletonHeight={44}
                   />
@@ -115,7 +115,7 @@ const Footer = () => {
               </div>
 
               {/* Get in touch */}
-              <div className="space-y-4 flex flex-col items-center ">
+              <div className="space-y-4 flex flex-col  ">
                 <TagLabel>Get in touch</TagLabel>
                 <div className="space-y-3">
                   {phoneFields.map(

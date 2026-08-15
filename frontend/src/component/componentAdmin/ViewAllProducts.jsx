@@ -3,6 +3,8 @@ import axios from 'axios';
 import useProductStore from '../../store/useProductStore.js';
 import useBrandStore from '../../store/useBrandStore.js';
 import useCategoryStore from '../../store/useCategoryStore.js';
+import useSubCategoryStore from '../../store/useSubCategoryStore.js';
+import useChildCategoryStore from '../../store/useChildCategoryStore.js';
 import useFlagStore from '../../store/useFlagStore.js';
 import ImageComponent from '../componentGeneral/ImageComponent.jsx';
 import { Link, useNavigate } from 'react-router-dom';
@@ -72,6 +74,8 @@ const ViewAllProducts = () => {
 
   const { brands, fetchBrands } = useBrandStore();
   const { categories, fetchCategories } = useCategoryStore();
+  const { subCategories, fetchSubCategories } = useSubCategoryStore();
+  const { childCategories, fetchChildCategories } = useChildCategoryStore();
   const { flags, fetchFlags } = useFlagStore();
 
   const navigate = useNavigate();
@@ -82,6 +86,8 @@ const ViewAllProducts = () => {
     search: '',
     brand: '',
     category: '',
+    subcategory: '',
+    childCategory: '',
     flags: '',
     isActive: '',
     stock: '',
@@ -102,6 +108,8 @@ const ViewAllProducts = () => {
         filters.search ||
         filters.brand ||
         filters.category ||
+        filters.subcategory ||
+        filters.childCategory ||
         filters.flags ||
         filters.isActive ||
         filters.stock
@@ -116,6 +124,8 @@ const ViewAllProducts = () => {
     filters.search,
     filters.brand,
     filters.category,
+    filters.subcategory,
+    filters.childCategory,
     filters.flags,
     filters.isActive,
     filters.stock,
@@ -128,6 +138,14 @@ const ViewAllProducts = () => {
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
+
+  useEffect(() => {
+    fetchSubCategories();
+  }, [fetchSubCategories]);
+
+  useEffect(() => {
+    fetchChildCategories();
+  }, [fetchChildCategories]);
 
   useEffect(() => {
     fetchFlags();
@@ -163,6 +181,40 @@ const ViewAllProducts = () => {
   const handleFilterChange = useCallback((name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value, page: 1 }));
   }, []);
+
+  const handleCategoryFilterChange = (value) => {
+    handleFilterChange('category', value);
+    handleFilterChange('subcategory', '');
+    handleFilterChange('childCategory', '');
+  };
+
+  const handleSubCategoryFilterChange = (value) => {
+    handleFilterChange('subcategory', value);
+    handleFilterChange('childCategory', '');
+  };
+
+  const selectedCategoryId = categories.find(
+    (category) => category.name === filters.category,
+  )?._id;
+
+  const filteredSubCategories = subCategories.filter(
+    (subCategory) =>
+      !selectedCategoryId || subCategory.category?._id === selectedCategoryId,
+  );
+
+  const selectedSubCategoryId = filteredSubCategories.find(
+    (subCategory) => subCategory.slug === filters.subcategory,
+  )?._id;
+
+  const filteredChildCategories = childCategories.filter((childCategory) => {
+    if (selectedSubCategoryId) {
+      return childCategory.subCategory?._id === selectedSubCategoryId;
+    }
+    if (selectedCategoryId) {
+      return childCategory.category?._id === selectedCategoryId;
+    }
+    return true;
+  });
 
   const handleSearch = () => {
     handleFilterChange('search', searchQuery.trim());
@@ -295,20 +347,23 @@ const ViewAllProducts = () => {
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:flex md:items-center md:justify-between gap-2 md:gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3">
           <SearchableSelect
             value={filters.brand}
             onValueChange={(value) => handleFilterChange('brand', value)}
             placeholder="All brands"
             searchPlaceholder="Search brands..."
-            options={brands.map((brand) => ({ value: brand.name, label: brand.name }))}
-            triggerClassName="w-full md:w-36 h-8 bg-background"
+            options={brands.map((brand) => ({
+              value: brand.name,
+              label: brand.name,
+            }))}
+            triggerClassName="w-full h-8 bg-background"
           />
           <Select
             value={filters.category}
-            onValueChange={(value) => handleFilterChange('category', value)}
+            onValueChange={handleCategoryFilterChange}
           >
-            <SelectTrigger className="w-full md:w-36 h-8 bg-background">
+            <SelectTrigger className="w-full h-8 bg-background">
               <SelectValue placeholder="All categories" />
             </SelectTrigger>
             <SelectContent>
@@ -321,10 +376,44 @@ const ViewAllProducts = () => {
             </SelectContent>
           </Select>
           <Select
+            value={filters.subcategory}
+            onValueChange={handleSubCategoryFilterChange}
+          >
+            <SelectTrigger className="w-full h-8 bg-background">
+              <SelectValue placeholder="All subcategories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All subcategories</SelectItem>
+              {filteredSubCategories.map((subCategory) => (
+                <SelectItem key={subCategory._id} value={subCategory.slug}>
+                  {subCategory.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={filters.childCategory}
+            onValueChange={(value) =>
+              handleFilterChange('childCategory', value)
+            }
+          >
+            <SelectTrigger className="w-full h-8 bg-background">
+              <SelectValue placeholder="All child categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All child categories</SelectItem>
+              {filteredChildCategories.map((childCategory) => (
+                <SelectItem key={childCategory._id} value={childCategory.slug}>
+                  {childCategory.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
             value={filters.flags}
             onValueChange={(value) => handleFilterChange('flags', value)}
           >
-            <SelectTrigger className="w-full md:w-32 h-8 bg-background">
+            <SelectTrigger className="w-full h-8 bg-background">
               <SelectValue placeholder="All flags" />
             </SelectTrigger>
             <SelectContent>
@@ -340,7 +429,7 @@ const ViewAllProducts = () => {
             value={filters.isActive}
             onValueChange={(value) => handleFilterChange('isActive', value)}
           >
-            <SelectTrigger className="w-full md:w-28 h-8 bg-background">
+            <SelectTrigger className="w-full h-8 bg-background">
               <SelectValue placeholder="All status" />
             </SelectTrigger>
             <SelectContent>
@@ -353,7 +442,7 @@ const ViewAllProducts = () => {
             value={filters.stock}
             onValueChange={(value) => handleFilterChange('stock', value)}
           >
-            <SelectTrigger className="w-full md:w-32 h-8 bg-background">
+            <SelectTrigger className="w-full h-8 bg-background">
               <SelectValue placeholder="All stock" />
             </SelectTrigger>
             <SelectContent>
@@ -362,27 +451,29 @@ const ViewAllProducts = () => {
               <SelectItem value="out">Out of Stock</SelectItem>
             </SelectContent>
           </Select>
-          <div className={'flex items-center justify-center gap-2'}>
+          <div className="flex items-center justify-center gap-2">
             <span className="hidden md:inline text-sm text-muted-foreground">
               Show
             </span>
-            <Select
-              value={String(filters.limit)}
-              onValueChange={(value) =>
-                handleFilterChange('limit', Number(value))
-              }
-            >
-              <SelectTrigger className="w-full md:w-16 h-8 bg-background">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {[5, 10, 20].map((n) => (
-                  <SelectItem key={n} value={String(n)}>
-                    {n}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex-1 min-w-0">
+              <Select
+                value={String(filters.limit)}
+                onValueChange={(value) =>
+                  handleFilterChange('limit', Number(value))
+                }
+              >
+                <SelectTrigger className="w-full h-8 bg-background">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[5, 10, 20].map((n) => (
+                    <SelectItem key={n} value={String(n)}>
+                      {n}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <p className="hidden md:block text-sm text-muted-foreground">
               entries
             </p>
@@ -509,13 +600,17 @@ const ViewAllProducts = () => {
                       ) : (
                         <div>
                           <p className="font-semibold">
-                            ৳{product.finalDiscount > 0 ? product.finalDiscount : product.finalPrice}
+                            ৳
+                            {product.finalDiscount > 0
+                              ? product.finalDiscount
+                              : product.finalPrice}
                           </p>
-                          {product.finalDiscount > 0 && product.finalPrice > 0 && (
-                            <p className="text-xs text-destructive line-through">
-                              ৳{product.finalPrice}
-                            </p>
-                          )}
+                          {product.finalDiscount > 0 &&
+                            product.finalPrice > 0 && (
+                              <p className="text-xs text-destructive line-through">
+                                ৳{product.finalPrice}
+                              </p>
+                            )}
                         </div>
                       )}
                     </TableCell>
