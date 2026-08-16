@@ -7,7 +7,12 @@ import useSubCategoryStore from '../../store/useSubCategoryStore.js';
 import useChildCategoryStore from '../../store/useChildCategoryStore.js';
 import useFlagStore from '../../store/useFlagStore.js';
 import ImageComponent from '../componentGeneral/ImageComponent.jsx';
-import { Link, useNavigate } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  useSearchParams,
+  useLocation,
+} from 'react-router-dom';
 import RequirePermission from './RequirePermission.jsx';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -79,21 +84,27 @@ const ViewAllProducts = () => {
   const { flags, fetchFlags } = useFlagStore();
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [filters, setFilters] = useState({
-    page: 1,
-    limit: 10,
-    search: '',
-    brand: '',
-    category: '',
-    subcategory: '',
-    childCategory: '',
-    flags: '',
-    isActive: '',
-    stock: '',
+  const getInitialFilters = (searchParams) => ({
+    page: Number(searchParams.get('page')) || 1,
+    limit: Number(searchParams.get('limit')) || 10,
+    search: searchParams.get('search') || '',
+    brand: searchParams.get('brand') || '',
+    category: searchParams.get('category') || '',
+    subcategory: searchParams.get('subcategory') || '',
+    childCategory: searchParams.get('childCategory') || '',
+    flags: searchParams.get('flags') || '',
+    isActive: searchParams.get('isActive') || '',
+    stock: searchParams.get('stock') || '',
   });
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState(() => getInitialFilters(searchParams));
+
+  const [searchQuery, setSearchQuery] = useState(
+    () => searchParams.get('search') || '',
+  );
 
   const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -130,6 +141,22 @@ const ViewAllProducts = () => {
     filters.isActive,
     filters.stock,
   ]);
+
+  useEffect(() => {
+    const params = {};
+    Object.entries(filters).forEach(([key, value]) => {
+      if (
+        value !== '' &&
+        value !== null &&
+        value !== undefined &&
+        !(key === 'page' && value === 1) &&
+        !(key === 'limit' && value === 10)
+      ) {
+        params[key] = String(value);
+      }
+    });
+    setSearchParams(params, { replace: true });
+  }, [filters, setSearchParams]);
 
   useEffect(() => {
     fetchBrands();
@@ -681,6 +708,9 @@ const ViewAllProducts = () => {
                               <Button variant="ghost" size="icon-xs" asChild>
                                 <Link
                                   to={`/admin/edit-product/${product.slug}`}
+                                  state={{
+                                    manageProductsUrl: `${location.pathname}${location.search}`,
+                                  }}
                                 >
                                   <Pencil className="size-3.5" />
                                 </Link>

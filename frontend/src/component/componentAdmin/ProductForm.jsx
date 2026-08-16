@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useMemo, lazy } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import useCategoryStore from '../../store/useCategoryStore.js';
 import useSubCategoryStore from '../../store/useSubCategoryStore.js';
 import useChildCategoryStore from '../../store/useChildCategoryStore.js';
@@ -73,6 +73,7 @@ const ProductForm = ({ isEdit: isEditMode }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { token } = AuthAdminStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [name, setName] = useState('');
   const [keyFeatures, setKeyFeatures] = useState([{ key: '', value: '' }]);
@@ -793,7 +794,9 @@ const ProductForm = ({ isEdit: isEditMode }) => {
       }
 
       setTimeout(() => {
-        navigate('/admin/manage-products');
+        const returnUrl =
+          location.state?.manageProductsUrl || '/admin/manage-products';
+        navigate(returnUrl);
       }, 3000);
     } catch (error) {
       toast.error(
