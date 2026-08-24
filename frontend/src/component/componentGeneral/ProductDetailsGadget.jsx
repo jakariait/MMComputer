@@ -252,13 +252,18 @@ const ProductDetailsGadget = () => {
       {product && (
         <div>
           {/*Seo Meta Data*/}
-          <Helmet titleTemplate={`%s | ${GeneralInfoList?.CompanyName || 'MM Computer'}`}>
+          <Helmet
+            titleTemplate={`%s | ${GeneralInfoList?.CompanyName || 'MM Computer'}`}
+          >
             <html lang="en" />
             <meta name="robots" content="index, follow" />
             <title>{product?.name || product?.metaTitle}</title>
             <meta charSet="utf-8" />
             <meta name="description" content={product?.metaDescription} />
-            <meta name="keywords" content={product?.metaKeywords?.join(', ') ?? ''} />
+            <meta
+              name="keywords"
+              content={product?.metaKeywords?.join(', ') ?? ''}
+            />
             <meta
               name="viewport"
               content="width=device-width, initial-scale=1"

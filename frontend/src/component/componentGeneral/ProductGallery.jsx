@@ -13,7 +13,7 @@ const ProductGallery = ({ images, discount, zoom = true, productName }) => {
   const [imageUrls, setImageUrls] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const thumbnailRefs = useRef([]);
-  const lightGalleryRef = useRef(null);
+  const lightGalleryInstance = useRef(null);
 
   useEffect(() => {
     if (images?.length > 0) {
@@ -46,6 +46,16 @@ const ProductGallery = ({ images, discount, zoom = true, productName }) => {
         return prevIndex === 0 ? imageUrls.length - 1 : prevIndex - 1;
       }
     });
+  };
+
+  const onGalleryInit = (detail) => {
+    lightGalleryInstance.current = detail.instance;
+  };
+
+  const openGallery = (index) => {
+    if (lightGalleryInstance.current) {
+      lightGalleryInstance.current.openGallery(index);
+    }
   };
 
   const plugins = zoom ? [lgThumbnail, lgZoom] : [];
@@ -88,31 +98,41 @@ const ProductGallery = ({ images, discount, zoom = true, productName }) => {
         </div>
 
         {zoom ? (
-          <LightGallery speed={500} plugins={plugins}>
-            {imageUrls.map((url, index) => (
-              <div key={index} className="relative">
-                <a
-                  href={url}
-                  className={activeIndex === index ? 'block' : 'hidden'}
-                >
-                  <ImageComponent
-                    imageName={images[index]}
-                    altName={productName}
-                    className="w-full aspect-square object-cover"
-                    skeletonHeight={'400px'}
-                  />
-                </a>
-                <button
-                  type="button"
-                  className="absolute md:bottom-4 bottom-1 left-1 p-3 md:left-3 bg-white rounded-full cursor-pointer"
-                  aria-label="Open full screen"
-                  onClick={() => lightGalleryRef.current?.openGallery(index)}
-                >
-                  <BsArrowsFullscreen aria-hidden="true" focusable="false" />
-                </button>
-              </div>
-            ))}
-          </LightGallery>
+          <>
+            <div
+              className="cursor-pointer"
+              onClick={() => openGallery(activeIndex)}
+            >
+              <ImageComponent
+                imageName={images[activeIndex]}
+                altName={productName}
+                className="w-full aspect-square object-cover"
+                skeletonHeight={'400px'}
+              />
+              <button
+                type="button"
+                className="absolute md:bottom-4 bottom-1 left-1 p-3 md:left-3 bg-white rounded-full cursor-pointer"
+                aria-label="Open full screen"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openGallery(activeIndex);
+                }}
+              >
+                <BsArrowsFullscreen aria-hidden="true" focusable="false" />
+              </button>
+            </div>
+            <LightGallery
+              speed={500}
+              plugins={plugins}
+              onInit={onGalleryInit}
+              dynamic
+              dynamicEl={imageUrls.map((url) => ({
+                src: url,
+                thumb: url,
+                alt: productName,
+              }))}
+            />
+          </>
         ) : (
           <div>
             <ImageComponent
