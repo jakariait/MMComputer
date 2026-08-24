@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import GeneralInfoStore from '../../store/GeneralInfoStore.js';
 
 const TITLE_RULES = [
-  { path: '/', title: 'Home' },
   { path: '/shop', title: 'Shop' },
   { path: '/product/', title: 'Product Details' },
   { path: '/contact-us', title: 'Contact Us' },
