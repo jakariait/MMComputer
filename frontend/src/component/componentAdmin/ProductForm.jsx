@@ -683,8 +683,6 @@ const ProductForm = ({ isEdit: isEditMode }) => {
 
     if (selectedFlags.length > 0) {
       selectedFlags.forEach((flag) => formData.append('flags', flag));
-    } else {
-      formData.append('flags', '');
     }
     searchTags.forEach((tag) => formData.append('searchTags', tag));
     metaKeywords.forEach((keyword) => formData.append('metaKeywords', keyword));
@@ -799,9 +797,11 @@ const ProductForm = ({ isEdit: isEditMode }) => {
         navigate(returnUrl);
       }, 3000);
     } catch (error) {
-      toast.error(
-        isEditMode ? 'Failed to update product.' : 'Failed to create product.',
-      );
+      const serverMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message;
+      toast.error(serverMessage || 'An unexpected error occurred.');
       if (error.response && error.response.data) {
         setErrors(error.response.data);
       } else {
