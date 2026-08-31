@@ -41,6 +41,7 @@ const brandController = require('../controllers/brandController');
 const reviewController = require('../controllers/productReviewController');
 const productQuestionController = require('../controllers/productQuestionController');
 const complainFeedbackController = require('../controllers/complainFeedbackController');
+const { getMetaCatalog } = require('../controllers/metaCatalogController');
 
 const { handleCourierCheck, getDynamicCourierStatus } = require('../controllers/courierController');
 const cacheMiddleware = require('../middlewares/redisCacheMiddleware');
@@ -886,5 +887,7 @@ router.delete(
   checkPermission('contact_request'),
   complainFeedbackController.deleteComplainFeedback
 );
+// Routes for meta catalog
+router.get('/catalog', getMetaCatalog);
 
 module.exports = router;
