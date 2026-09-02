@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import useProductStore from '../../store/useProductStore.js';
 import useCategoryStore from '../../store/useCategoryStore.js';
 import useFlagStore from '../../store/useFlagStore.js';
-import useBrandStore from '../../store/useBrandStore.js';
 import { Typography } from '@/components/ui/typography';
 import Skeleton from 'react-loading-skeleton';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -12,12 +11,11 @@ import ProductFilters from './ProductFilters.jsx';
 import SubChildCategorisingShop from './SubChildCategorisingShop.jsx';
 
 const Product = () => {
-  const { products, totalPages, loading, error, fetchProducts, totalProducts } =
+  const { products, totalPages, loading, error, fetchProducts, totalProducts, filteredBrands } =
     useProductStore();
 
   const { categories } = useCategoryStore();
   const { flags, fetchFlags } = useFlagStore();
-  const { brands, fetchBrands } = useBrandStore();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -66,12 +64,10 @@ const Product = () => {
     () => (flags || []).filter((flag) => flag.isActive),
     [flags],
   );
-  const memoizedBrands = useMemo(() => brands || [], [brands]);
 
   useEffect(() => {
     if (!flags || flags.length === 0) fetchFlags();
-    if (!brands || brands.length === 0) fetchBrands();
-  }, [fetchFlags, flags, fetchBrands, brands]);
+  }, [fetchFlags, flags]);
 
   const {
     page,
@@ -163,7 +159,7 @@ const Product = () => {
                 filters={currentFilters}
                 categories={memoizedCategories}
                 flags={memoizedFlags}
-                brands={memoizedBrands}
+                brands={filteredBrands}
                 products={products}
                 onUpdateFilters={updateFilters}
               />
@@ -180,7 +176,7 @@ const Product = () => {
               filters={currentFilters}
               categories={memoizedCategories}
               flags={memoizedFlags}
-              brands={memoizedBrands}
+              brands={filteredBrands}
               products={products}
               onUpdateFilters={updateFilters}
               mobileOnly

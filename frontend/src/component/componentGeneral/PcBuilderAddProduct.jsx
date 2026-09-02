@@ -7,7 +7,6 @@ import ProductList from './ProductList.jsx';
 import ProductFilters from './ProductFilters.jsx';
 import useCategoryStore from '../../store/useCategoryStore.js';
 import useFlagStore from '../../store/useFlagStore.js';
-import useBrandStore from '../../store/useBrandStore.js';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -24,6 +23,7 @@ const PcBuilderAddProduct = ({
 }) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [filteredBrands, setFilteredBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -51,7 +51,6 @@ const PcBuilderAddProduct = ({
 
   const { categories } = useCategoryStore();
   const { flags, fetchFlags } = useFlagStore();
-  const { brands, fetchBrands } = useBrandStore();
 
   useEffect(() => {
     localStorage.setItem('pcBuild', JSON.stringify(selected));
@@ -59,8 +58,7 @@ const PcBuilderAddProduct = ({
 
   useEffect(() => {
     if (!flags || flags.length === 0) fetchFlags();
-    if (!brands || brands.length === 0) fetchBrands();
-  }, [fetchFlags, flags, fetchBrands, brands]);
+  }, [fetchFlags, flags]);
 
   const [prevParams, setPrevParams] = useState({ slug, category });
   if (slug !== prevParams.slug || category !== prevParams.category) {
@@ -115,6 +113,7 @@ const PcBuilderAddProduct = ({
         }
         const res = await axios.get(`${apiUrl}/getAllProducts`, { params });
         setProducts(res.data.products || []);
+        setFilteredBrands(res.data.filteredBrands || []);
         setTotalPages(res.data.totalPages || 0);
         setTotalProducts(res.data.totalProducts || 0);
       } catch {
@@ -220,8 +219,7 @@ const PcBuilderAddProduct = ({
                 filters={filters}
                 categories={categories}
                 flags={flags}
-                brands={brands}
-                products={products}
+                brands={filteredBrands}
                 onUpdateFilters={onUpdateFilters}
                 hideCategory
               />
@@ -235,8 +233,7 @@ const PcBuilderAddProduct = ({
               filters={filters}
               categories={categories}
               flags={flags}
-              brands={brands}
-              products={products}
+              brands={filteredBrands}
               onUpdateFilters={onUpdateFilters}
               mobileOnly
               hideCategory

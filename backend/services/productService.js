@@ -259,6 +259,14 @@ const getAllProducts = async ({
     // Count total documents matching the query
     const totalProducts = await ProductModel.countDocuments(query);
 
+    // Get distinct brands present in the filtered product set (all pages)
+    const filteredBrandIds = await ProductModel.distinct('brand', query);
+    const filteredBrandDocs = await BrandModel.find({
+      _id: { $in: filteredBrandIds },
+    })
+      .select('name slug logo isActive')
+      .sort({ name: 1 });
+
     // Effective selling price expression (discount price when a discount
     // exists, otherwise the base price) used for price sorting.
     const effectivePriceExpr = {
@@ -325,6 +333,7 @@ const getAllProducts = async ({
       totalProducts,
       totalPages: Math.ceil(totalProducts / limit),
       currentPage: page,
+      filteredBrands: filteredBrandDocs,
     };
   } catch (error) {
     throw new Error(error.message);

@@ -6,6 +6,7 @@ const apiUrl = import.meta.env.VITE_API_URL; // API base URL
 
 const useProductStore = create((set) => ({
   products: [],
+  filteredBrands: [],
   totalProducts: 0,
   totalProductsAdmin: 0,
   activeCount: 0,
@@ -29,6 +30,7 @@ const useProductStore = create((set) => ({
 
       set({
         products: response.data.products || [],
+        filteredBrands: response.data.filteredBrands || [],
         totalProducts: response.data.totalProducts || 0,
         totalPages: response.data.totalPages || 0,
         currentPage: response.data.currentPage || 1,
