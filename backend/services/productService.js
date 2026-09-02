@@ -638,6 +638,19 @@ const getHomePageProducts = async () => {
   }
 };
 
+const copyImageFile = (filename) => {
+  if (!filename) return filename;
+  const sourcePath = path.join(uploadsDir, filename);
+  if (!fs.existsSync(sourcePath)) return filename;
+  const ext = path.extname(filename);
+  const uniqueSuffix =
+    Date.now() + '-' + Math.random().toString(36).substring(2, 8);
+  const newFilename = uniqueSuffix + ext;
+  const destPath = path.join(uploadsDir, newFilename);
+  fs.copyFileSync(sourcePath, destPath);
+  return newFilename;
+};
+
 const duplicateProduct = async (productId) => {
   try {
     const originalProduct = await ProductModel.findById(productId);
@@ -651,6 +664,14 @@ const duplicateProduct = async (productId) => {
     delete doc.createdAt;
     delete doc.updatedAt;
     delete doc.__v;
+
+    if (doc.thumbnailImage) {
+      doc.thumbnailImage = copyImageFile(doc.thumbnailImage);
+    }
+
+    if (doc.images && doc.images.length > 0) {
+      doc.images = doc.images.map((img) => copyImageFile(img));
+    }
 
     const variantsData = doc.variants;
     delete doc.variants;
