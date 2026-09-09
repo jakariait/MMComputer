@@ -681,7 +681,13 @@ const ProductForm = ({ isEdit: isEditMode }) => {
     if (selectedChildCategory)
       formData.append('childCategory', selectedChildCategory);
 
-    if (selectedFlags.length > 0) {
+    if (isEditMode) {
+      if (selectedFlags.length > 0) {
+        selectedFlags.forEach((flag) => formData.append('flags', flag));
+      } else {
+        formData.append('flags', '');
+      }
+    } else {
       selectedFlags.forEach((flag) => formData.append('flags', flag));
     }
     searchTags.forEach((tag) => formData.append('searchTags', tag));
@@ -1571,8 +1577,20 @@ const ProductForm = ({ isEdit: isEditMode }) => {
                     {selectedFlags.map((flagId) => {
                       const flag = flags.find((f) => f._id === flagId);
                       return flag ? (
-                        <Badge key={flag._id} variant="secondary">
+                        <Badge
+                          key={flag._id}
+                          variant="secondary"
+                          className="gap-1 pr-1"
+                        >
                           {flag.name}
+                          <button
+                            type="button"
+                            onClick={() => handleFlagToggle(flagId)}
+                            className="ml-1 hover:text-destructive"
+                            aria-label={`Remove flag ${flag.name}`}
+                          >
+                            <X className="size-3" />
+                          </button>
                         </Badge>
                       ) : null;
                     })}
