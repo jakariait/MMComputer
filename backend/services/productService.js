@@ -203,7 +203,8 @@ const getAllProducts = async ({
 
     // Add search filter: partial, case-insensitive match on product name
     if (search && search.trim()) {
-      query.name = { $regex: search.trim(), $options: 'i' };
+      const escapedSearch = search.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      query.name = { $regex: escapedSearch, $options: 'i' };
     }
 
     // Add price range filter using the effective selling price
