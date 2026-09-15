@@ -109,10 +109,20 @@ const AdminNewOrderCreate = () => {
   });
 
   useEffect(() => {
-    fetchProducts();
     fetchShippingOptions();
     fetchVatPercentage();
   }, []);
+
+  useEffect(() => {
+    if (!productSearch.trim()) {
+      setProducts([]);
+      return;
+    }
+    const timer = setTimeout(() => {
+      fetchProducts(productSearch);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [productSearch]);
 
   useEffect(() => {
     if (!isGuest) {
@@ -124,9 +134,11 @@ const AdminNewOrderCreate = () => {
     calculateTotals();
   }, [orderItems, selectedShipping, specialDiscount, vatPercentage]);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (search = '') => {
     try {
-      const res = await axios.get(`${apiUrl}/getAllProductsAdmin`, {
+      const params = new URLSearchParams({ limit: '50' });
+      if (search.trim()) params.append('search', search.trim());
+      const res = await axios.get(`${apiUrl}/getAllProductsAdmin?${params}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       if (res.data?.success) {
@@ -184,13 +196,6 @@ const AdminNewOrderCreate = () => {
     }
     return variant._id ? `Variant ${variant._id.slice(-4)}` : 'Variant';
   };
-
-  const filteredProducts = useMemo(() => {
-    if (!productSearch) return products;
-    return products.filter((p) =>
-      p.name?.toLowerCase().includes(productSearch.toLowerCase()),
-    );
-  }, [products, productSearch]);
 
   const filteredCustomers = useMemo(() => {
     if (!customerSearch) return customers;
@@ -400,6 +405,7 @@ const AdminNewOrderCreate = () => {
     setPaymentMethod('cash_on_delivery');
     setPaymentStatus('unpaid');
     setProductSearch('');
+    setProducts([]);
     setCustomerSearch('');
     setFormErrors({
       fullName: false,
@@ -738,9 +744,9 @@ const AdminNewOrderCreate = () => {
                 </div>
 
                 <div className="max-h-100 overflow-y-auto">
-                  {filteredProducts.length > 0 ? (
+                  {products.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
-                      {filteredProducts.map((p) => (
+                      {products.map((p) => (
                         <button
                           type="button"
                           key={p._id}
@@ -831,7 +837,11 @@ const AdminNewOrderCreate = () => {
                   ) : (
                     <div className="flex flex-col items-center justify-center py-12 text-sm text-muted-foreground">
                       <Package className="size-8 mb-2 opacity-40" />
-                      <p>No products found</p>
+                      <p>
+                        {productSearch.trim()
+                          ? 'No products found'
+                          : 'Type to search products'}
+                      </p>
                     </div>
                   )}
                 </div>
