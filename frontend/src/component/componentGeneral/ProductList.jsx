@@ -55,6 +55,7 @@ const ProductList = ({
           name: product.name,
           thumbnailImage: product.thumbnailImage || product.images?.[0],
           finalPrice: product.finalPrice,
+          finalDiscount: product.finalDiscount || 0,
           slug: product.slug,
           category,
         },

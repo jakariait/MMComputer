@@ -15,6 +15,12 @@ const formatPrice = (price) => {
   return price.toLocaleString();
 };
 
+const hasDiscount = (item) => {
+  const price = Number(item?.finalPrice) || 0;
+  const discount = Number(item?.finalDiscount) || 0;
+  return discount > 0 && discount < price;
+};
+
 const PcBuilderAddProduct = ({
   name,
   slug,
@@ -151,6 +157,7 @@ const PcBuilderAddProduct = ({
           name: product.name,
           thumbnailImage: product.thumbnailImage || product.images?.[0],
           finalPrice: product.finalPrice,
+          finalDiscount: product.finalDiscount || 0,
           slug: product.slug,
           category: name,
         },
@@ -357,7 +364,20 @@ const PcBuilderAddProduct = ({
                     <p className="text-xs text-gray-500">{item.category}</p>
                   </div>
                   <p className="text-sm font-semibold text-[var(--primaryColor)] shrink-0">
-                    {item.finalPrice ? `৳${formatPrice(item.finalPrice)}` : '—'}
+                    {!item.finalPrice ? (
+                      '—'
+                    ) : hasDiscount(item) ? (
+                      <span className="inline-flex items-baseline gap-1.5">
+                        <span className="text-[11px] font-normal text-gray-400 line-through">
+                          ৳{formatPrice(item.finalPrice)}
+                        </span>
+                        <span className="text-red-600">
+                          ৳{formatPrice(item.finalDiscount)}
+                        </span>
+                      </span>
+                    ) : (
+                      `৳${formatPrice(item.finalPrice)}`
+                    )}
                   </p>
                   <button
                     onClick={() => removeSelected(item._id)}
