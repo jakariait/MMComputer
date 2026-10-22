@@ -59,6 +59,10 @@ const updateGeneralInfo = async (data, files) => {
         CompanyEmail: Array.isArray(data.CompanyEmail)
           ? data.CompanyEmail
           : data.CompanyEmail?.split(',') || [],
+        WhatsAppNumber: data.WhatsAppNumber,
+        WhatsAppNumberActive:
+          data.WhatsAppNumberActive === true ||
+          data.WhatsAppNumberActive === 'true',
       });
     } else {
       generalInfo.PrimaryLogo = PrimaryLogo;
@@ -79,6 +83,10 @@ const updateGeneralInfo = async (data, files) => {
         : data.CompanyEmail?.split(',') || [];
       generalInfo.CompanyAddress = data.CompanyAddress;
       generalInfo.GoogleMapLink = data.GoogleMapLink;
+      generalInfo.WhatsAppNumber = data.WhatsAppNumber;
+      generalInfo.WhatsAppNumberActive =
+        data.WhatsAppNumberActive === true ||
+        data.WhatsAppNumberActive === 'true';
       generalInfo.FooterCopyright = data.FooterCopyright;
     }
 

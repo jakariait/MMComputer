@@ -10,6 +10,8 @@ const DataSchema = mongoose.Schema(
     ServicePhone: { type: [String] },
     HotlinePhone: { type: [String] },
     CompanyEmail: { type: [String] },
+    WhatsAppNumber: { type: String },
+    WhatsAppNumberActive: { type: Boolean, default: false },
     ShortDescription: { type: String },
     CompanyAddress: { type: String },
     GoogleMapLink: { type: String },

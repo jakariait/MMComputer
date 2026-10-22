@@ -253,12 +253,16 @@ const AdminCategoryAllinone = () => {
                               className="mx-auto h-8 w-8 rounded object-cover"
                             />
                           ) : (
-                            <span className="text-xs text-muted-foreground">—</span>
+                            <span className="text-xs text-muted-foreground">
+                              —
+                            </span>
                           )}
                         </TableCell>
                         <TableCell className="text-center">
                           <Badge
-                            variant={cat.showInHomepage ? 'default' : 'secondary'}
+                            variant={
+                              cat.showInHomepage ? 'default' : 'secondary'
+                            }
                           >
                             {cat.showInHomepage ? 'Yes' : 'No'}
                           </Badge>
