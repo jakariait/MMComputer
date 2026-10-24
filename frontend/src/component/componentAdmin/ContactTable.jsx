@@ -50,6 +50,7 @@ const ContactTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(30);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [viewContact, setViewContact] = useState(null);
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -173,8 +174,15 @@ const ContactTable = () => {
                         </TableCell>
                         <TableCell>{contact.phoneNumber}</TableCell>
                         <TableCell>{contact.emailAddress}</TableCell>
-                        <TableCell className="max-w-[270px] truncate">
-                          {contact.message}
+                        <TableCell className="max-w-[270px]">
+                          <button
+                            type="button"
+                            onClick={() => setViewContact(contact)}
+                            className="block w-full truncate text-left hover:underline"
+                            title="View full message"
+                          >
+                            {contact.message}
+                          </button>
                         </TableCell>
                         <TableCell>
                           <Button
@@ -256,6 +264,25 @@ const ContactTable = () => {
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={!!viewContact} onOpenChange={(open) => !open && setViewContact(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Message from {viewContact?.fullName}</DialogTitle>
+            <DialogDescription>
+              {viewContact?.emailAddress} · {viewContact?.phoneNumber}
+            </DialogDescription>
+          </DialogHeader>
+          <p className="text-sm whitespace-pre-wrap leading-relaxed">
+            {viewContact?.message}
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setViewContact(null)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
